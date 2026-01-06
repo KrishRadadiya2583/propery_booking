@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const sampleListings = require("./data");
-const Listing = require("../models/listing");
+const Listing = require("../models/listing").default;
 async function main() {
     await mongoose.connect("mongodb+srv://krishradadiya19_db_user:mils%402109@cluster0.xbvmrom.mongodb.net/");
 }

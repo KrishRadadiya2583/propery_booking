@@ -1,25 +1,25 @@
 var express = require('express');
 var router = express.Router();
-const Listing = require('../models/listing');
+const Listing = require('../models/listing').default;
 const Booking = require('../models/booking');
-const {isLoggedIn} = require('../middlewares/loginmiddleware');
+const { isLoggedIn } = require('../middlewares/loginmiddleware');
 // const app = express();
 // app.set('view engine', 'ejs');
 
 // index route
-router.get('/',isLoggedIn ,async (req, res) => {
+router.get('/', isLoggedIn, async (req, res) => {
   const listings = await Listing.find();
   res.render('listings/listing', { listings, currentUser: req.session.user });
 });
 
 
-router.get('/new',isLoggedIn, (req, res) => {
+router.get('/new', isLoggedIn, (req, res) => {
   res.render("listings/new");
 })
 
 
 // show route
-router.get('/:id',isLoggedIn, async (req, res) => {
+router.get('/:id', isLoggedIn, async (req, res) => {
   let { id } = req.params;
   const listing = await Listing.findById(id);
   res.render("listings/show", { listing, currentUser: req.session.user });
@@ -37,26 +37,26 @@ router.get('/:id',isLoggedIn, async (req, res) => {
 //   res.redirect("/listings");
 // })
 
-router.post("/",isLoggedIn, async (req, res) => {
-    try {
-        const listing = req.body.listing;
+router.post("/", isLoggedIn, async (req, res) => {
+  try {
+    const listing = req.body.listing;
 
-        // Optional: Remove empty URLs
-        listing.image = listing.image.filter(url => url && url.trim() !== "");
+    // Optional: Remove empty URLs
+    listing.image = listing.image.filter(url => url && url.trim() !== "");
 
-        const newListing = new Listing(listing);
-        await newListing.save();
-        console.log("Listing created successfully");
-        res.redirect("/listings");
-    } catch (err) {
-        console.log(err);
-        res.send("Something went wrong");
-    }
+    const newListing = new Listing(listing);
+    await newListing.save();
+    console.log("Listing created successfully");
+    res.redirect("/listings");
+  } catch (err) {
+    console.log(err);
+    res.send("Something went wrong");
+  }
 });
 
 
 // edit listing route
-router.get('/:id/edit',isLoggedIn, async (req, res) => {
+router.get('/:id/edit', isLoggedIn, async (req, res) => {
   let { id } = req.params;
   const listing = await Listing.findById(id);
   res.render("listings/edit", { listing });
@@ -79,7 +79,7 @@ router.get('/:id/edit',isLoggedIn, async (req, res) => {
 //   res.redirect(`/listings/${id}`);
 // })
 
-router.post('/:id/edit',isLoggedIn, async (req, res) => {
+router.post('/:id/edit', isLoggedIn, async (req, res) => {
   const { id } = req.params;
   const listingData = req.body.listing;
 
@@ -107,7 +107,7 @@ router.post('/:id/edit',isLoggedIn, async (req, res) => {
 
 
 // delete listing route
-router.get('/:id/delete',isLoggedIn, async (req, res) => {
+router.get('/:id/delete', isLoggedIn, async (req, res) => {
   const { id } = req.params;
   Listing.findByIdAndDelete(id)
     .then(() => {
@@ -120,9 +120,9 @@ router.get('/:id/delete',isLoggedIn, async (req, res) => {
 })
 
 // booking router for listings
-router.get("/:id/booking",isLoggedIn, async (req, res) => {
-   if (!req.session.user) {
-return res.render("profile", {currentUser: null});
+router.get("/:id/booking", isLoggedIn, async (req, res) => {
+  if (!req.session.user) {
+    return res.render("profile", { currentUser: null });
   }
   const listing = await Listing.findById(req.params.id);
   const currentUser = req.session.user;
@@ -131,12 +131,12 @@ return res.render("profile", {currentUser: null});
 
 
 
-router.post("/:id/booking",isLoggedIn, async(req, res) => {
+router.post("/:id/booking", isLoggedIn, async (req, res) => {
   console.log(req.body);
 
-  
-const listing = await Listing.findById(req.params.id);
-const listingtitle = listing.title;
+
+  const listing = await Listing.findById(req.params.id);
+  const listingtitle = listing.title;
 
   const { name, email, phone, checkIn, checkOut, guests, totalPrice } = req.body;
 
@@ -164,7 +164,7 @@ const listingtitle = listing.title;
 
 
 // cancel Booking
-router.get("/:id/cancelbooking",isLoggedIn, async (req, res) => {
+router.get("/:id/cancelbooking", isLoggedIn, async (req, res) => {
   const { id } = req.params;
   Booking.findByIdAndDelete(id)
     .then(() => {

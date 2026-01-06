@@ -1,26 +1,26 @@
 const express = require("express");
 const router = express.Router();
 const Booking = require("../models/booking");
-const Listing = require("../models/listing");
+const Listing = require("../models/listing").default;
 const { isLoggedIn } = require("../middlewares/loginmiddleware");
-router.get("/",isLoggedIn, (req, res) => {
+router.get("/", isLoggedIn, (req, res) => {
   if (!req.session.user) {
-return res.render("profile", {currentUser: null});
+    return res.render("profile", { currentUser: null });
   }
 
-  res.render("profile", {currentUser: req.session.user});
+  res.render("profile", { currentUser: req.session.user });
 });
 
-router.get("/edit-profile",isLoggedIn, (req, res) => {
+router.get("/edit-profile", isLoggedIn, (req, res) => {
   if (!req.session.user) {
 
     return res.redirect("/");
   }
 
-  res.render("editprofile", {currentUser: req.session.user});
+  res.render("editprofile", { currentUser: req.session.user });
 });
 
-router.post("/edit-profile",isLoggedIn, (req, res) => {
+router.post("/edit-profile", isLoggedIn, (req, res) => {
   if (!req.session.user) {
     return res.redirect("/");
   }
@@ -36,9 +36,9 @@ router.post("/edit-profile",isLoggedIn, (req, res) => {
 
 // show your  bookings page
 
-router.get("/bookings",isLoggedIn, async (req, res) => {
+router.get("/bookings", isLoggedIn, async (req, res) => {
   if (!req.session.user) {
-    return res.redirect("/", {currentUser: null});
+    return res.redirect("/", { currentUser: null });
   }
 
   const bookings = await Booking.find({ user: req.session.user._id });
@@ -46,9 +46,9 @@ router.get("/bookings",isLoggedIn, async (req, res) => {
 });
 
 
-router.get("/listings",isLoggedIn, async (req, res) => {
+router.get("/listings", isLoggedIn, async (req, res) => {
   if (!req.session.user) {
-    return res.redirect("/", {currentUser: null});
+    return res.redirect("/", { currentUser: null });
   }
 
   const listings = await Listing.find({ user: req.session.user._id });

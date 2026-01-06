@@ -1,0 +1,55 @@
+<% layout("/layouts/boilerplate") %>
+
+<section id="form-page">
+  <div class="container form-container">
+
+    <form class="listing-form" action="/listings/<%= listing._id %>/edit" method="POST">
+      <h2 class="form-title">Edit Listing</h2>
+
+      <label for="listing-title">Title</label>
+      <input class="form-input" name="listing[title]" value="<%= listing.title %>" required>
+
+      <label for="listing-description">Description</label>
+      <input class="form-input" name="listing[description]" value="<%= listing.description %>" required>
+
+      <label>Images</label>
+      <div id="image-fields">
+        <% listing.image.forEach((img) => { %>
+          <input class="form-input" name="listing[image][]" value="<%= img %>">
+        <% }) %>
+        <!-- If no images yet, show one blank input -->
+        <% if (listing.image.length === 0) { %>
+          <input class="form-input" name="listing[image][]" placeholder="Image URL">
+        <% } %>
+      </div>
+
+      <button type="button" id="add-image-btn" class="add-btn">Add Another URL</button>
+<br>
+      <label for="listing-price">Price</label>
+      <input class="form-input" type="number" name="listing[price]" value="<%= listing.price %>" required>
+
+      <label for="listing-location">Location</label>
+      <input class="form-input" name="listing[location]" value="<%= listing.location %>">
+
+      <label for="listing-country">Country</label>
+      <input class="form-input" name="listing[country]" value="<%= listing.country %>">
+
+      <button class="form-btn" type="submit">Update</button>
+    </form>
+
+  </div>
+</section>
+
+<script>
+  const addBtn = document.getElementById("add-image-btn");
+  const imageFields = document.getElementById("image-fields");
+
+  addBtn.addEventListener("click", () => {
+    const input = document.createElement("input");
+    input.type = "text";
+    input.name = "listing[image][]";
+    input.placeholder = "Image URL";
+    input.className = "form-input";
+    imageFields.appendChild(input);
+  });
+</script>

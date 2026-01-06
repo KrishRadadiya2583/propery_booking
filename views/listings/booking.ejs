@@ -1,0 +1,126 @@
+<% layout("/layouts/boilerplate") %>
+
+<section class="booking-page">
+  <div class="booking-container">
+
+    <h1 class="booking-title">
+      Book <%= listing.title %>
+    </h1>
+
+    <div class="booking-price">
+      <span class="price-amount">₹<%= listing.price %></span>
+      <span class="price-unit"> / guest / night</span>
+    </div>
+
+   
+
+    <form
+      class="booking-form"
+      action="/listings/<%= listing._id %>/booking"
+      method="POST"
+    >
+
+    <div>
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name"  value="<%= currentUser ? currentUser.name : '' %>" required>
+      </div>
+
+      <div>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" value="<%= currentUser ? currentUser.email : '' %>" required>
+      </div>
+
+      <div>
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" name="phone" required>
+      </div>
+
+      <div>
+        <label for="checkIn">Check-in</label>
+        <input type="date" id="checkIn" name="checkIn" required>
+      </div>
+
+      <div>
+        <label for="checkOut">Check-out</label>
+        <input type="date" id="checkOut" name="checkOut" required>
+      </div>
+
+      <div>
+        <label for="guests">Guests</label>
+        <input
+          type="number"
+          id="guests"
+          name="guests"
+          min="1"
+          value="1"
+          required
+        >
+      </div>
+
+      <!-- Hidden field to send calculated price -->
+      <input
+        type="hidden"
+        name="totalPrice"
+        id="totalPriceInput"
+        value="<%= listing.price %>"
+      >
+
+ <!-- TOTAL PRICE DISPLAY -->
+   <!-- TOTAL PRICE DISPLAY -->
+<div class="booking-total">
+  <span class="total-label">Total Price</span>
+  <strong class="total-amount">
+    ₹<span id="totalPrice"><%= listing.price %></span>
+  </strong>
+</div>
+
+
+      <button type="submit" class="btn-confirm">
+        Confirm Booking
+      </button>
+
+    </form>
+
+  </div>
+</section>
+
+<script>
+  const pricePerGuestPerNight = Number("<%= listing.price %>");
+
+  const checkInInput = document.getElementById("checkIn");
+  const checkOutInput = document.getElementById("checkOut");
+  const guestsInput = document.getElementById("guests");
+
+  const totalPriceText = document.getElementById("totalPrice");
+  const totalPriceInput = document.getElementById("totalPriceInput");
+
+  function calculateTotalPrice() {
+    const checkInDate = new Date(checkInInput.value);
+    const checkOutDate = new Date(checkOutInput.value);
+    const guests = Number(guestsInput.value) || 1;
+
+    if (!checkInInput.value || !checkOutInput.value) {
+      return;
+    }
+
+    // Calculate number of nights
+    const timeDiff = checkOutDate - checkInDate;
+    const nights = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+    if (nights <= 0) {
+      totalPriceText.textContent = 0;
+      totalPriceInput.value = 0;
+      return;
+    }
+
+    const total = nights * guests * pricePerGuestPerNight;
+
+    totalPriceText.textContent = total;
+    totalPriceInput.value = total;
+  }
+
+  checkInInput.addEventListener("change", calculateTotalPrice);
+  checkOutInput.addEventListener("change", calculateTotalPrice);
+  guestsInput.addEventListener("input", calculateTotalPrice);
+  
+</script>

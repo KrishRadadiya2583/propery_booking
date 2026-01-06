@@ -1,0 +1,91 @@
+<% layout("/layouts/boilerplate") %>
+
+<link rel="stylesheet" href="/css/user-listing.css">
+
+<section class="listings-page">
+  <div class="listings-container">
+
+    <h1 class="page-title">Your Listings</h1>
+
+    <% if (!listings || listings.length === 0) { %>
+
+      <div class="empty-state">
+        <h2>No listings yet</h2>
+        <p>When you add a property, it will appear here.</p>
+        <a href="/listings/new" class="btn-primary">
+          Add New Listing
+        </a>
+      </div>
+
+    <% } else { %>
+
+      <div class="listings-grid">
+
+        <% listings.forEach(listing => { %>
+<% if (currentUser && currentUser.email === listing.useremail) { %>
+          <div class="listing-card">
+
+            <!-- IMAGE -->
+            <a href="/listings/<%= listing._id %>" class="image-wrapper">
+              <% if (listing.image && listing.image.length > 0) { %>
+                <img
+                  src="<%= listing.image[0] %>"
+                  alt="<%= listing.title %>"
+                >
+              <% } else { %>
+                <div class="image-placeholder">No Image</div>
+              <% } %>
+            </a>
+
+            <!-- CONTENT -->
+            <div class="card-body">
+
+              <div class="card-header">
+                <span class="property-badge">Your property</span>
+                <span class="price">
+                  ₹<%= listing.price %> <span>/ night</span>
+                </span>
+              </div>
+
+              <h2 class="listing-title">
+                <%= listing.title %>
+              </h2>
+
+              <p class="location">
+                <%= listing.location %>, <%= listing.country %>
+              </p>
+
+              <p class="description">
+                <%= listing.description %>
+              </p>
+
+            </div>
+
+            <!-- FOOTER -->
+            <div class="card-footer">
+              <span class="status active">Active</span>
+
+              <div class="actions">
+                <a href="/listings/<%= listing._id %>" class="btn-outline">
+                  View
+                </a>
+                <a href="/listings/<%= listing._id %>/edit" class="btn-outline">
+                  Edit
+                </a>
+                <a href="/listings/<%= listing._id %>/delete" class="btn-outline">
+                  Delete
+                </a>
+              </div>
+            </div>
+
+          </div>
+          <% } %>
+
+        <% }) %>
+
+      </div>
+
+    <% } %>
+
+  </div>
+</section>

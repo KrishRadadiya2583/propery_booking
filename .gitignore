@@ -1,0 +1,48 @@
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Logs
+logs/
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory
+coverage/
+
+# Build output
+dist/
+build/
+
+# Cache
+.cache/
+.tmp/
+
+
+# Editor / IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+
+# EJS compiled cache (if any)
+.ejs-cache/
+
+# Optional: ignore lock file (NOT recommended for teams)
+# package-lock.json
+# yarn.lock

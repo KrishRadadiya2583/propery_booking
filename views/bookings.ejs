@@ -1,0 +1,88 @@
+<% layout("/layouts/boilerplate") %>
+
+<link rel="stylesheet" href="/css/bookings.css">
+
+<section class="bookings-page">
+  <div class="bookings-container">
+
+    <h1 class="bookings-title">Your Trips</h1>
+
+    <% if (!bookings || bookings.length === 0) { %>
+      <div class="no-bookings-card">
+        <h2>No bookings yet</h2>
+        <p>When you book a place, your trips will appear here.</p>
+      </div>
+    <% } else { %>
+
+      <% bookings.forEach(booking => { %>
+        <% if (currentUser && currentUser.email === booking.email) { %>
+
+          <div class="booking-card">
+
+            <!-- HEADER -->
+            <div class="booking-header">
+
+              <div class="booking-header-left">
+                <span class="trip-label">Upcoming trip</span>
+
+                <h2 class="listing-title">
+                  <%= booking.listingtitle %>
+                </h2>
+
+                <p class="booking-email"><%= booking.email %></p>
+              </div>
+
+             <p>
+  <a href="/listings/<%= booking._id %>/cancelbooking" class="btn-cancel">
+    Cancel Booking
+  </a>
+</p>
+
+
+              <div class="booking-price">
+                ₹<%= booking.totalPrice %>
+              </div>
+
+            </div>
+
+            <!-- DETAILS -->
+            <div class="booking-details">
+
+              <div class="detail-item">
+                <span class="detail-label">Check-in</span>
+                <span class="detail-value"><%= booking.checkIn %></span>
+              </div>
+
+              <div class="detail-item">
+                <span class="detail-label">Check-out</span>
+                <span class="detail-value"><%= booking.checkOut %></span>
+              </div>
+
+              <div class="detail-item">
+                <span class="detail-label">Guests</span>
+                <span class="detail-value"><%= booking.guests %></span>
+              </div>
+
+              <div class="detail-item">
+                <span class="detail-label">Phone</span>
+                <span class="detail-value"><%= booking.phone %></span>
+              </div>
+
+            </div>
+
+            <!-- FOOTER -->
+
+            <div class="booking-footer">
+              <span class="booking-status confirmed">Confirmed</span>
+            </div>
+
+          </div>
+
+        <% } %>
+
+      <% }) %>
+
+    <% } %>
+
+  </div>
+</section>

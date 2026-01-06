@@ -1,0 +1,115 @@
+/* AUTH PAGE BASE */
+#auth-body {
+  background: #f7f7f7;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Poppins", "Segoe UI", sans-serif;
+}
+
+/* CONTAINER */
+#auth-container {
+  width: 100%;
+  max-width: 420px;
+  padding: 20px;
+}
+
+/* CARD */
+.auth-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 28px 26px 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* TABS */
+.auth-tabs {
+  display: flex;
+  background: #f1f1f1;
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 24px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 10px 0;
+  border: none;
+  background: transparent;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #555;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.tab-btn.active {
+  background: #ffffff;
+  color: #222;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* FORMS */
+.auth-form {
+  display: none;
+}
+
+.auth-form.active {
+  display: block;
+}
+
+/* INPUTS */
+.auth-input {
+  width: 100%;
+  padding: 14px 12px;
+  margin-bottom: 14px;
+  border-radius: 10px;
+  border: 1px solid #dddddd;
+  font-size: 0.95rem;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: #ff385c;
+  box-shadow: 0 0 0 3px rgba(255, 56, 92, 0.15);
+}
+
+/* BUTTON */
+.auth-btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 8px;
+  background: linear-gradient(90deg, #ff385c, #e61e4d);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.auth-btn:hover {
+  background: linear-gradient(90deg, #e61e4d, #d61b45);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(255, 56, 92, 0.35);
+}
+
+/* MOBILE FRIENDLY */
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 24px 20px;
+  }
+}
+
+.error-msg {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-weight: 500;
+}

@@ -1,0 +1,38 @@
+<% layout("/layouts/boilerplate") %>
+
+    <section id="listing-page">
+        <div class="container listing-grid">
+
+            <% for(let listing of listings){ %>
+                <div class="listing-card">
+
+                    <a class="listing-image-link" href="/listings/<%= listing._id %>">
+                        <img class="listing-image" src="<%= listing.image[0] %>" alt="<%= listing.title %>">
+                    </a>
+
+                    <div class="listing-info">
+                        <h3 class="listing-title">
+                            <%= listing.title %><span class="like-btn">♡</span>
+                        </h3>
+                        <p class="listing-price">₹ <%= listing.price ? Number(listing.price).toLocaleString("en-IN") : "N/A" %> <span>/night</span>
+
+                        </p>
+
+                        <a class="listing-btn" href="/listings/<%= listing._id %>">
+                            View Details
+                        </a>
+                    </div>
+
+                </div>
+                <% } %>
+
+        </div>
+        <script>
+  document.querySelectorAll(".like-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      btn.classList.toggle("liked");
+      btn.innerText = btn.classList.contains("liked") ? "❤️" : "♡";
+    });
+  });
+</script>
+    </section>

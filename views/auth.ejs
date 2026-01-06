@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Auth</title>
+  <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body id="auth-body">
+
+<div id="auth-container">
+  <div class="auth-card">
+<% if (error) { %>
+  <div class="error-msg">
+    <%= error %>
+  </div>
+<% } %>
+<br>
+    <div class="auth-tabs">
+      <button id="loginTab" class="tab-btn active">Login</button>
+      <button id="registerTab" class="tab-btn">Register</button>
+    </div>
+
+    <form id="loginForm" class="auth-form active" action="/login" method="POST">
+      <input class="auth-input" name="email" type="email" placeholder="Email" required>
+      <input class="auth-input" name="password" type="password" placeholder="Password" required>
+
+      <button class="auth-btn">Login</button>
+    </form>
+
+    <form id="registerForm" class="auth-form" action="/register" method="POST">
+      <input class="auth-input" name="name" placeholder="Name" required>
+      <input class="auth-input" name="email" type="email" placeholder="Email" required>
+      <input class="auth-input" name="password" type="password" placeholder="Password" required>
+
+      <button class="auth-btn">Register</button>
+    </form>
+<br>
+    
+
+
+  </div>
+</div>
+
+<script>
+  loginTab.onclick = () => {
+    loginForm.classList.add("active");
+    registerForm.classList.remove("active");
+    loginTab.classList.add("active");
+    registerTab.classList.remove("active");
+  };
+
+  registerTab.onclick = () => {
+    registerForm.classList.add("active");
+    loginForm.classList.remove("active");
+    registerTab.classList.add("active");
+    loginTab.classList.remove("active");
+  };
+
+  
+</script>
+
+</body>
+</html>

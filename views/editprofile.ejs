@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Edit Profile</title>
+
+  <style>
+    :root {
+      --airbnb-red: #ff385c;
+      --text-dark: #222222;
+      --text-light: #717171;
+      --border-color: #dddddd;
+      --bg-light: #f7f7f7;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", Arial;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--bg-light);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .profile-card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 420px;
+      padding: 32px;
+      border-radius: 16px;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+    }
+
+    .profile-card h1 {
+      margin: 0 0 24px;
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 14px 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-group input:focus {
+      border-color: #000;
+      box-shadow: 0 0 0 1px #000;
+    }
+
+    .submit-btn {
+      margin-top: 8px;
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      background-color: var(--airbnb-red);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    .submit-btn:hover {
+      background-color: #e03150;
+    }
+
+    .submit-btn:active {
+      transform: scale(0.98);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="profile-card">
+    <h1>Edit Profile</h1>
+
+    <form action="/profile/edit-profile" method="POST">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          id="name"
+          type="text"
+          name="name"
+          value="<%= currentUser.name %>"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          name="email"
+          value="<%= currentUser.email %>"
+          required
+        />
+      </div>
+
+      <button type="submit" class="submit-btn">
+        Update Profile
+      </button>
+    </form>
+  </div>
+</body>
+</html>

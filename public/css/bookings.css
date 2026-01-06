@@ -1,0 +1,177 @@
+/* BASE */
+body {
+  background-color: #f7f7f7;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+  color: #222;
+}
+
+/* PAGE */
+.bookings-page {
+  padding: 40px 20px;
+}
+
+.bookings-container {
+  max-width: 1000px;
+  margin: auto;
+}
+
+/* TITLE */
+.bookings-title {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 32px;
+}
+
+/* EMPTY STATE */
+.no-bookings-card {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.no-bookings-card h2 {
+  font-size: 22px;
+}
+
+.no-bookings-card p {
+  color: #717171;
+}
+
+/* CARD */
+.booking-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+/* HEADER */
+.booking-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid #eeeeee;
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.booking-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* TRIP LABEL */
+.trip-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #717171;
+  text-transform: uppercase;
+}
+
+/* LISTING TITLE */
+.listing-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* EMAIL */
+.booking-email {
+  font-size: 14px;
+  color: #717171;
+}
+
+/* PRICE */
+.booking-price {
+  font-size: 22px;
+  font-weight: 600;
+  color: #ff385c;
+  white-space: nowrap;
+}
+
+/* DETAILS */
+.booking-details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-label {
+  font-size: 13px;
+  color: #717171;
+}
+
+.detail-value {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* FOOTER */
+.booking-footer {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* STATUS */
+.booking-status {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.booking-status.confirmed {
+  background-color: #e6f4ea;
+  color: #0f5132;
+}
+
+/* RESPONSIVE */
+@media (max-width: 640px) {
+  .booking-header {
+    flex-direction: column;
+  }
+
+  .booking-details {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-price {
+    align-self: flex-start;
+  }
+}
+
+/* cancel button*/
+.btn-cancel {
+  display: inline-block;
+  padding: 12px 20px;
+  background-color: #ff385c; /* Airbnb red */
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+    box-shadow: 2px 2px 2px black;
+
+}
+
+.btn-cancel:hover {
+  background-color: #e31c5f;
+  transform: translateY(-1px);
+}
+
+.btn-cancel:active {
+  transform: translateY(0);
+}
+

@@ -1,0 +1,50 @@
+<% layout("/layouts/boilerplate") %>
+
+<section id="show-page">
+  <div class="container show-container">
+
+    <!-- IMAGE SLIDER -->
+    <div class="show-slider">
+      <% listing.image.forEach((img, index) => { %>
+        <img src="<%= img %>" class="<%= index === 0 ? 'active' : '' %>">
+      <% }) %>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="show-content">
+      <h1 class="show-title"><%= listing.title %></h1>
+      <p class="show-description"><%= listing.description %></p>
+      <p class="show-price">₹ <%= listing.price.toLocaleString("en-IN") %> <span>/night</span></p>
+      <p class="show-location">📍 <%= listing.location %></p>
+      <p class="show-country">🌍 <%= listing.country %></p>
+
+      <a href="/listings/<%= listing._id %>/booking" class="btn-book">Book Now</a>
+
+
+      <% if (currentUser && currentUser.name === "mils") { %>
+        <div class="show-actions">
+          <a class="btn-edit" href="/listings/<%= listing._id %>/edit">Edit</a>
+          <a class="btn-delete" href="/listings/<%= listing._id %>/delete">Delete</a>
+        </div>
+      <% } %>
+
+      <br>
+      <a class="btn-back" href="/listings">Back</a>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  // AUTO SLIDER
+  const slides = document.querySelectorAll('.show-slider img');
+  let current = 0;
+
+  function nextSlide() {
+    slides[current].classList.remove('active');
+    current = (current + 1) % slides.length;
+    slides[current].classList.add('active');
+  }
+
+  setInterval(nextSlide, 3000); // Change image every 3 seconds
+</script>

@@ -1,0 +1,40 @@
+<% layout("/layouts/boilerplate") %>
+
+<section id="form-page">
+  <div class="container form-container">
+    <form class="listing-form" action="/listings" method="POST">
+      <h2 class="form-title">Add New Listing</h2>
+
+<input class="form-input" type="email" name="listing[useremail]" placeholder="Contact Email" required>
+      <input class="form-input" name="listing[title]" placeholder="Title" required>
+      <input class="form-input" name="listing[description]" placeholder="Description" required>
+      <input class="form-input" type="number" name="listing[price]" placeholder="Price" required>
+      <input class="form-input" name="listing[location]" placeholder="Location" required>
+      <input class="form-input" name="listing[country]" placeholder="Country" required>
+
+      <!-- Image URLs -->
+      <div id="image-fields">
+        <label>Image URLs:</label>
+        <input class="form-input" name="listing[image][]" placeholder="Image URL" required>
+      </div>
+
+      <button type="button" id="add-image-btn" class="add-btn">Add Another URL</button>
+      <br><br>
+      <button class="form-btn" type="submit">Add Listing</button>
+    </form>
+  </div>
+</section>
+
+<script>
+  const addBtn = document.getElementById("add-image-btn");
+  const imageFields = document.getElementById("image-fields");
+
+  addBtn.addEventListener("click", () => {
+    const input = document.createElement("input");
+    input.type = "text";
+    input.name = "listing[image][]";
+    input.placeholder = "Image URL";
+    input.className = "form-input";
+    imageFields.appendChild(input);
+  });
+</script>

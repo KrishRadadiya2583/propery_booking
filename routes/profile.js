@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Booking = require("../models/booking");
-const Listing = require("../models/listing").default;
+const Listing = require("../models/listing");
 const { isLoggedIn } = require("../middlewares/loginmiddleware");
 router.get("/", isLoggedIn, (req, res) => {
   if (!req.session.user) {

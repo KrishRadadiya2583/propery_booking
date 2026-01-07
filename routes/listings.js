@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const Listing = require('../models/listing').default;
+const Listing = require('../models/listing');
 const Booking = require('../models/booking');
 const { isLoggedIn } = require('../middlewares/loginmiddleware');
 // const app = express();

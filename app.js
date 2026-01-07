@@ -1,3 +1,6 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -19,7 +22,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.use(session({
-    secret: "Pvr@172#305",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -35,7 +38,7 @@ app.use((req, res, next) => {
 
 app.engine(".ejs", ejsMate);
 async function main() {
-    await mongoose.connect("mongodb+srv://krishradadiya19_db_user:mils%402109@cluster0.xbvmrom.mongodb.net/");
+    await mongoose.connect(process.env.MONGO_URL);
 }
 
 main().then(() => {
@@ -51,6 +54,7 @@ app.use("/about", aboutRouter);
 app.use("/contact", contactRouter)
 app.use("/profile", profileRouter);
 
-app.listen(3000, () => {
-    console.log("Server started on port 3000");
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server started on port ${PORT}`);
 });

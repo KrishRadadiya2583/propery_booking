@@ -1160,3 +1160,90 @@ body {
   font-weight: 600;
   color: #222222;
 }
+
+/* message notification*/
+.flash {
+  max-width: 880px;
+  margin: 16px auto;
+  padding: 14px 20px;
+  border-radius: 14px;
+
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  background: #ffffff;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+
+  /* SLIDER BEHAVIOR */
+  position: relative;
+  transform: translateY(-20px);
+  opacity: 0;
+
+  animation: slideDown 0.45s ease forwards;
+}
+
+/* SLIDE IN */
+@keyframes slideDown {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* SLIDE OUT */
+.flash.hide {
+  animation: slideUp 0.35s ease forwards;
+}
+
+@keyframes slideUp {
+  to {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+}
+
+/* SUCCESS */
+.flash.success {
+  background-color: #f0fdf4;
+  color: #166534;
+  border-left: 4px solid #22c55e;
+}
+
+/* ERROR */
+.flash.error {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border-left: 4px solid #ef4444;
+}
+
+/* ICON BASE */
+.flash::before {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* SUCCESS ICON */
+.flash.success::before {
+  content: "✓";
+  background: #22c55e;
+  color: #ffffff;
+}
+
+/* ERROR ICON */
+.flash.error::before {
+  content: "✕";
+  background: #ef4444;
+  color: #ffffff;
+}

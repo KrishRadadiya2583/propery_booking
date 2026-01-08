@@ -13,6 +13,9 @@ const authRouter = require("./routes/auth");
 const aboutRouter = require("./routes/about");
 const contactRouter = require("./routes/contact");
 const profileRouter = require("./routes/profile");
+const footerRouter = require("./routes/footer");
+const flash = require("connect-flash");
+
 
 
 app.set("view engine", "ejs");
@@ -29,6 +32,15 @@ app.use(session({
         maxAge: 1000 * 86400
     }
 }));
+
+app.use(flash());
+
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  next();
+});
+
 
 app.use((req, res, next) => {
     res.locals.currentUser = req.session.user;
@@ -53,6 +65,7 @@ app.use("/", authRouter);
 app.use("/about", aboutRouter);
 app.use("/contact", contactRouter)
 app.use("/profile", profileRouter);
+app.use("/footer", footerRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

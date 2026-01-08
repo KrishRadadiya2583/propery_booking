@@ -29,10 +29,11 @@ router.post("/register", async (req, res) => {
       name: user.name,
       email: user.email
     };
-
+req.flash("success", "register successful");
     res.redirect("/listings");
   } catch (err) {
     console.error(err);
+req.flash("error", "Registration failed. Please try again.");
     res.render("auth", {
       error: "Registration failed. Please try again."
     });
@@ -63,11 +64,12 @@ router.post("/login", async (req, res) => {
       name: user.name,
       email: user.email
     };
-
+req.flash("success", "login successful");
     res.redirect("/listings");
 
   } catch (err) {
     console.error("error generated");
+req.flash("error", "Login failed. Please try again.");
     res.render("auth", {
       error: "Login failed. Please try again."
     });

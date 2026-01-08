@@ -22,12 +22,34 @@
 <body id="app-body">
 
   <%- include("../includes/navbar.ejs") %>
+  <% if (success.length > 0) { %>
+  <div class="flash success">
+    <%= success[0] %>
+  </div>
+<% } %>
+
+<% if (error.length > 0) { %>
+  <div class="flash error">
+    <%= error[0] %>
+  </div>
+<% } %>
+
 
   <main id="page-wrapper">
     <%- body %>
+   
   </main>
 
   <%- include("../includes/footer.ejs") %>
+<script>
+  setTimeout(() => {
+    const flashes = document.querySelectorAll(".flash");
+    flashes.forEach(flash => {
+      flash.classList.add("hide");
+      setTimeout(() => flash.remove(), 400);
+    });
+  }, 4000);
+</script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>

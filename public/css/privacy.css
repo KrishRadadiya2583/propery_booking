@@ -1,0 +1,84 @@
+/* Place this file in /public/css/privacy.css */
+
+:root {
+  --primary: #ff385c;
+  --text-dark: #222222;
+  --text-light: #717171;
+  --border: #dddddd;
+  --bg-light: #f7f7f7;
+  --white: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  background: var(--bg-light);
+  color: var(--text-dark);
+}
+
+/* HERO */
+.privacy-hero {
+  background: linear-gradient(120deg, #ff385c, #ff6b81);
+  color: var(--white);
+  padding: 70px 20px;
+  text-align: center;
+}
+
+.privacy-hero h1 {
+  font-size: 38px;
+  margin-bottom: 10px;
+}
+
+.privacy-hero p {
+  font-size: 16px;
+}
+
+/* MAIN */
+.container {
+  max-width: 900px;
+  margin: 60px auto;
+  padding: 0 20px;
+}
+
+.privacy-section {
+  background: var(--white);
+  border-radius: 18px;
+  padding: 30px;
+  margin-bottom: 30px;
+  border: 1px solid var(--border);
+}
+
+.privacy-section h2 {
+  font-size: 22px;
+  margin-bottom: 14px;
+}
+
+.privacy-section p,
+.privacy-section li {
+  font-size: 14px;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+.privacy-section ul {
+  padding-left: 20px;
+}
+
+.privacy-section a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+footer {
+  margin-top: 80px;
+  padding: 24px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-light);
+}

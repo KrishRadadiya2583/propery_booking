@@ -1,0 +1,55 @@
+<!-- ================= COMMUNITY FORUM PAGE (EJS TEMPLATE) ================= -->
+<% layout("/layouts/boilerplate") %>
+
+<link rel="stylesheet" href="/css/community.css" />
+
+<header class="forum-hero">
+  <div class="hero-content">
+    <h1>Community Forum</h1>
+    <p>Connect with other hosts and guests, share experiences, and get tips.</p>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="forum-intro">
+    <h2>Welcome to the Wonderlust Community</h2>
+    <p>
+      This is a space where hosts and guests can discuss topics, ask questions, and help each other succeed.
+      Browse threads, ask questions, or share your hosting experience.
+    </p>
+  </section>
+
+  <section class="forum-actions">
+    <a href="#" class="btn-primary">Start New Thread</a>
+  </section>
+
+  <section class="threads-grid">
+    <!-- Example threads; dynamically populate with DB -->
+    <div class="thread-card">
+      <h3>How to take better listing photos?</h3>
+      <p class="meta">Posted by Alice • 5 replies • 2 hours ago</p>
+      <a href="#" class="btn-link">View Thread</a>
+    </div>
+
+    <div class="thread-card">
+      <h3>Best pricing strategy for holidays?</h3>
+      <p class="meta">Posted by Bob • 8 replies • 1 day ago</p>
+      <a href="#" class="btn-link">View Thread</a>
+    </div>
+
+    <div class="thread-card">
+      <h3>Safety tips for first-time hosts</h3>
+      <p class="meta">Posted by Carol • 12 replies • 3 days ago</p>
+      <a href="#" class="btn-link">View Thread</a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  © 2026 Wonderlust. All rights reserved.
+</footer>
+
+
+<!-- ================= EXTERNAL CSS (community-forum.css) ================= -->

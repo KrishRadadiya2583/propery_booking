@@ -1,0 +1,129 @@
+/* Place this file in /public/css/hosting-resources.css */
+
+:root {
+  --primary: #ff385c;
+  --text-dark: #222222;
+  --text-light: #717171;
+  --border: #dddddd;
+  --bg-light: #f7f7f7;
+  --white: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  background: var(--bg-light);
+  color: var(--text-dark);
+}
+
+/* HERO */
+.resources-hero {
+  background: linear-gradient(120deg, #ff385c, #ff6b81);
+  color: var(--white);
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.resources-hero h1 {
+  font-size: 42px;
+  margin-bottom: 12px;
+}
+
+.resources-hero p {
+  font-size: 18px;
+}
+
+/* MAIN */
+.container {
+  max-width: 1100px;
+  margin: 60px auto;
+  padding: 0 20px;
+}
+
+.resources-intro {
+  margin-bottom: 50px;
+  text-align: center;
+}
+
+.resources-intro h2 {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.resources-intro p {
+  color: var(--text-light);
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.resources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  margin-bottom: 60px;
+}
+
+.resource-card {
+  background: var(--white);
+  border-radius: 18px;
+  padding: 28px;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+
+.resource-card h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.resource-card p {
+  font-size: 14px;
+  color: var(--text-light);
+  margin-bottom: 12px;
+}
+
+.btn-link {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+}
+
+/* CTA */
+.cta {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 50px 30px;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+.cta p {
+  margin: 10px 0 24px;
+  color: var(--text-light);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--white);
+  padding: 14px 28px;
+  border-radius: 14px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+footer {
+  margin-top: 80px;
+  padding: 24px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-light);
+}

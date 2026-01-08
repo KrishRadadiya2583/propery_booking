@@ -1,0 +1,71 @@
+<!-- ================= REPORT A CONCERN PAGE (EJS TEMPLATE) ================= -->
+<% layout("/layouts/boilerplate") %>
+
+<link rel="stylesheet" href="/css/report.css" />
+
+<header class="report-header">
+  <h1>Report a Concern</h1>
+  <p>Your safety matters. Let us know if something doesn’t feel right.</p>
+</header>
+
+<main class="container">
+
+  <section class="intro">
+    <h2>We’re here to help</h2>
+    <p>
+      If you experience unsafe behavior, policy violations, or suspicious activity on Wonderlust,
+      please report it using the form below. Our team reviews every report seriously and confidentially.
+    </p>
+  </section>
+
+  <section class="form-card">
+    <form action="#" method="POST">
+
+      <div class="form-group">
+        <label for="issueType">Type of concern</label>
+        <select id="issueType" name="issueType" required>
+          <option value="">Select an option</option>
+          <option value="safety">Safety issue</option>
+          <option value="harassment">Harassment or abuse</option>
+          <option value="fraud">Fraud or scam</option>
+          <option value="property">Property issue</option>
+          <option value="policy">Policy violation</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="bookingId">Booking ID (optional)</label>
+        <input type="text" id="bookingId" name="bookingId" placeholder="Enter booking ID" />
+      </div>
+
+      <div class="form-group">
+        <label for="description">Describe the issue</label>
+        <textarea id="description" name="description" rows="5" placeholder="Please provide as much detail as possible" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="contact">Preferred contact email</label>
+        <input type="email" id="contact" name="contact" placeholder="you@example.com" required />
+      </div>
+
+      <button type="submit" class="btn-primary">Submit report</button>
+    </form>
+  </section>
+
+  <section class="note">
+    <h3>Emergency situations</h3>
+    <p>
+      If you are in immediate danger, contact local emergency services first.
+      Afterward, inform Wonderlust Support so we can assist you further.
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  © 2026 Wonderlust. All rights reserved.
+</footer>
+
+
+

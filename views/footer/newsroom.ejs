@@ -1,0 +1,56 @@
+<!-- ================= NEWSROOM PAGE (EJS TEMPLATE) ================= -->
+<% layout("/layouts/boilerplate") %>
+
+<link rel="stylesheet" href="/css/newsroom.css" />
+
+<header class="newsroom-hero">
+  <div class="hero-content">
+    <h1>Wonderlust Newsroom</h1>
+    <p>Latest news, announcements, and media resources from Wonderlust.</p>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="intro">
+    <h2>Stay updated</h2>
+    <p>
+      Discover company announcements, press releases, and updates to stay informed about Wonderlust.
+    </p>
+  </section>
+
+  <section class="news-grid">
+    <!-- Example news articles; dynamically populate from DB -->
+    <div class="news-card">
+      <h3>Wonderlust launches new host protection program</h3>
+      <p class="meta">Jan 5, 2026 • Press Release</p>
+      <a href="/news/1" class="btn-link">Read More</a>
+    </div>
+
+    <div class="news-card">
+      <h3>Wonderlust reaches 1 million listings worldwide</h3>
+      <p class="meta">Dec 20, 2025 • Announcement</p>
+      <a href="/news/2" class="btn-link">Read More</a>
+    </div>
+
+    <div class="news-card">
+      <h3>Introducing new sustainable travel initiatives</h3>
+      <p class="meta">Nov 10, 2025 • Media Coverage</p>
+      <a href="/news/3" class="btn-link">Read More</a>
+    </div>
+  </section>
+
+  <section class="cta">
+    <h2>Media Contact</h2>
+    <p>For press inquiries or media resources, contact our PR team.</p>
+    <a href="mailto:press@wonderlust.com" class="btn-primary">Contact PR</a>
+  </section>
+
+</main>
+
+<footer>
+  © 2026 Wonderlust. All rights reserved.
+</footer>
+
+
+<!-- ================= EXTERNAL CSS (newsroom.css) ================= -->

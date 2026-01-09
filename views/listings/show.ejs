@@ -1,50 +1,105 @@
 <% layout("/layouts/boilerplate") %>
 
-<section id="show-page">
-  <div class="container show-container">
+  <section id="show-page">
+    <div class="container show-container">
 
-    <!-- IMAGE SLIDER -->
-    <div class="show-slider">
-      <% listing.image.forEach((img, index) => { %>
-        <img src="<%= img %>" class="<%= index === 0 ? 'active' : '' %>">
-      <% }) %>
+      <!-- IMAGE SLIDER -->
+      <div class="show-slider">
+        <% listing.image.forEach((img, index)=> { %>
+          <img src="<%= img %>" class="<%= index === 0 ? 'active' : '' %>">
+          <% }) %>
+      </div>
+
+      <!-- CONTENT -->
+      <div class="show-content">
+        <h1 class="show-title">
+          <%= listing.title %>
+        </h1>
+        <p class="show-description">
+          <%= listing.description %>
+        </p>
+        <p class="show-price">₹ <%= listing.price.toLocaleString("en-IN") %> <span>/night</span></p>
+        <p class="show-location">📍 <%= listing.location %>
+        </p>
+        <p class="show-country">🌍 <%= listing.country %>
+        </p>
+
+        <a href="/listings/<%= listing._id %>/booking" class="btn-book">Book Now</a>
+
+
+        <% if (currentUser && currentUser.name==="mils" ) { %>
+          <div class="show-actions">
+            <a class="btn-edit" href="/listings/<%= listing._id %>/edit">Edit</a>
+            <a class="btn-delete" href="/listings/<%= listing._id %>/delete">Delete</a>
+          </div>
+          <% } %>
+
+            <br>
+            <a class="btn-back" href="/listings">Back</a>
+      </div>
+
+
+
+    
+      <div class="show-reviews" style="grid-column: 1 / -1; padding: 32px; border-top: 1px solid #eee;">
+        <% if(currentUser) { %>
+          <h4>Leave a Review</h4>
+          <form action="/listings/<%= listing.id %>/reviews" method="POST" novalidate class="needs-validation">
+            
+            <div class="mb-3 mt-3">
+              <label for="name" class="form-label">Name</label>
+              <input type="text" value="<%= currentUser.name %>" id="name" name="review[name]" class="form-control" required>
+              <label for="comment" class="form-label">Comments</label>
+              <textarea name="review[comment]" id="comment" cols="30" rows="5" class="form-control" required></textarea>
+            </div>
+            <button class="btn btn-outline-dark">Submit</button>
+          </form>
+          <hr>
+          <% } %>
+
+            <% if(listing.reviews.length> 0) { %>
+              <p><b>All Reviews</b></p>
+              <div class="row">
+                <% for(review of listing.reviews) { %>
+                  <div class="card col-5 ms-3 mb-3">
+                    <div class="card-body">
+                      <h5 class="card-title">@<%= review.name %>
+                      </h5>
+                      <p class="text-muted small mb-2">
+                        <%= new Date(review.createdAt).toLocaleDateString("en-US", { year: 'numeric' , month: 'long' ,
+                          day: 'numeric' }) %>
+                      </p>
+                      <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
+                      <p class="card-text">
+                        <%= review.comment %>
+                      </p>
+                      <% if(currentUser.name == "mils") {
+                        %>
+                        <form class="mb-3" method="GET"
+                          action="/listings/<%= listing._id %>/reviews/<%= review._id %>/delete">
+                          <button class="btn btn-sm btn-dark">Delete</button>
+                        </form>
+                        <% } %>
+                    </div>
+                  </div>
+                  <% } %>
+              </div>
+              <% } %>
+      </div>
+
     </div>
+  </section>
 
-    <!-- CONTENT -->
-    <div class="show-content">
-      <h1 class="show-title"><%= listing.title %></h1>
-      <p class="show-description"><%= listing.description %></p>
-      <p class="show-price">₹ <%= listing.price.toLocaleString("en-IN") %> <span>/night</span></p>
-      <p class="show-location">📍 <%= listing.location %></p>
-      <p class="show-country">🌍 <%= listing.country %></p>
+  <script>
+    // AUTO SLIDER
+    const slides = document.querySelectorAll('.show-slider img');
+    let current = 0;
 
-      <a href="/listings/<%= listing._id %>/booking" class="btn-book">Book Now</a>
+    function nextSlide() {
+      slides[current].classList.remove('active');
+      current = (current + 1) % slides.length;
+      slides[current].classList.add('active');
+    }
 
-
-      <% if (currentUser && currentUser.name === "mils") { %>
-        <div class="show-actions">
-          <a class="btn-edit" href="/listings/<%= listing._id %>/edit">Edit</a>
-          <a class="btn-delete" href="/listings/<%= listing._id %>/delete">Delete</a>
-        </div>
-      <% } %>
-
-      <br>
-      <a class="btn-back" href="/listings">Back</a>
-    </div>
-
-  </div>
-</section>
-
-<script>
-  // AUTO SLIDER
-  const slides = document.querySelectorAll('.show-slider img');
-  let current = 0;
-
-  function nextSlide() {
-    slides[current].classList.remove('active');
-    current = (current + 1) % slides.length;
-    slides[current].classList.add('active');
-  }
-
-  setInterval(nextSlide, 3000); // Change image every 3 seconds
-</script>
+    setInterval(nextSlide, 3000); // Change image every 3 seconds
+  </script>

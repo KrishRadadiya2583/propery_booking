@@ -4,17 +4,22 @@
   <div class="container form-container">
     <form class="listing-form" action="/listings" method="POST">
       <h2 class="form-title">Add New Listing</h2>
-
+<label for="listing[useremail]">useremail</label>
 <input class="form-input" type="email" name="listing[useremail]" placeholder="Contact Email" required>
+<label for="listing[title]">title</label>
       <input class="form-input" name="listing[title]" placeholder="Title" required>
+<label for="listing[description]">description</label>
       <input class="form-input" name="listing[description]" placeholder="Description" required>
+<label for="listing[price]">price</label>
       <input class="form-input" type="number" name="listing[price]" placeholder="Price" required>
+<label for="listing[location]">location</label>
       <input class="form-input" name="listing[location]" placeholder="Location" required>
+<label for="listing[country]">country</label>
       <input class="form-input" name="listing[country]" placeholder="Country" required>
 
       <!-- Image URLs -->
-      <div id="image-fields">
-        <label>Image URLs:</label>
+<label for="listing[image][]">image</label>
+        <div id="image-fields">
         <input class="form-input" name="listing[image][]" placeholder="Image URL" required>
       </div>
 

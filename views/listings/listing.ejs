@@ -1,38 +1,43 @@
 <% layout("/layouts/boilerplate") %>
-
     <section id="listing-page">
-        <div class="container listing-grid">
+       
+
+        <div class="listing-grid">
 
             <% for(let listing of listings){ %>
                 <div class="listing-card">
 
-                    <a class="listing-image-link" href="/listings/<%= listing._id %>">
-                        <img class="listing-image" src="<%= listing.image[0] %>" alt="<%= listing.title %>">
-                    </a>
+                    <div class="image-wrapper">
+                        <span class="like-btn" onclick="toggleLike(this)">♡</span>
+
+                        <a href="/listings/<%= listing._id %>">
+                            <img class="listing-image" src="<%= listing.image[0] %>" alt="<%= listing.title %>"
+                                 loading="lazy">
+                        </a>
+                    </div>
 
                     <div class="listing-info">
-                        <h3 class="listing-title">
-                            <%= listing.title %><span class="like-btn">♡</span>
-                        </h3>
-                        <p class="listing-price">₹ <%= listing.price ? Number(listing.price).toLocaleString("en-IN") : "N/A" %> <span>/night</span>
-
-                        </p>
-
-                        <a class="listing-btn" href="/listings/<%= listing._id %>">
-                            View Details
+                        <a href="/listings/<%= listing._id %>" class="listing-link">
+                            <h3 class="listing-title">
+                                <%= listing.title %>
+                            </h3>
                         </a>
+                        <p class="listing-location"><%= listing.location %>, <%= listing.country %></p>
+                        <p class="listing-price">
+                            <b>₹<%= listing.price ? Number(listing.price).toLocaleString("en-IN") : "N/A" %></b>
+                            <span>night</span>
+                        </p>
                     </div>
 
                 </div>
                 <% } %>
 
         </div>
-        <script>
-  document.querySelectorAll(".like-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      btn.classList.toggle("liked");
-      btn.innerText = btn.classList.contains("liked") ? "❤️" : "♡";
-    });
-  });
-</script>
     </section>
+
+    <script>
+        function toggleLike(btn) {
+            btn.classList.toggle("liked");
+            btn.innerText = btn.classList.contains("liked") ? "♥" : "♡";
+        }
+    </script>

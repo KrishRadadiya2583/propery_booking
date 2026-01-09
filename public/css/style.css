@@ -46,68 +46,147 @@ body {
 }
 
 /* =====================================================
-   LISTING GRID
+   LISTING page
 ===================================================== */
-.listing-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 28px;
-  padding: 0 10px;
+
+/* Container Padding */
+#listing-page {
+  padding: 10px 40px 30px 40px;
 }
 
-/* =====================================================
-   LISTING CARD
-===================================================== */
+/* ===============================
+   FILTERS BAR
+=============================== */
+/* ===============================
+   Listing Card
+=============================== */
 .listing-card {
-  background: #fff;
-  border-radius: 22px;
-  overflow: hidden;
-  border: 1px solid var(--airbnb-border);
-  transition: all 0.25s ease;
+  background-color: transparent;
+  border: none;
+  position: relative;
+  display: flex;
+  flex-direction: column;
   cursor: pointer;
 }
 
-.listing-card:hover {
-  transform: translateY(-4px) scale(1.01);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+.listing-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+/* Image Container with Rounded Corners */
+.image-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 0.95;
+  /* Airbnb approx ratio (Sqaurish) */
+  overflow: hidden;
+  border-radius: 12px;
+  /* Slightly tighter radius */
+  background-color: #efefef;
+  margin-bottom: 12px;
 }
 
 .listing-image {
   width: 100%;
-  height: 220px;
+  height: 100%;
   object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
+/* Hover Zoom Effect: Only Zoom Image */
+.image-wrapper:hover .listing-image {
+  transform: scale(1.1);
+}
+
+/* Remove card lift on hover - Airbnb only zooms image */
+.listing-card:hover {
+  transform: none;
+}
+
+/* Floating Like Button */
+.like-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 24px;
+  color: rgba(0, 0, 0, 0.5);
+  -webkit-text-stroke: 0.5px white;
+  z-index: 10;
+  transition: transform 0.2s;
+}
+
+.like-btn:hover {
+  transform: scale(1.15);
+}
+
+/* ===============================
+   Grid System (Responsive)
+=============================== */
+.listing-grid {
+  display: grid;
+  gap: 40px 24px;
+  /* Row Gap: 40px, Col Gap: 24px */
+
+  /* Mobile First: 1 Column */
+  grid-template-columns: repeat(1, 1fr);
+}
+
+/* Responsive Breakpoints mimicking Airbnb */
+@media (min-width: 550px) {
+  .listing-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 950px) {
+  .listing-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1128px) {
+  .listing-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 1640px) {
+  .listing-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+@media (min-width: 1880px) {
+  .listing-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+/* Text Content - Tighter Spacing */
 .listing-info {
-  padding: 14px 16px 18px;
+  margin-top: 0;
 }
 
-.listing-info h4 {
-  font-size: 1rem;
-  font-weight: 500;
-  margin-bottom: 6px;
+.listing-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 2px;
+  line-height: 1.3;
 }
 
-.listing-info p {
-  font-size: 0.9rem;
-  color: var(--airbnb-gray);
+.listing-location {
+  font-size: 15px;
+  color: #717171;
+  margin-bottom: 4px;
 }
 
 .listing-price {
-  font-weight: 600;
-  margin-top: 8px;
-  color: var(--airbnb-dark);
-}
-
-/* Button */
-.listing-btn {
-  display: inline-block;
-  margin-top: 12px;
-  padding: 8px 16px;
-  background: var(--airbnb-red);
-  color: #fff;
-  font-size: 0.85rem;
-  border-radius: 999px;
+  font-size: 15px;
+  color: #222;
+  margin-top: 4px;
 }
 
 /* =====================================================
@@ -355,7 +434,8 @@ body {
    AIRBNB-STYLE FOOTER
 ================================= */
 .airbnb-footer {
-  background: #ffffff; /* cleaner white background */
+  background: #ffffff;
+  /* cleaner white background */
   border-top: 1px solid #e5e7eb;
   font-family: "Poppins", "Segoe UI", sans-serif;
   color: #111;
@@ -397,7 +477,8 @@ body {
 }
 
 .footer-col ul li a:hover {
-  color: #ff385c; /* Airbnb pink accent */
+  color: #ff385c;
+  /* Airbnb pink accent */
   text-decoration: underline;
 }
 
@@ -484,6 +565,7 @@ body {
     grid-template-columns: 1fr 1fr;
     gap: 30px;
   }
+
   .footer-bottom {
     flex-direction: column;
     gap: 10px;
@@ -513,11 +595,11 @@ body {
 }
 
 .hero-overlay {
-  background: rgba(0,0,0,0.45);
+  background: rgba(0, 0, 0, 0.45);
   padding: 80px 30px;
   border-radius: 16px;
   max-width: 800px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
 .hero-overlay h1 {
@@ -575,17 +657,18 @@ body {
   border-radius: 16px;
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
 }
 
 .feature-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
 }
 
 .feature-card i {
   font-size: 40px;
-  color: #FF5A5F; /* Airbnb accent color */
+  color: #FF5A5F;
+  /* Airbnb accent color */
   margin-bottom: 16px;
 }
 
@@ -626,13 +709,13 @@ body {
   background: #fff;
   padding: 30px 20px;
   border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .team-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
 }
 
 .team-card img {
@@ -642,7 +725,7 @@ body {
   margin-bottom: 16px;
   object-fit: cover;
   border: 4px solid #fff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .team-card h4 {
@@ -685,7 +768,7 @@ body {
   border-radius: 16px;
   font-style: italic;
   color: #555;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
 }
 
 .testimonial-card h4 {
@@ -703,7 +786,7 @@ body {
   text-align: center;
   border-radius: 16px;
   margin: 60px 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 .about-cta h2 {
@@ -727,7 +810,7 @@ body {
   font-weight: 600;
   text-decoration: none;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .btn-primary:hover {
@@ -737,12 +820,31 @@ body {
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
-  .hero-overlay h1 { font-size: 32px; }
-  .hero-overlay p { font-size: 18px; }
-  .about-story h2 { font-size: 28px; }
-  .about-cta h2 { font-size: 28px; }
-  .about-cta p { font-size: 18px; }
-  .feature-card, .team-card, .testimonial-card { padding: 30px 20px; }
+  .hero-overlay h1 {
+    font-size: 32px;
+  }
+
+  .hero-overlay p {
+    font-size: 18px;
+  }
+
+  .about-story h2 {
+    font-size: 28px;
+  }
+
+  .about-cta h2 {
+    font-size: 28px;
+  }
+
+  .about-cta p {
+    font-size: 18px;
+  }
+
+  .feature-card,
+  .team-card,
+  .testimonial-card {
+    padding: 30px 20px;
+  }
 }
 
 /* ===============================
@@ -802,13 +904,13 @@ body {
   padding: 30px 20px;
   border-radius: 16px;
   text-align: center;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .info-cards .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 .info-cards .card i {
@@ -830,7 +932,7 @@ body {
   background: #fff;
   padding: 60px 20px;
   border-radius: 16px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
   max-width: 800px;
   margin: 0 auto 60px;
 }
@@ -894,7 +996,7 @@ body {
 
 .contact-map iframe {
   border-radius: 16px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
   width: 100%;
   height: 350px;
   border: none;
@@ -944,6 +1046,7 @@ body {
   scroll-snap-align: center;
   border-radius: 14px;
 }
+
 .error-msg {
   background: #fee2e2;
   color: #991b1b;
@@ -962,7 +1065,7 @@ body {
 }
 
 .like-btn {
- float: right;
+  float: right;
   font-size: 22px;
   cursor: pointer;
   color: #999;
@@ -970,7 +1073,7 @@ body {
 }
 
 .like-btn.liked {
-  color: #ff385c; 
+  color: #ff385c;
 }
 
 .like-btn:hover {
@@ -981,7 +1084,7 @@ body {
 .user-profile .dropdown-menu {
   min-width: 220px;
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 .user-profile i {
@@ -995,7 +1098,8 @@ body {
   display: inline-block;
   margin-top: 10px;
   padding: 8px 16px;
-  background-color: #FF5A5F; /* Airbnb red/pink */
+  background-color: #FF5A5F;
+  /* Airbnb red/pink */
   color: white;
   border: none;
   border-radius: 6px;
@@ -1006,7 +1110,8 @@ body {
 }
 
 .add-btn:hover {
-  background-color: #e04850; /* slightly darker on hover */
+  background-color: #e04850;
+  /* slightly darker on hover */
 }
 
 .add-btn:focus {
@@ -1037,107 +1142,107 @@ body {
 
 
 /* booking page */
-  /* ===== BOOKING PAGE ===== */
+/* ===== BOOKING PAGE ===== */
 
-  .booking-page {
-    padding: 60px 20px;
-    background-color: #f7f7f7;
-    min-height: 100vh;
-  }
+.booking-page {
+  padding: 60px 20px;
+  background-color: #f7f7f7;
+  min-height: 100vh;
+}
 
+.booking-container {
+  max-width: 520px;
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Title */
+.booking-title {
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #222222;
+}
+
+/* Price (Airbnb style) */
+.booking-price {
+  margin-bottom: 28px;
+  color: #222222;
+}
+
+.price-amount {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.price-unit {
+  font-size: 16px;
+  font-weight: 400;
+  color: #717171;
+}
+
+/* Form */
+.booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.booking-form label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #222222;
+}
+
+.booking-form input {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #dddddd;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.booking-form input:focus {
+  border-color: #222222;
+  box-shadow: 0 0 0 1px #222222;
+}
+
+/* Button */
+.btn-confirm {
+  margin-top: 12px;
+  padding: 14px;
+  background: linear-gradient(90deg, #ff385c, #e61e4d);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-confirm:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(230, 30, 77, 0.35);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
   .booking-container {
-    max-width: 520px;
-    margin: 0 auto;
-    background: #ffffff;
-    padding: 32px;
-    border-radius: 16px;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    padding: 24px;
   }
 
-  /* Title */
   .booking-title {
-    font-size: 26px;
-    font-weight: 600;
-    margin-bottom: 6px;
-    color: #222222;
-  }
-
-  /* Price (Airbnb style) */
-  .booking-price {
-    margin-bottom: 28px;
-    color: #222222;
-  }
-
-  .price-amount {
     font-size: 22px;
-    font-weight: 600;
   }
+}
 
-  .price-unit {
-    font-size: 16px;
-    font-weight: 400;
-    color: #717171;
-  }
-
-  /* Form */
-  .booking-form {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
-
-  .booking-form label {
-    font-size: 14px;
-    font-weight: 500;
-    color: #222222;
-  }
-
-  .booking-form input {
-    padding: 12px 14px;
-    border-radius: 10px;
-    border: 1px solid #dddddd;
-    font-size: 15px;
-    outline: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  }
-
-  .booking-form input:focus {
-    border-color: #222222;
-    box-shadow: 0 0 0 1px #222222;
-  }
-
-  /* Button */
-  .btn-confirm {
-    margin-top: 12px;
-    padding: 14px;
-    background: linear-gradient(90deg, #ff385c, #e61e4d);
-    color: #ffffff;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-  }
-
-  .btn-confirm:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 20px rgba(230, 30, 77, 0.35);
-  }
-
-  /* Responsive */
-  @media (max-width: 480px) {
-    .booking-container {
-      padding: 24px;
-    }
-
-    .booking-title {
-      font-size: 22px;
-    }
-  }
-
-  /* booking page total price*/
-  .booking-total {
+/* booking page total price*/
+.booking-total {
   margin-top: 20px;
   padding: 16px 18px;
   background: #ffffff;

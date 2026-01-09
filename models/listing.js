@@ -13,12 +13,17 @@ const listingSchema = new mongoose.Schema({
     },
     location: String,
     country: String,
-    
+
     useremail: {
         type: String,
         default: "milspatel21@gmail.com"
-    }
-
+    },
+    reviews: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Review",
+        },
+    ],
 });
 
 const Listing = mongoose.model("Listing", listingSchema);

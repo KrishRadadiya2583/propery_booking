@@ -1,5 +1,5 @@
 if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
+    require("dotenv").config();
 }
 const express = require("express");
 const app = express();
@@ -14,6 +14,7 @@ const aboutRouter = require("./routes/about");
 const contactRouter = require("./routes/contact");
 const profileRouter = require("./routes/profile");
 const footerRouter = require("./routes/footer");
+const reviewsRouter = require("./routes/reviews");
 const flash = require("connect-flash");
 
 
@@ -27,7 +28,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     cookie: {
         maxAge: 1000 * 86400
     }
@@ -36,9 +37,9 @@ app.use(session({
 app.use(flash());
 
 app.use((req, res, next) => {
-  res.locals.success = req.flash("success");
-  res.locals.error = req.flash("error");
-  next();
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    next();
 });
 
 
@@ -60,6 +61,7 @@ main().then(() => {
 })
 
 app.use("/listings", listingsRouter);
+app.use("/listings/:id/reviews", reviewsRouter);
 
 app.use("/", authRouter);
 app.use("/about", aboutRouter);

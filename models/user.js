@@ -4,9 +4,7 @@ const validator = require("validator");
 const userSchema = new mongoose.Schema({
   name: { type: String, 
     required: true,
-    trim: true, 
-    minlength: [3, "Name must be at least 3 characters"],
-    maxlength: [50, "Name cannot exceed 50 characters"],
+      trim: true, 
     match: [/^[A-Za-z\s]+$/, "Name can contain only letters"]
   },
   email: { type: String, 
@@ -23,6 +21,7 @@ const userSchema = new mongoose.Schema({
 
   password: { type: String,
     required: true,
+    trim: true,
   }
 });
 

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
-
+const bcrypt = require("bcrypt");
 
 
 router.get("/", (req, res) => {
@@ -21,7 +21,9 @@ router.post("/register", async (req, res) => {
       });
     }
 
-    const user = new User({ name, email, password });
+    const hashedpassword  = await bcrypt.hash(password,10)
+
+    const user = new User({ name:name, email:email,password: hashedpassword }); 
     await user.save();
 
     req.session.user = {
@@ -53,7 +55,8 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    if (password !== user.password) {
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
       return res.render("auth", {
         error: "Invalid email or password"
       });

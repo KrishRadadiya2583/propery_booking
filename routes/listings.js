@@ -3,6 +3,7 @@ var router = express.Router();
 const Listing = require('../models/listing');
 const Booking = require('../models/booking');
 const { isLoggedIn } = require('../middlewares/loginmiddleware');
+const { isuser } = require('../middlewares/authenticate');
 // const app = express();
 // app.set('view engine', 'ejs');
 
@@ -72,7 +73,7 @@ router.post("/", isLoggedIn, async (req, res) => {
 
 
 // edit listing route
-router.get('/:id/edit', isLoggedIn, async (req, res) => {
+router.get('/:id/edit', isLoggedIn,isuser, async (req, res) => {
   try {
     let { id } = req.params;
     const listing = await Listing.findById(id);
@@ -134,17 +135,15 @@ router.post('/:id/edit', isLoggedIn, async (req, res) => {
 
 
 // delete listing route
-router.get('/:id/delete', isLoggedIn, async (req, res) => {
+router.get('/:id/delete', isLoggedIn, isuser,async (req, res) => {
   try {
     const { id } = req.params;
-    Listing.findByIdAndDelete(id)
-      .then(() => {
-        console.log("Listing deleted successfully");
-
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+   
+     Listing.findByIdAndDelete(id).then(() => {
+      console.log("Listing deleted successfully");
+    }).catch((err) => {
+     console.log("Something went wrong");
+    })
     req.flash("success", "Listing Deleted successfully");
     res.redirect("/listings");
   }
@@ -172,8 +171,6 @@ router.get("/:id/booking", isLoggedIn, async (req, res) => {
 
 router.post("/:id/booking", isLoggedIn, async (req, res) => {
   try {
-    console.log(req.body);
-
 
     const listing = await Listing.findById(req.params.id);
     const listingtitle = listing.title;

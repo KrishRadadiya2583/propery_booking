@@ -27,7 +27,7 @@
         <a href="/listings/<%= listing._id %>/booking" class="btn-book">Book Now</a>
 
 
-        <% if (currentUser && currentUser.name==="mils" ) { %>
+        <% if (currentUser.email === listing.useremail ) { %>
           <div class="show-actions">
             <a class="btn-edit" href="/listings/<%= listing._id %>/edit">Edit</a>
             <a class="btn-delete" href="/listings/<%= listing._id %>/delete">Delete</a>

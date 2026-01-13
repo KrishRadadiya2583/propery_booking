@@ -27,7 +27,7 @@
         <a href="/listings/<%= listing._id %>/booking" class="btn-book">Book Now</a>
 
 
-        <% if (currentUser.email === listing.useremail ) { %>
+        <% if (currentUser.email===listing.useremail ) { %>
           <div class="show-actions">
             <a class="btn-edit" href="/listings/<%= listing._id %>/edit">Edit</a>
             <a class="btn-delete" href="/listings/<%= listing._id %>/delete">Delete</a>
@@ -40,15 +40,21 @@
 
 
 
-    
-      <div class="show-reviews" style="grid-column: 1 / -1; padding: 32px; border-top: 1px solid #eee;">
+
+      <div class="show-reviews-section">
         <% if(currentUser) { %>
           <h4>Leave a Review</h4>
           <form action="/listings/<%= listing.id %>/reviews" method="POST" novalidate class="needs-validation">
-            
+
             <div class="mb-3 mt-3">
               <label for="name" class="form-label">Name</label>
-              <input type="text" value="<%= currentUser.name %>" id="name" name="review[name]" class="form-control" required>
+              <input type="text" value="<%= currentUser.name %>" id="name" name="review[name]" class="form-control"
+                required>
+
+              <label for="rating" class="form-label">Rating</label>
+              <input type="range" id="rating" name="review[rating]" class="form-control" required min="1" max="5">
+
+
               <label for="comment" class="form-label">Comments</label>
               <textarea name="review[comment]" id="comment" cols="30" rows="5" class="form-control" required></textarea>
             </div>
@@ -61,20 +67,27 @@
               <p><b>All Reviews</b></p>
               <div class="row">
                 <% for(review of listing.reviews) { %>
-                  <div class="card col-5 ms-3 mb-3">
+                  <div class="card col-12 col-md-5 ms-md-3 mb-3">
                     <div class="card-body">
                       <h5 class="card-title">@<%= review.name %>
                       </h5>
+                      <div class="star-rating" data-rating="<%= review.rating %>">
+                        <span data-value="1">★</span>
+                        <span data-value="2">★</span>
+                        <span data-value="3">★</span>
+                        <span data-value="4">★</span>
+                        <span data-value="5">★</span>
+                      </div>
+
                       <p class="text-muted small mb-2">
                         <%= new Date(review.createdAt).toLocaleDateString("en-US", { year: 'numeric' , month: 'long' ,
                           day: 'numeric' }) %>
                       </p>
-                      <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
+
                       <p class="card-text">
                         <%= review.comment %>
                       </p>
-                      <% if(currentUser.name == "mils") {
-                        %>
+                      <% if(currentUser.name==review.name) { %>
                         <form class="mb-3" method="GET"
                           action="/listings/<%= listing._id %>/reviews/<%= review._id %>/delete">
                           <button class="btn btn-sm btn-dark">Delete</button>
@@ -102,4 +115,14 @@
     }
 
     setInterval(nextSlide, 3000); // Change image every 3 seconds
+
+    document.querySelectorAll('.star-rating').forEach(rating => {
+      const value = Number(rating.dataset.rating) || 0
+
+      rating.querySelectorAll('span').forEach(star => {
+        if (star.dataset.value <= value) {
+          star.classList.add('active')
+        }
+      })
+    })
   </script>

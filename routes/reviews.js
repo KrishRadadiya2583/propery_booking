@@ -3,7 +3,6 @@ const router = express.Router({ mergeParams: true });
 const Listing = require("../models/listing");
 const Review = require("../models/review");
 const { isLoggedIn } = require("../middlewares/loginmiddleware");
-
 // Post Review Route
 router.post("/", isLoggedIn, async (req, res) => {
     try {
@@ -22,7 +21,7 @@ router.post("/", isLoggedIn, async (req, res) => {
     }
 });
 
-// Delete Review Route
+//Route for  Delete Review 
 router.get("/:reviewId/delete", isLoggedIn, async (req, res) => {
     try {
         const { id, reviewId } = req.params;

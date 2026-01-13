@@ -4,6 +4,7 @@ const Listing = require('../models/listing');
 const Booking = require('../models/booking');
 const { isLoggedIn } = require('../middlewares/loginmiddleware');
 const { isuser } = require('../middlewares/authenticate');
+const upload = require('../middlewares/multer');
 // const app = express();
 // app.set('view engine', 'ejs');
 
@@ -53,12 +54,15 @@ router.get('/:id', isLoggedIn, async (req, res) => {
 //   res.redirect("/listings");
 // })
 
-router.post("/", isLoggedIn, async (req, res) => {
+router.post("/", isLoggedIn, upload.array("listing[image]"), async (req, res) => {
   try {
     const listing = req.body.listing;
 
-    // Optional: Remove empty URLs
-    listing.image = listing.image.filter(url => url && url.trim() !== "");
+    // Handle uploaded images
+    listing.image = [];
+    if (req.files && req.files.length > 0) {
+      listing.image = req.files.map(f => "/uploads/" + f.filename);
+    }
 
     const newListing = new Listing(listing);
     await newListing.save();
@@ -73,7 +77,7 @@ router.post("/", isLoggedIn, async (req, res) => {
 
 
 // edit listing route
-router.get('/:id/edit', isLoggedIn,isuser, async (req, res) => {
+router.get('/:id/edit', isLoggedIn, isuser, async (req, res) => {
   try {
     let { id } = req.params;
     const listing = await Listing.findById(id);
@@ -101,16 +105,10 @@ router.get('/:id/edit', isLoggedIn,isuser, async (req, res) => {
 //   res.redirect(`/listings/${id}`);
 // })
 
-router.post('/:id/edit', isLoggedIn, async (req, res) => {
+router.post('/:id/edit', isLoggedIn, upload.array("listing[image]"), async (req, res) => {
   try {
     const { id } = req.params;
     const listingData = req.body.listing;
-
-    // Ensure image is an array and remove empty values
-    if (!Array.isArray(listingData.image)) {
-      listingData.image = listingData.image ? [listingData.image] : [];
-    }
-    listingData.image = listingData.image.filter(url => url && url.trim() !== "");
 
     try {
       await Listing.findByIdAndUpdate(
@@ -118,6 +116,21 @@ router.post('/:id/edit', isLoggedIn, async (req, res) => {
         listingData,
         { new: true, runValidators: true }
       );
+
+      if (req.files && req.files.length > 0) {
+        const newImages = req.files.map(f => "/uploads/" + f.filename);
+        await Listing.findByIdAndUpdate(id, { $push: { image: { $each: newImages } } });
+      }
+
+      if (req.body.deleteImages) {
+        // Ensure deleteImages is an array (it might be a single string if only 1 checkbox is checked)
+        let imagesToDelete = req.body.deleteImages;
+        if (!Array.isArray(imagesToDelete)) {
+          imagesToDelete = [imagesToDelete];
+        }
+        await Listing.findByIdAndUpdate(id, { $pull: { image: { $in: imagesToDelete } } });
+      }
+
       console.log("Listing updated successfully");
       req.flash("success", "Listing Updated successfully");
       res.redirect(`/listings/${id}`);
@@ -135,14 +148,14 @@ router.post('/:id/edit', isLoggedIn, async (req, res) => {
 
 
 // delete listing route
-router.get('/:id/delete', isLoggedIn, isuser,async (req, res) => {
+router.get('/:id/delete', isLoggedIn, isuser, async (req, res) => {
   try {
     const { id } = req.params;
-   
-     Listing.findByIdAndDelete(id).then(() => {
+
+    Listing.findByIdAndDelete(id).then(() => {
       console.log("Listing deleted successfully");
     }).catch((err) => {
-     console.log("Something went wrong");
+      console.log("Something went wrong");
     })
     req.flash("success", "Listing Deleted successfully");
     res.redirect("/listings");

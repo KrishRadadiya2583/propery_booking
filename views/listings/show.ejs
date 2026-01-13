@@ -8,6 +8,8 @@
         <% listing.image.forEach((img, index)=> { %>
           <img src="<%= img %>" class="<%= index === 0 ? 'active' : '' %>">
           <% }) %>
+            <!-- <button class="slider-btn prev-btn" onclick="changeSlide(-1)">&#10094;</button>
+            <button class="slider-btn next-btn" onclick="changeSlide(1)">&#10095;</button> -->
       </div>
 
       <!-- CONTENT -->
@@ -27,7 +29,7 @@
         <a href="/listings/<%= listing._id %>/booking" class="btn-book">Book Now</a>
 
 
-        <% if (currentUser.email===listing.useremail ) { %>
+        <% if (currentUser && currentUser.email===listing.useremail ) { %>
           <div class="show-actions">
             <a class="btn-edit" href="/listings/<%= listing._id %>/edit">Edit</a>
             <a class="btn-delete" href="/listings/<%= listing._id %>/delete">Delete</a>
@@ -87,7 +89,7 @@
                       <p class="card-text">
                         <%= review.comment %>
                       </p>
-                      <% if(currentUser.name==review.name) { %>
+                      <% if(currentUser && currentUser.name==review.name) { %>
                         <form class="mb-3" method="GET"
                           action="/listings/<%= listing._id %>/reviews/<%= review._id %>/delete">
                           <button class="btn btn-sm btn-dark">Delete</button>
@@ -104,17 +106,32 @@
   </section>
 
   <script>
-    // AUTO SLIDER
+    // IMAGE SLIDER
     const slides = document.querySelectorAll('.show-slider img');
     let current = 0;
 
-    function nextSlide() {
+    // Show first slide initially
+    if (slides.length > 0) slides[0].classList.add('active');
+
+    function changeSlide(direction) {
+      if (slides.length === 0) return;
+
       slides[current].classList.remove('active');
-      current = (current + 1) % slides.length;
+
+      current = current + direction;
+
+      // Loop boundaries
+      if (current >= slides.length) {
+        current = 0;
+      } else if (current < 0) {
+        current = slides.length - 1;
+      }
+
       slides[current].classList.add('active');
     }
 
-    setInterval(nextSlide, 3000); // Change image every 3 seconds
+    // Auto-play slider
+    setInterval(() => changeSlide(1), 3000);
 
     document.querySelectorAll('.star-rating').forEach(rating => {
       const value = Number(rating.dataset.rating) || 0

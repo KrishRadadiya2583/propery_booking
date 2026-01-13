@@ -1,6 +1,6 @@
 <% layout("/layouts/boilerplate") %>
     <section id="listing-page">
-       
+
 
         <div class="listing-grid">
 
@@ -11,8 +11,14 @@
                         <span class="like-btn" onclick="toggleLike(this)">♡</span>
 
                         <a href="/listings/<%= listing._id %>">
-                            <img class="listing-image" src="<%= listing.image[0] %>" alt="<%= listing.title %>"
-                                 loading="lazy">
+                            <% if (listing.image && listing.image.length> 0) { %>
+                                <img class="listing-image" src="<%= listing.image[0] %>" alt="<%= listing.title %>"
+                                    loading="lazy">
+                                <% } else { %>
+                                    <img class="listing-image"
+                                        src="https://images.unsplash.com/photo-1625505826533-5c80aca7d157?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGdvYXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60"
+                                        alt="Default Image" loading="lazy">
+                                    <% } %>
                         </a>
                     </div>
 
@@ -22,7 +28,9 @@
                                 <%= listing.title %>
                             </h3>
                         </a>
-                        <p class="listing-location"><%= listing.location %>, <%= listing.country %></p>
+                        <p class="listing-location">
+                            <%= listing.location %>, <%= listing.country %>
+                        </p>
                         <p class="listing-price">
                             <b>₹<%= listing.price ? Number(listing.price).toLocaleString("en-IN") : "N/A" %></b>
                             <span>night</span>

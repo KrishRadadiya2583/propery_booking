@@ -1,45 +1,70 @@
 <% layout("/layouts/boilerplate") %>
 
-<section id="form-page">
-  <div class="container form-container">
-    <form class="listing-form" action="/listings" method="POST">
-      <h2 class="form-title">Add New Listing</h2>
-<label for="listing[useremail]">useremail</label>
-<input class="form-input" type="email" name="listing[useremail]" placeholder="Contact Email" required>
-<label for="listing[title]">title</label>
-      <input class="form-input" name="listing[title]" placeholder="Title" required>
-<label for="listing[description]">description</label>
-      <input class="form-input" name="listing[description]" placeholder="Description" required>
-<label for="listing[price]">price</label>
-      <input class="form-input" type="number" name="listing[price]" placeholder="Price" required>
-<label for="listing[location]">location</label>
-      <input class="form-input" name="listing[location]" placeholder="Location" required>
-<label for="listing[country]">country</label>
-      <input class="form-input" name="listing[country]" placeholder="Country" required>
+  <section id="form-page">
+    <div class="container form-container">
+      <form class="listing-form" action="/listings" method="POST" enctype="multipart/form-data">
+        <h2 class="form-title">Add New Listing</h2>
+        <label for="listing[useremail]">useremail</label>
+        <input class="form-input" type="email" name="listing[useremail]" placeholder="Contact Email" required>
+        <label for="listing[title]">title</label>
+        <input class="form-input" name="listing[title]" placeholder="Title" required>
+        <label for="listing[description]">description</label>
+        <input class="form-input" name="listing[description]" placeholder="Description" required>
+        <label for="listing[price]">price</label>
+        <input class="form-input" type="number" name="listing[price]" placeholder="Price" required>
+        <label for="listing[location]">location</label>
+        <input class="form-input" name="listing[location]" placeholder="Location" required>
+        <label for="listing[country]">country</label>
+        <input class="form-input" name="listing[country]" placeholder="Country" required>
 
-      <!-- Image URLs -->
-<label for="listing[image][]">image</label>
-        <div id="image-fields">
-        <input class="form-input" name="listing[image][]" placeholder="Image URL" required>
-      </div>
+        <!-- Image Upload -->
+        <label>Upload Images</label>
+        <div id="image-upload-wrapper">
+          <div class="image-input-group">
+            <input class="form-input" type="file" name="listing[image]" multiple required onchange="previewAllImages()">
+          </div>
+        </div>
 
-      <button type="button" id="add-image-btn" class="add-btn">Add Another URL</button>
-      <br><br>
-      <button class="form-btn" type="submit">Add Listing</button>
-    </form>
-  </div>
-</section>
+        <button type="button" class="btn-add-image" onclick="addImageField()">+ Add Another Image</button>
 
-<script>
-  const addBtn = document.getElementById("add-image-btn");
-  const imageFields = document.getElementById("image-fields");
+        <div id="image-preview" class="image-preview-container"></div>
+        <br><br>
+        <button class="form-btn" type="submit">Add Listing</button>
+      </form>
+    </div>
+  </section>
 
-  addBtn.addEventListener("click", () => {
-    const input = document.createElement("input");
-    input.type = "text";
-    input.name = "listing[image][]";
-    input.placeholder = "Image URL";
-    input.className = "form-input";
-    imageFields.appendChild(input);
-  });
-</script>
+  <script>
+    function addImageField() {
+      const wrapper = document.getElementById('image-upload-wrapper');
+      const div = document.createElement('div');
+      div.className = 'image-input-group';
+      div.style.marginTop = "10px";
+      div.innerHTML = `
+        <input class="form-input" type="file" name="listing[image]" multiple onchange="previewAllImages()">
+      `;
+      wrapper.appendChild(div);
+    }
+
+    function previewAllImages() {
+      const previewContainer = document.getElementById('image-preview');
+      previewContainer.innerHTML = '';
+
+      const inputs = document.querySelectorAll('input[name="listing[image]"]');
+
+      inputs.forEach(input => {
+        if (input.files) {
+          Array.from(input.files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              const img = document.createElement('img');
+              img.src = e.target.result;
+              img.classList.add('preview-img');
+              previewContainer.appendChild(img);
+            }
+            reader.readAsDataURL(file);
+          });
+        }
+      });
+    }
+  </script>

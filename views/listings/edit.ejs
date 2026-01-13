@@ -1,55 +1,89 @@
 <% layout("/layouts/boilerplate") %>
 
-<section id="form-page">
-  <div class="container form-container">
+  <section id="form-page">
+    <div class="container form-container">
 
-    <form class="listing-form" action="/listings/<%= listing._id %>/edit" method="POST">
-      <h2 class="form-title">Edit Listing</h2>
+      <form class="listing-form" action="/listings/<%= listing._id %>/edit" method="POST" enctype="multipart/form-data">
+        <h2 class="form-title">Edit Listing</h2>
 
-      <label for="listing-title">Title</label>
-      <input class="form-input" name="listing[title]" value="<%= listing.title %>" required>
+        <label for="listing-title">Title</label>
+        <input class="form-input" name="listing[title]" value="<%= listing.title %>" required>
 
-      <label for="listing-description">Description</label>
-      <input class="form-input" name="listing[description]" value="<%= listing.description %>" required>
+        <label for="listing-description">Description</label>
+        <input class="form-input" name="listing[description]" value="<%= listing.description %>" required>
 
-      <label>Images</label>
-      <div id="image-fields">
-        <% listing.image.forEach((img) => { %>
-          <input class="form-input" name="listing[image][]" value="<%= img %>">
-        <% }) %>
-        <!-- If no images yet, show one blank input -->
-        <% if (listing.image.length === 0) { %>
-          <input class="form-input" name="listing[image][]" placeholder="Image URL">
-        <% } %>
-      </div>
+        <label>Current Images</label>
+        <div class="current-images-grid" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+          <% listing.image.forEach((img, index)=> { %>
+            <div class="current-image-wrapper" style="position: relative;">
+              <img src="<%= img %>" class="preview-img"
+                style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">
+              <div style="text-align: center; margin-top: 5px;">
+                <input type="checkbox" id="img-<%= index %>" name="deleteImages[]" value="<%= img %>">
+                <label for="img-<%= index %>" style="font-size: 12px;">Delete</label>
+              </div>
+            </div>
+            <% }) %>
+        </div>
 
-      <button type="button" id="add-image-btn" class="add-btn">Add Another URL</button>
-<br>
-      <label for="listing-price">Price</label>
-      <input class="form-input" type="number" name="listing[price]" value="<%= listing.price %>" required>
+        <label>Upload New Images</label>
+        <div id="image-upload-wrapper">
+          <div class="image-input-group">
+            <input class="form-input" type="file" name="listing[image]" multiple onchange="previewAllImages()">
+          </div>
+        </div>
+        <button type="button" class="btn-add-image" onclick="addImageField()">+ Add Another Image</button>
+        <div id="image-preview" class="image-preview-container"></div>
+        <br>
+        <label for="listing-price">Price</label>
+        <input class="form-input" type="number" name="listing[price]" value="<%= listing.price %>" required>
 
-      <label for="listing-location">Location</label>
-      <input class="form-input" name="listing[location]" value="<%= listing.location %>">
+        <label for="listing-location">Location</label>
+        <input class="form-input" name="listing[location]" value="<%= listing.location %>">
 
-      <label for="listing-country">Country</label>
-      <input class="form-input" name="listing[country]" value="<%= listing.country %>">
+        <label for="listing-country">Country</label>
+        <input class="form-input" name="listing[country]" value="<%= listing.country %>">
 
-      <button class="form-btn" type="submit">Update</button>
-    </form>
+        <button class="form-btn" type="submit">Update</button>
+      </form>
+
+    </div>
+  </section>
+
+  <script>
+    function addImageField() {
+      const wrapper = document.getElementById('image-upload-wrapper');
+      const div = document.createElement('div');
+      div.className = 'image-input-group';
+      div.style.marginTop = "10px";
+      div.innerHTML = `
+        <input class="form-input" type="file" name="listing[image]" multiple onchange="previewAllImages()">
+      `;
+      wrapper.appendChild(div);
+    }
+
+    function previewAllImages() {
+      const previewContainer = document.getElementById('image-preview');
+      previewContainer.innerHTML = '';
+
+      const inputs = document.querySelectorAll('input[name="listing[image]"]');
+
+      inputs.forEach(input => {
+        if (input.files) {
+          Array.from(input.files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              const img = document.createElement('img');
+              img.src = e.target.result;
+              img.classList.add('preview-img');
+              previewContainer.appendChild(img);
+            }
+            reader.readAsDataURL(file);
+          });
+        }
+      });
+    }
+  </script>
 
   </div>
-</section>
-
-<script>
-  const addBtn = document.getElementById("add-image-btn");
-  const imageFields = document.getElementById("image-fields");
-
-  addBtn.addEventListener("click", () => {
-    const input = document.createElement("input");
-    input.type = "text";
-    input.name = "listing[image][]";
-    input.placeholder = "Image URL";
-    input.className = "form-input";
-    imageFields.appendChild(input);
-  });
-</script>
+  </section>

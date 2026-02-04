@@ -4,6 +4,7 @@ const Listing = require('../models/listing');
 const Booking = require('../models/booking');
 const { isLoggedIn } = require('../middlewares/loginmiddleware');
 const { isuser } = require('../middlewares/authenticate');
+const razorpay = require("../config/razorpay");
 const upload = require('../middlewares/multer');
 // const app = express();
 // app.set('view engine', 'ejs');
@@ -182,40 +183,96 @@ router.get("/:id/booking", isLoggedIn, async (req, res) => {
 
 
 
+// router.post("/:id/booking", isLoggedIn, async (req, res) => {
+//   try {
+
+//     const listing = await Listing.findById(req.params.id);
+//     const listingtitle = listing.title;
+
+//     const { name, email, phone, checkIn, checkOut, guests, totalPrice } = req.body;
+
+//     const newBooking = new Booking({
+
+//       name,
+//       email,
+//       phone,
+//       listingtitle,
+//       checkIn,
+//       checkOut,
+//       guests,
+//       totalPrice,
+//     });
+
+//     newBooking.save().then(() => {
+//       console.log("Booking created successfully");
+//       req.flash("success", "Booking Created successfully");
+
+//       res.redirect("/profile/bookings");
+//     }).catch((err) => {
+//       console.log(err);
+//       req.flash("error", "Something went wrong");
+//       res.send("Something went wrong");
+//     })
+//   }
+//   catch (err) {
+//     res.send("something went wrong")
+//   }
+// });
+
+
+
 router.post("/:id/booking", isLoggedIn, async (req, res) => {
   try {
+    const { totalPrice } = req.body;
 
-    const listing = await Listing.findById(req.params.id);
-    const listingtitle = listing.title;
-
-    const { name, email, phone, checkIn, checkOut, guests, totalPrice } = req.body;
-
-    const newBooking = new Booking({
-
-      name,
-      email,
-      phone,
-      listingtitle,
-      checkIn,
-      checkOut,
-      guests,
-      totalPrice,
+    const order = await razorpay.orders.create({
+      amount: totalPrice * 100,
+      currency: "INR",
+      receipt: "receipt_" + Date.now(),
     });
 
-    newBooking.save().then(() => {
-      console.log("Booking created successfully");
-      req.flash("success", "Booking Created successfully");
-      res.redirect("/profile/bookings");
-    }).catch((err) => {
-      console.log(err);
-      req.flash("error", "Something went wrong");
-      res.send("Something went wrong");
-    })
-  }
-  catch (err) {
-    res.send("something went wrong")
+    res.json({
+      success: true,
+      order,
+      key: process.env.RAZORPAY_KEY_ID,
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false });
   }
 });
+
+/* ===============================
+   SAVE BOOKING AFTER PAYMENT
+================================ */
+router.post("/confirm", isLoggedIn, async (req, res) => {
+  try {
+
+    console.log(req.body);
+    const listing = await Listing.findById(req.body.listingId);
+
+    const booking = new Booking({
+      name: req.body.name,
+      email: req.body.email,
+      phone: req.body.phone,
+      listingtitle: listing.title,
+      checkIn: req.body.checkIn,
+      checkOut: req.body.checkOut,
+      guests: req.body.guests,
+      totalPrice: req.body.totalPrice,
+      paymentId: req.body.paymentId,
+    });
+
+    await booking.save();
+    res.json({ success: true });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false });
+  }
+});
+
 
 
 

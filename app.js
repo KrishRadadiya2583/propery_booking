@@ -1,6 +1,10 @@
 if (process.env.NODE_ENV !== "production") {
     require("dotenv").config();
 }
+ 
+
+
+const bodyParser = require("body-parser");
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -16,6 +20,9 @@ const profileRouter = require("./routes/profile");
 const footerRouter = require("./routes/footer");
 const reviewsRouter = require("./routes/reviews");
 const flash = require("connect-flash");
+const ratelimit = require("./middlewares/ratelimit");
+const morgan = require("morgan");
+
 
 
 
@@ -24,6 +31,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -36,6 +44,8 @@ app.use(session({
 }));
 
 app.use(flash());
+app.use(morgan("dev"));
+app.use(ratelimit);
 
 app.use((req, res, next) => {
     res.locals.success = req.flash("success");

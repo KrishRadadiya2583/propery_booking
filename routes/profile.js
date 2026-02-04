@@ -57,7 +57,7 @@ router.get("/bookings", isLoggedIn, async (req, res) => {
     return res.redirect("/", { currentUser: null });
   }
 
-  const bookings = await Booking.find({ user: req.session.user._id });
+  const bookings = await Booking.find({ user: req.session.user._id }).sort({createdAt: -1});
   res.render("bookings", { bookings, currentUser: req.session.user });
 }
 catch(err){

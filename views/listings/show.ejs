@@ -102,7 +102,60 @@
               <% } %>
       </div>
 
+
+      <div class="row map-container">
+        <div class="col-8 offset-3 mb-3">
+          <h3>Where you'll be</h3>
+          <div id="listing-map"></div>
+        </div>
+      </div>
+
     </div>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script>
+      const listingLocation = "<%= listing.location %>";
+      const listingCountry = "<%= listing.country %>";
+
+      // Initialize map
+      const map = L.map('listing-map').setView([20.5937, 78.9629], 5); // Default to India
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+
+      // Fetch coordinates from Nominatim (Free OpenStreetMap Geocoder)
+      const query = `${listingLocation}, ${listingCountry}`;
+      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data && data.length > 0) {
+            const lat = parseFloat(data[0].lat);
+            const lon = parseFloat(data[0].lon);
+
+            map.setView([lat, lon], 13);
+
+            L.marker([lat, lon]).addTo(map)
+              .bindPopup(`<b>${listingLocation}</b><br>Exact location provided after booking.`)
+              .openPopup();
+
+            // Add a circle to show approximate area
+            L.circle([lat, lon], {
+              color: '#ff385c',
+              fillColor: '#ff385c',
+              fillOpacity: 0.2,
+              radius: 500
+            }).addTo(map);
+
+          } else {
+            console.log("Location not found");
+          }
+        })
+        .catch(err => console.error("Error fetching location:", err));
+    </script>
   </section>
 
   <script>

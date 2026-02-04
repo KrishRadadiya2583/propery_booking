@@ -26,6 +26,13 @@ const bookingschema = new mongoose.Schema({
     totalPrice:{
         type:String,
     },
+    paymentId:{
+        type:String,
+    },
+    createdAt:{
+        type:Date,
+        default:Date.now(),
+    }
 })
 
 const Booking = mongoose.model("Booking", bookingschema);

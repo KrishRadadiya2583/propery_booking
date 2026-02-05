@@ -1,155 +1,164 @@
 <% layout("/layouts/boilerplate") %>
 
-<section class="booking-page">
-  <div class="booking-container">
+  <section class="booking-page">
+    <div class="booking-container">
 
-    <h1 class="booking-title">
-      Book <%= listing.title %>
-    </h1>
+      <h1 class="booking-title">
+        Book <%= listing.title %>
+      </h1>
 
-    <div class="booking-price">
-      <span class="price-amount">₹<%= listing.price %></span>
-      <span class="price-unit"> / guest / night</span>
+      <div class="booking-price">
+        <span class="price-amount">₹<%= listing.price %></span>
+        <span class="price-unit"> / guest / night</span>
+      </div>
+
+      <form class="booking-form" id="bookingForm" action="/confirm" method="POST">
+
+        <input type="hidden" name="listingId" value="<%= listing._id %>">
+
+        <div>
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" value="<%= currentUser ? currentUser.name : '' %>" required>
+        </div>
+
+        <div>
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" value="<%= currentUser ? currentUser.email : '' %>" required>
+        </div>
+
+        <div>
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" name="phone" required>
+        </div>
+
+        <div>
+          <label for="checkIn">Check-in</label>
+          <input type="date" id="checkIn" name="checkIn" required>
+        </div>
+
+        <div>
+          <label for="checkOut">Check-out</label>
+          <input type="date" id="checkOut" name="checkOut" required>
+        </div>
+
+        <div>
+          <label for="guests">Guests</label>
+          <input type="number" id="guests" name="guests" min="1" max="20" value="1" required>
+        </div>
+
+        <!-- Hidden total price -->
+        <input type="hidden" name="totalPrice" id="totalPriceInput" value="<%= listing.price %>">
+
+        <!-- TOTAL PRICE DISPLAY -->
+        <div class="booking-total">
+          <span class="total-label">Total Price</span>
+          <strong class="total-amount">
+            ₹<span id="totalPrice">
+              <%= listing.price %>
+            </span>
+          </strong>
+        </div>
+
+        <button type="submit" class="btn-confirm">
+          Confirm Booking
+        </button>
+
+      </form>
+
     </div>
+  </section>
 
-    <form class="booking-form" id="bookingForm" action="/confirm" method="POST">
+  <!-- Razorpay -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-      <input type="hidden" name="listingId" value="<%= listing._id %>">
+  <script>
+    const pricePerGuestPerNight = Number("<%= listing.price %>");
 
-      <div>
-        <label for="name">Name</label>
-        <input type="text" id="name" name="name"
-          value="<%= currentUser ? currentUser.name : '' %>" required>
-      </div>
+    const checkInInput = document.getElementById("checkIn");
+    const checkOutInput = document.getElementById("checkOut");
+    const guestsInput = document.getElementById("guests");
 
-      <div>
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email"
-          value="<%= currentUser ? currentUser.email : '' %>" required>
-      </div>
+    const totalPriceText = document.getElementById("totalPrice");
+    const totalPriceInput = document.getElementById("totalPriceInput");
 
-      <div>
-        <label for="phone">Phone</label>
-        <input type="tel" id="phone" name="phone" required>
-      </div>
+    function calculateTotalPrice() {
+      if (!checkInInput.value || !checkOutInput.value) return;
 
-      <div>
-        <label for="checkIn">Check-in</label>
-        <input type="date" id="checkIn" name="checkIn" required>
-      </div>
+      const checkInDate = new Date(checkInInput.value);
+      const checkOutDate = new Date(checkOutInput.value);
+      const guests = Number(guestsInput.value) || 1;
 
-      <div>
-        <label for="checkOut">Check-out</label>
-        <input type="date" id="checkOut" name="checkOut" required>
-      </div>
+      const nights = Math.ceil(
+        (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)
+      );
 
-      <div>
-        <label for="guests">Guests</label>
-        <input type="number" id="guests" name="guests" min="1" value="1" required>
-      </div>
+      if (nights <= 0) {
+        totalPriceText.textContent = 0;
+        totalPriceInput.value = 0;
+        return;
+      }
 
-      <!-- Hidden total price -->
-      <input type="hidden" name="totalPrice" id="totalPriceInput"
-        value="<%= listing.price %>">
-
-      <!-- TOTAL PRICE DISPLAY -->
-      <div class="booking-total">
-        <span class="total-label">Total Price</span>
-        <strong class="total-amount">
-          ₹<span id="totalPrice"><%= listing.price %></span>
-        </strong>
-      </div>
-
-      <button type="submit" class="btn-confirm">
-        Confirm Booking
-      </button>
-
-    </form>
-
-  </div>
-</section>
-
-<!-- Razorpay -->
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-<script>
-  const pricePerGuestPerNight = Number("<%= listing.price %>");
-
-  const checkInInput = document.getElementById("checkIn");
-  const checkOutInput = document.getElementById("checkOut");
-  const guestsInput = document.getElementById("guests");
-
-  const totalPriceText = document.getElementById("totalPrice");
-  const totalPriceInput = document.getElementById("totalPriceInput");
-
-  function calculateTotalPrice() {
-    if (!checkInInput.value || !checkOutInput.value) return;
-
-    const checkInDate = new Date(checkInInput.value);
-    const checkOutDate = new Date(checkOutInput.value);
-    const guests = Number(guestsInput.value) || 1;
-
-    const nights = Math.ceil(
-      (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)
-    );
-
-    if (nights <= 0) {
-      totalPriceText.textContent = 0;
-      totalPriceInput.value = 0;
-      return;
+      const total = nights * guests * pricePerGuestPerNight;
+      totalPriceText.textContent = total;
+      totalPriceInput.value = total;
     }
 
-    const total = nights * guests * pricePerGuestPerNight;
-    totalPriceText.textContent = total;
-    totalPriceInput.value = total;
-  }
+    checkInInput.addEventListener("change", calculateTotalPrice);
+    checkOutInput.addEventListener("change", calculateTotalPrice);
+    guestsInput.addEventListener("input", calculateTotalPrice);
 
-  checkInInput.addEventListener("change", calculateTotalPrice);
-  checkOutInput.addEventListener("change", calculateTotalPrice);
-  guestsInput.addEventListener("input", calculateTotalPrice);
+    /* ===============================
+       RAZORPAY PAYMENT FLOW
+    ================================ */
+    document.getElementById("bookingForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-  /* ===============================
-     RAZORPAY PAYMENT FLOW
-  ================================ */
-  document.getElementById("bookingForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
+      const formData = Object.fromEntries(new FormData(e.target));
 
-    const formData = Object.fromEntries(new FormData(e.target));
-
-    // Create order
-    const res = await fetch(
-      "/listings/<%= listing._id %>/booking",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      }
-    );
-
-    const data = await res.json();
-
-    const options = {
-      key: data.key,
-      amount: data.order.amount,
-      currency: "INR",
-      name: "Stay Booking",
-      description: "Demo Payment",
-      order_id: data.order.id,
-
-      handler: async function (response) {
-        await fetch("/listings/confirm", {
+      // Create order
+      const res = await fetch(
+        "/listings/<%= listing._id %>/booking",
+        {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ...formData,
-            paymentId: response.razorpay_payment_id,
-          }),
-        });
+          body: JSON.stringify(formData),
+        }
+      );
 
-        window.location.href = "/profile/bookings";
-      },
-    };
+      const data = await res.json();
 
-    new Razorpay(options).open();
-  });
-</script>
+      if (!data.success) {
+        window.location.reload();
+        return;
+      }
+
+      const options = {
+        key: data.key,
+        amount: data.order.amount,
+        currency: "INR",
+        name: "Stay Booking",
+        description: "Demo Payment",
+        order_id: data.order.id,
+
+        handler: async function (response) {
+          const confirmRes = await fetch("/listings/confirm", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              ...formData,
+              paymentId: response.razorpay_payment_id,
+            }),
+          });
+
+          const confirmData = await confirmRes.json();
+          if (confirmData.success) {
+            window.location.href = "/profile/bookings";
+          } else {
+            window.location.reload();
+          }
+        },
+      };
+
+      new Razorpay(options).open();
+    });
+  </script>

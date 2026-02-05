@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Edit Profile</title>
 
   <style>
@@ -17,7 +18,7 @@
     * {
       box-sizing: border-box;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-                   Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", Arial;
+        Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", Arial;
     }
 
     body {
@@ -93,40 +94,84 @@
     .submit-btn:active {
       transform: scale(0.98);
     }
+
+
+
+    .profile-card {
+      position: relative;
+    }
+
+    /* Professional square rounded back button */
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      background: #ffffff;
+      color: var(--text-dark);
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition:
+        background-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.1s ease,
+        border-color 0.2s ease;
+    }
+
+    /* Hover effect */
+    .back-btn:hover {
+      background-color: #f7f7f7;
+      border-color: #cfcfcf;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    /* Click effect */
+    .back-btn:active {
+      transform: scale(0.94);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Focus (keyboard users) */
+    .back-btn:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 56, 92, 0.3);
+    }
   </style>
 </head>
 
 <body>
   <div class="profile-card">
+    <br><br>
+    <button class="back-btn" onclick="window.location.href='/profile'">
+      ←
+    </button>
     <h1>Edit Profile</h1>
+
 
     <form action="/profile/edit-profile" method="POST">
       <div class="form-group">
         <label for="name">Name</label>
-        <input
-          id="name"
-          type="text"
-          name="name"
-          value="<%= currentUser.name %>"
-          required
-        />
+        <input id="name" type="text" name="name" value="<%= currentUser.name %>" required />
       </div>
 
       <div class="form-group">
         <label for="email">Email</label>
-        <input
-          id="email"
-          type="email"
-          name="email"
-          value="<%= currentUser.email %>"
-          required
-        />
+        <input id="email" type="email" name="email" value="<%= currentUser.email %>" required />
       </div>
 
       <button type="submit" class="submit-btn">
         Update Profile
       </button>
+
     </form>
+
   </div>
 </body>
+
 </html>

@@ -4,6 +4,10 @@ const Listing = require('../models/listing');
 const Booking = require('../models/booking');
 const { isLoggedIn } = require('../middlewares/loginmiddleware');
 const { isuser } = require('../middlewares/authenticate');
+const { validateBooking } = require('../middlewares/bookingValidation');
+const { validateImages } = require('../middlewares/validateimage');
+
+
 const razorpay = require("../config/razorpay");
 const upload = require('../middlewares/multer');
 // const app = express();
@@ -55,7 +59,7 @@ router.get('/:id', isLoggedIn, async (req, res) => {
 //   res.redirect("/listings");
 // })
 
-router.post("/", isLoggedIn, upload.array("listing[image]"), async (req, res) => {
+router.post("/", isLoggedIn, upload.array("listing[image]"), validateImages,async (req, res) => {
   try {
     const listing = req.body.listing;
 
@@ -106,7 +110,7 @@ router.get('/:id/edit', isLoggedIn, isuser, async (req, res) => {
 //   res.redirect(`/listings/${id}`);
 // })
 
-router.post('/:id/edit', isLoggedIn, upload.array("listing[image]"), async (req, res) => {
+router.post('/:id/edit', isLoggedIn, upload.array("listing[image]"), validateImages, async (req, res) => {
   try {
     const { id } = req.params;
     const listingData = req.body.listing;
@@ -183,47 +187,14 @@ router.get("/:id/booking", isLoggedIn, async (req, res) => {
 
 
 
-// router.post("/:id/booking", isLoggedIn, async (req, res) => {
-//   try {
-
-//     const listing = await Listing.findById(req.params.id);
-//     const listingtitle = listing.title;
-
-//     const { name, email, phone, checkIn, checkOut, guests, totalPrice } = req.body;
-
-//     const newBooking = new Booking({
-
-//       name,
-//       email,
-//       phone,
-//       listingtitle,
-//       checkIn,
-//       checkOut,
-//       guests,
-//       totalPrice,
-//     });
-
-//     newBooking.save().then(() => {
-//       console.log("Booking created successfully");
-//       req.flash("success", "Booking Created successfully");
-
-//       res.redirect("/profile/bookings");
-//     }).catch((err) => {
-//       console.log(err);
-//       req.flash("error", "Something went wrong");
-//       res.send("Something went wrong");
-//     })
-//   }
-//   catch (err) {
-//     res.send("something went wrong")
-//   }
-// });
 
 
 
-router.post("/:id/booking", isLoggedIn, async (req, res) => {
+router.post("/:id/booking", isLoggedIn, validateBooking, async (req, res) => {
   try {
     const { totalPrice } = req.body;
+
+
 
     const order = await razorpay.orders.create({
       amount: totalPrice * 100,
@@ -238,6 +209,7 @@ router.post("/:id/booking", isLoggedIn, async (req, res) => {
     });
 
   } catch (err) {
+    req.flash("error", "Something went wrong");
     console.log(err);
     res.status(500).json({ success: false });
   }
@@ -246,11 +218,13 @@ router.post("/:id/booking", isLoggedIn, async (req, res) => {
 /* ===============================
    SAVE BOOKING AFTER PAYMENT
 ================================ */
-router.post("/confirm", isLoggedIn, async (req, res) => {
+router.post("/confirm", isLoggedIn, validateBooking, async (req, res) => {
   try {
 
     console.log(req.body);
     const listing = await Listing.findById(req.body.listingId);
+
+
 
     const booking = new Booking({
       name: req.body.name,
@@ -292,7 +266,8 @@ router.get("/:id/cancelbooking", isLoggedIn, async (req, res) => {
     res.redirect("/profile/bookings");
   }
   catch (err) {
-    res.send("something went wrong")
+    req.flash("error", "Something went wrong");
+    res.redirect("/profile/bookings");
   }
 })
 

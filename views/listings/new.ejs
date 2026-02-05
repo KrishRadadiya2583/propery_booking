@@ -5,7 +5,8 @@
       <form class="listing-form" action="/listings" method="POST" enctype="multipart/form-data">
         <h2 class="form-title">Add New Listing</h2>
         <label for="listing[useremail]">useremail</label>
-        <input class="form-input" type="email" name="listing[useremail]" placeholder="Contact Email" required>
+        <input class="form-input" type="email" value="<%= currentUser.email %>" name="listing[useremail]"
+          placeholder="Contact Email" required>
         <label for="listing[title]">title</label>
         <input class="form-input" name="listing[title]" placeholder="Title" required>
         <label for="listing[description]">description</label>

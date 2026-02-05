@@ -155,14 +155,15 @@ body {
 .btn-cancel {
   display: inline-block;
   padding: 12px 20px;
-  background-color: #ff385c; /* Airbnb red */
+  background-color: #ff385c;
+  /* Airbnb red */
   color: #ffffff;
   font-size: 15px;
   font-weight: 600;
   text-decoration: none;
   border-radius: 8px;
   transition: background-color 0.2s ease, transform 0.1s ease;
-    box-shadow: 2px 2px 2px black;
+  box-shadow: 2px 2px 2px black;
 
 }
 
@@ -174,4 +175,3 @@ body {
 .btn-cancel:active {
   transform: translateY(0);
 }
-

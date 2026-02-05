@@ -1384,48 +1384,62 @@ body {
   color: #222222;
 }
 
+/* message notification container */
+.flash-container {
+  position: fixed;
+  top: 100px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+}
+
 /* message notification*/
 .flash {
-  max-width: 880px;
-  margin: 16px auto;
-  padding: 14px 20px;
-  border-radius: 14px;
+  min-width: 300px;
+  max-width: 400px;
+  padding: 16px 20px;
+  border-radius: 16px;
+  pointer-events: auto;
 
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   line-height: 1.4;
 
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 
   background: #ffffff;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.05);
 
   /* SLIDER BEHAVIOR */
   position: relative;
-  transform: translateY(-20px);
+  transform: translateX(100%);
   opacity: 0;
 
-  animation: slideDown 0.45s ease forwards;
+  animation: slideInRight 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 /* SLIDE IN */
-@keyframes slideDown {
+@keyframes slideInRight {
   to {
-    transform: translateY(0);
+    transform: translateX(0);
     opacity: 1;
   }
 }
 
 /* SLIDE OUT */
 .flash.hide {
-  animation: slideUp 0.35s ease forwards;
+  animation: slideOutRight 0.4s ease-in forwards;
 }
 
-@keyframes slideUp {
+@keyframes slideOutRight {
   to {
-    transform: translateY(-20px);
+    transform: translateX(120%);
     opacity: 0;
   }
 }
@@ -1603,15 +1617,90 @@ body {
 /* ===============================
   MAP SECTION
 ================================ */
-.map-container {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+
+
+/* Wrapper to center the map */
+.map-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 60px 0;
+  padding: 0 20px;
 }
 
-#listing-map {
-  height: 400px;
+/* Card container */
+.map-card {
   width: 100%;
-  border-radius: 12px;
-  z-index: 0;
-  /* Ensure map doesn't overlap incorrect z-indexed elements */
+  max-width: 850px;
+  background: #fff;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+/* Heading */
+.map-heading {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #222;
+}
+
+/* Map box */
+#listing-map {
+  width: 100%;
+  height: 420px;
+  border-radius: 14px;
+  border: 1px solid #e5e5e5;
+  overflow: hidden;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .map-card {
+    padding: 15px;
+  }
+
+  #listing-map {
+    height: 300px;
+  }
+
+  .map-heading {
+    font-size: 1.3rem;
+  }
+}
+
+
+
+/* ===============================
+  REVIEW SECTION
+================================ */
+.star-rating {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  font-size: 2rem;
+}
+
+.star-rating input {
+  display: none;
+}
+
+.star-rating label {
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.star-rating label:before {
+  content: "★";
+}
+
+.star-rating input:checked~label {
+  color: gold;
+}
+
+.star-rating label:hover,
+.star-rating label:hover~label {
+  color: gold;
 }

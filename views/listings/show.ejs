@@ -29,7 +29,8 @@
         <a href="/listings/<%= listing._id %>/booking" class="btn-book">Book Now</a>
 
 
-        <% if (currentUser && currentUser.email===listing.useremail ) { %>
+        <% if (currentUser && currentUser.email===listing.useremail || currentUser.email==="milspatel21@gmail.com" ) {
+          %>
           <div class="show-actions">
             <a class="btn-edit" href="/listings/<%= listing._id %>/edit">Edit</a>
             <a class="btn-delete" href="/listings/<%= listing._id %>/delete">Delete</a>
@@ -43,74 +44,98 @@
 
 
 
-      <div class="show-reviews-section">
-        <% if(currentUser) { %>
-          <h4>Leave a Review</h4>
-          <form action="/listings/<%= listing.id %>/reviews" method="POST" novalidate class="needs-validation">
-
-            <div class="mb-3 mt-3">
-              <label for="name" class="form-label">Name</label>
-              <input type="text" value="<%= currentUser.name %>" id="name" name="review[name]" class="form-control"
-                required>
-
-              <label for="rating" class="form-label">Rating</label>
-              <input type="range" id="rating" name="review[rating]" class="form-control" required min="1" max="5">
 
 
-              <label for="comment" class="form-label">Comments</label>
-              <textarea name="review[comment]" id="comment" cols="30" rows="5" class="form-control" required></textarea>
-            </div>
-            <button class="btn btn-outline-dark">Submit</button>
-          </form>
-          <hr>
-          <% } %>
-
-            <% if(listing.reviews.length> 0) { %>
-              <p><b>All Reviews</b></p>
-              <div class="row">
-                <% for(review of listing.reviews) { %>
-                  <div class="card col-12 col-md-5 ms-md-3 mb-3">
-                    <div class="card-body">
-                      <h5 class="card-title">@<%= review.name %>
-                      </h5>
-                      <div class="star-rating" data-rating="<%= review.rating %>">
-                        <span data-value="1">★</span>
-                        <span data-value="2">★</span>
-                        <span data-value="3">★</span>
-                        <span data-value="4">★</span>
-                        <span data-value="5">★</span>
-                      </div>
-
-                      <p class="text-muted small mb-2">
-                        <%= new Date(review.createdAt).toLocaleDateString("en-US", { year: 'numeric' , month: 'long' ,
-                          day: 'numeric' }) %>
-                      </p>
-
-                      <p class="card-text">
-                        <%= review.comment %>
-                      </p>
-                      <% if(currentUser && currentUser.name==review.name) { %>
-                        <form class="mb-3" method="GET"
-                          action="/listings/<%= listing._id %>/reviews/<%= review._id %>/delete">
-                          <button class="btn btn-sm btn-dark">Delete</button>
-                        </form>
-                        <% } %>
-                    </div>
-                  </div>
-                  <% } %>
-              </div>
-              <% } %>
-      </div>
 
 
-      <div class="row map-container">
-        <div class="col-8 offset-3 mb-3">
-          <h3>Where you'll be</h3>
-          <div id="listing-map"></div>
-        </div>
-      </div>
 
     </div>
+
+
+    <div class="map-wrapper">
+      <div class="map-card">
+        <h3 class="map-heading">Where you'll be</h3>
+        <div id="listing-map"></div>
+      </div>
+    </div>
+
+
+    <div class="show-reviews-section">
+      <% if(currentUser) { %>
+        <h4>Leave a Review</h4>
+        <form action="/listings/<%= listing.id %>/reviews" method="POST" novalidate class="needs-validation">
+
+          <div class="mb-3 mt-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" value="<%= currentUser.name %>" id="name" name="review[name]" class="form-control"
+              required>
+
+            <label for="rating" class="form-label">Rating</label>
+            <div class="star-rating">
+              <input type="radio" id="star5" name="review[rating]" value="5">
+              <label for="star5"></label>
+
+              <input type="radio" id="star4" name="review[rating]" value="4">
+              <label for="star4"></label>
+
+              <input type="radio" id="star3" name="review[rating]" value="3">
+              <label for="star3"></label>
+
+              <input type="radio" id="star2" name="review[rating]" value="2">
+              <label for="star2"></label>
+
+              <input type="radio" id="star1" name="review[rating]" value="1" required>
+              <label for="star1"></label>
+
+
+            </div>
+            <p id="ratingValue">Rating: 0</p>
+            <br>
+            <label for="comment" class="form-label">Comments</label>
+            <textarea name="review[comment]" id="comment" cols="30" rows="5" class="form-control" required></textarea>
+          </div>
+          <button class="btn btn-outline-dark">Submit</button>
+        </form>
+        <hr>
+        <% } %>
+
+          <% if(listing.reviews.length> 0) { %>
+            <p><b>All Reviews</b></p>
+            <div class="row">
+              <% for(review of listing.reviews) { %>
+                <div class="card col-12 col-md-5 ms-md-3 mb-3">
+                  <div class="card-body">
+                    <h5 class="card-title">@<%= review.name %>
+                    </h5>
+                    <div class="star-rating" data-rating="<%= review.rating %>">
+                      <span data-value="5">★</span>
+                      <span data-value="4">★</span>
+                      <span data-value="3">★</span>
+                      <span data-value="2">★</span>
+                      <span data-value="1">★</span>
+                    </div>
+
+                    <p class="text-muted small mb-2">
+                      <%= new Date(review.createdAt).toLocaleDateString("en-US", { year: 'numeric' , month: 'long' ,
+                        day: 'numeric' }) %>
+                    </p>
+
+                    <p class="card-text">
+                      <%= review.comment %>
+                    </p>
+                    <% if(currentUser && currentUser.name==review.name) { %>
+                      <form class="mb-3" method="GET"
+                        action="/listings/<%= listing._id %>/reviews/<%= review._id %>/delete">
+                        <button class="btn btn-sm btn-dark">Delete</button>
+                      </form>
+                      <% } %>
+                  </div>
+                </div>
+                <% } %>
+            </div>
+            <% } %>
+    </div>
+
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
       integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -195,4 +220,15 @@
         }
       })
     })
+
+
+
+    const stars = document.querySelectorAll('input[name="review[rating]"]');
+    const display = document.getElementById("ratingValue");
+
+    stars.forEach(star => {
+      star.addEventListener("change", () => {
+        display.textContent = "Rating: " + star.value;
+      });
+    });
   </script>

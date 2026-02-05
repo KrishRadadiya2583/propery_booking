@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
-
+const passwordvalidator = require("../middlewares/passwordvalidator");
 
 router.get("/", (req, res) => {
   res.render("auth", { error: null });
@@ -10,7 +10,7 @@ router.get("/", (req, res) => {
 
 
 // POST register
-router.post("/register", async (req, res) => {
+router.post("/register", passwordvalidator,async (req, res) => {
   const { name, email, password } = req.body;
 
   try {

@@ -1,7 +1,7 @@
 /* PAGE */
 .listings-page {
   padding: 40px 16px;
-  background-color: #f7f7f7;
+  background-color: var(--bg-body);
 }
 
 .listings-container {
@@ -13,24 +13,27 @@
   font-size: 32px;
   font-weight: 600;
   margin-bottom: 24px;
+  color: var(--text-main);
 }
 
 /* EMPTY STATE */
 .empty-state {
-  background: #fff;
+  background: var(--bg-surface);
   padding: 48px;
   border-radius: 16px;
   text-align: center;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
 }
 
 .empty-state h2 {
   font-size: 22px;
   margin-bottom: 8px;
+  color: var(--text-main);
 }
 
 .empty-state p {
-  color: #717171;
+  color: var(--text-secondary);
   margin-bottom: 20px;
 }
 
@@ -43,18 +46,20 @@
 
 /* CARD */
 .listing-card {
-  background: #fff;
+  background: var(--bg-surface);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid var(--border-color);
 }
 
 .listing-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--border-hover);
 }
 
 /* IMAGE */
@@ -66,16 +71,17 @@
 
 .image-placeholder {
   height: 200px;
-  background: #eaeaea;
+  background: var(--bg-input);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #999;
+  color: var(--text-muted);
 }
 
 /* BODY */
 .card-body {
   padding: 16px;
+  background: var(--bg-surface);
 }
 
 .card-header {
@@ -88,50 +94,53 @@
 .property-badge {
   font-size: 12px;
   font-weight: 600;
-  color: #ff385c;
+  color: var(--primary);
 }
 
 .price {
   font-size: 15px;
   font-weight: 600;
+  color: var(--text-main);
 }
 
 .price span {
   font-weight: 400;
-  color: #717171;
+  color: var(--text-secondary);
 }
 
 .listing-title {
   font-size: 18px;
   font-weight: 600;
   margin: 4px 0;
+  color: var(--text-main);
 }
 
 .location {
   font-size: 14px;
-  color: #717171;
+  color: var(--text-secondary);
   margin-bottom: 8px;
 }
 
 .description {
   font-size: 14px;
-  color: #444;
+  color: var(--text-secondary);
   line-height: 1.4;
 }
 
 /* FOOTER */
 .card-footer {
   padding: 12px 16px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background: var(--bg-input);
 }
 
 .status.active {
   font-size: 13px;
   font-weight: 600;
-  color: #008a05;
+  color: #34d399;
 }
 
 /* BUTTONS */
@@ -141,23 +150,32 @@
 }
 
 .btn-primary {
-  background: #ff385c;
+  background: var(--primary);
   color: #fff;
-  padding: 12px 20px;
+  padding: 8px 16px;
   border-radius: 8px;
   text-decoration: none;
   font-weight: 600;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
 }
 
 .btn-outline {
-  border: 1px solid #ddd;
-  padding: 6px 12px;
+  border: 1px solid var(--border-color);
+  padding: 8px 16px;
   border-radius: 8px;
   text-decoration: none;
   font-size: 14px;
-  color: #222;
+  color: var(--text-main);
+  background: transparent;
+  transition: all 0.2s;
 }
 
 .btn-outline:hover {
-  background: #f7f7f7;
+  background: var(--bg-secondary);
+  border-color: var(--text-main);
 }

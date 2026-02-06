@@ -1,12 +1,24 @@
-/* Place this file in /public/css/hosting-resources.css */
-
 :root {
-  --primary: #ff385c;
-  --text-dark: #222222;
-  --text-light: #717171;
-  --border: #dddddd;
-  --bg-light: #f7f7f7;
-  --white: #ffffff;
+  /* Neon primary accent */
+  --primary: #4f8cff;
+
+  /* Text */
+  --text-dark: #f1f4ff;
+  --text-light: #aab2d6;
+
+  /* Borders */
+  --border: rgba(120, 140, 255, 0.25);
+
+  /* Backgrounds */
+  --bg-light: radial-gradient(
+    circle at 20% 20%,
+    #0a0f2c,
+    #050714 60%,
+    #02030a 100%
+  );
+
+  /* Glass card surface */
+  --white: rgba(20, 25, 50, 0.55);
 }
 
 * {
@@ -23,7 +35,7 @@ body {
 
 /* HERO */
 .resources-hero {
-  background: linear-gradient(120deg, #ff385c, #ff6b81);
+  background: linear-gradient(120deg, #4f8cff, #6aa8ff);
   color: var(--white);
   padding: 80px 20px;
   text-align: center;

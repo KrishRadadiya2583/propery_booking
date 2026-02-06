@@ -8,97 +8,100 @@
 
   <style>
     :root {
-      --airbnb-red: #ff385c;
-      --text-dark: #222222;
-      --text-light: #717171;
-      --border-color: #dddddd;
-      --bg-light: #f7f7f7;
+      --primary: #ff385c;
+      --primary-hover: #ff5a78;
+      --bg-body: #0f1115;
+      --bg-card: #181a20;
+      --bg-input: #20232b;
+      --text-main: #ffffff;
+      --text-muted: #a0a4ab;
+      --border-color: #2a2d35;
     }
 
     * {
       box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-        Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", Arial;
+      font-family: "Segoe UI", Roboto, sans-serif;
     }
 
     body {
       margin: 0;
-      background-color: var(--bg-light);
+      background: radial-gradient(circle at top, #151821, #0f1115);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      color: var(--text-main);
     }
 
     .profile-card {
-      background: #ffffff;
+      background: var(--bg-card);
       width: 100%;
       max-width: 420px;
-      padding: 32px;
+      padding: 40px 32px;
       border-radius: 16px;
-      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--border-color);
+      position: relative;
     }
 
     .profile-card h1 {
       margin: 0 0 24px;
       font-size: 24px;
       font-weight: 600;
-      color: var(--text-dark);
+      color: var(--text-main);
+      text-align: center;
     }
 
     .form-group {
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
 
     .form-group label {
       display: block;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       font-size: 14px;
       font-weight: 500;
-      color: var(--text-dark);
+      color: var(--text-main);
     }
 
     .form-group input {
       width: 100%;
-      padding: 14px 12px;
-      font-size: 16px;
-      border-radius: 8px;
+      padding: 13px 14px;
+      font-size: 15px;
+      border-radius: 10px;
       border: 1px solid var(--border-color);
+      background: var(--bg-input);
+      color: var(--text-main);
       outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      transition: all 0.2s ease;
     }
 
     .form-group input:focus {
-      border-color: #000;
-      box-shadow: 0 0 0 1px #000;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(255, 56, 92, 0.2);
     }
 
     .submit-btn {
-      margin-top: 8px;
+      margin-top: 12px;
       width: 100%;
       padding: 14px;
       font-size: 16px;
       font-weight: 600;
       color: #ffffff;
-      background-color: var(--airbnb-red);
+      background-color: var(--primary);
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
-      transition: background-color 0.2s ease, transform 0.1s ease;
+      transition: all 0.25s ease;
     }
 
     .submit-btn:hover {
-      background-color: #e03150;
+      background-color: var(--primary-hover);
+      transform: translateY(-1px);
     }
 
     .submit-btn:active {
       transform: scale(0.98);
-    }
-
-
-
-    .profile-card {
-      position: relative;
     }
 
     /* Professional square rounded back button */
@@ -110,31 +113,25 @@
       height: 42px;
       border-radius: 12px;
       border: 1px solid var(--border-color);
-      background: #ffffff;
-      color: var(--text-dark);
+      background: var(--bg-input);
+      color: var(--text-main);
       font-size: 18px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition:
-        background-color 0.2s ease,
-        box-shadow 0.2s ease,
-        transform 0.1s ease,
-        border-color 0.2s ease;
+      transition: all 0.2s ease;
     }
 
     /* Hover effect */
     .back-btn:hover {
-      background-color: #f7f7f7;
-      border-color: #cfcfcf;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      background-color: var(--border-color);
+      transform: translateY(-1px);
     }
 
     /* Click effect */
     .back-btn:active {
       transform: scale(0.94);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     }
 
     /* Focus (keyboard users) */

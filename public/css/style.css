@@ -1,5 +1,5 @@
 /* =====================================================
-   RESET & THEME (AIRBNB STYLE)
+   RESET & THEME (AIRBNB DARK MODE)
 ===================================================== */
 * {
   margin: 0;
@@ -9,16 +9,61 @@
 }
 
 :root {
-  --airbnb-red: #ff385c;
-  --airbnb-dark: #222222;
-  --airbnb-gray: #717171;
-  --airbnb-border: #ebebeb;
-  --airbnb-bg: #f7f7f7;
+  /* Neon accent colors */
+  --primary: #4f8cff;
+  --primary-hover: #3a6fff;
+  --primary-glow: rgba(79, 140, 255, 0.6);
+
+  --accent: #ff4fd8;
+  --accent-glow: rgba(255, 79, 216, 0.6);
+
+  /* Night gradient base */
+  --bg-body: radial-gradient(
+      circle at 20% 20%,
+      #0a0f2c,
+      #050714 60%,
+      #02030a 100%
+    );
+
+  --bg-surface: rgba(15, 20, 40, 0.65);
+  --bg-card: rgba(20, 25, 50, 0.55);
+  --bg-input: rgba(25, 30, 60, 0.65);
+  --bg-secondary: rgba(30, 35, 70, 0.6);
+
+  /* Glass reflections */
+  --glass-highlight: rgba(255, 255, 255, 0.18);
+  --glass-soft: rgba(255, 255, 255, 0.08);
+
+  /* Text */
+  --text-main: #f1f4ff;
+  --text-secondary: #aab2d6;
+  --text-muted: #6b7399;
+
+  /* Borders */
+  --border-color: rgba(120, 140, 255, 0.25);
+  --border-hover: rgba(120, 140, 255, 0.55);
+
+  /* Neon shadows */
+  --shadow-sm: 0 10px 25px rgba(0, 0, 0, 0.7);
+  --shadow-md: 0 20px 50px rgba(0, 0, 0, 0.8);
+  --shadow-lg: 0 30px 80px rgba(0, 0, 0, 0.9);
+  --shadow-neon: 0 0 25px rgba(79, 140, 255, 0.5);
+
+  /* Compatibility */
+  --airbnb-red: var(--primary);
+  --airbnb-dark: var(--bg-surface);
+  --airbnb-gray: var(--text-secondary);
+  --airbnb-border: var(--border-color);
+  --airbnb-bg: #050714;
 }
 
+
+
+
+
 body {
-  background: var(--airbnb-bg);
-  color: var(--airbnb-dark);
+  background: var(--bg-body);
+  color: var(--text-main);
   padding-top: 90px;
 }
 
@@ -26,31 +71,30 @@ body {
    NAVBAR
 ===================================================== */
 #main-navbar {
-  background: #fff;
-  border-bottom: 1px solid var(--airbnb-border);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .brand-logo {
   font-size: 1.6rem;
   font-weight: 600;
-
 }
 
 .nav-links .nav-link {
   margin-left: 18px;
   font-weight: 500;
-  color: var(--airbnb-dark);
+  color: var(--text-main);
+  transition: color 0.3s ease;
 }
-
 
 .brand-text {
   font-size: 1.6rem;
   font-weight: 600;
-  color: var(--airbnb-red);
+  color: var(--primary);
 }
 
 .nav-links .nav-link:hover {
-  color: var(--airbnb-red);
+  color: var(--primary);
 }
 
 /* =====================================================
@@ -97,12 +141,13 @@ body {
   aspect-ratio: 1 / 0.95;
   overflow: hidden;
   border-radius: 14px;
-  background: #f1f1f1;
+  background: var(--bg-card);
   margin-bottom: 12px;
 
   /* Performance & smoothness */
   transform: translateZ(0);
   backface-visibility: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 /* Soft vignette + light bloom layer */
@@ -115,10 +160,10 @@ body {
   transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Light bloom */
+/* Light bloom - Adjusted for dark mode integration */
 .image-wrapper::before {
   background: radial-gradient(circle at center,
-      rgba(255, 255, 255, 0.12),
+      rgba(255, 255, 255, 0.1),
       transparent 65%);
   opacity: 0;
 }
@@ -126,9 +171,9 @@ body {
 /* Edge vignette */
 .image-wrapper::after {
   background: linear-gradient(to bottom,
-      rgba(0, 0, 0, 0.04),
-      rgba(0, 0, 0, 0.10));
-  opacity: 0;
+      rgba(0, 0, 0, 0.2),
+      rgba(0, 0, 0, 0.5));
+  opacity: 0.3;
 }
 
 .listing-image {
@@ -147,7 +192,7 @@ body {
 /* Hover state */
 .image-wrapper:hover .listing-image {
   transform: scale(1.085);
-  filter: brightness(1.04) saturate(1.06);
+  filter: brightness(1.1);
 }
 
 .image-wrapper:hover::before {
@@ -155,7 +200,7 @@ body {
 }
 
 .image-wrapper:hover::after {
-  opacity: 1;
+  opacity: 0.5;
 }
 
 /* Smooth exit (important) */
@@ -173,7 +218,7 @@ body {
 }
 
 .image-wrapper:hover {
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-hover);
 }
 
 /* Floating Like Button */
@@ -182,14 +227,14 @@ body {
   top: 12px;
   right: 12px;
   font-size: 24px;
-  color: rgba(0, 0, 0, 0.5);
-  -webkit-text-stroke: 0.5px white;
+  color: rgba(255, 255, 255, 0.7);
   z-index: 10;
   transition: transform 0.2s;
 }
 
 .like-btn:hover {
   transform: scale(1.15);
+  color: #fff;
 }
 
 /* ===============================
@@ -237,34 +282,35 @@ body {
 
 /* Text Content - Tighter Spacing */
 .listing-info {
-  margin-top: 0;
+  margin-top: 12px;
 }
 
 .listing-title {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
-  color: #222;
-  margin-bottom: 2px;
+  color: var(--text-main);
+  margin-bottom: 4px;
   line-height: 1.3;
 }
 
 .listing-location {
   font-size: 15px;
-  color: #717171;
-  margin-bottom: 4px;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
 }
 
 .listing-price {
-  font-size: 15px;
-  color: #222;
-  margin-top: 4px;
+  font-size: 16px;
+  color: var(--text-main);
+  margin-top: 6px;
+  font-weight: 500;
 }
 
 /* =====================================================
    SHOW PAGE
 ===================================================== */
 /* ===============================
-   SHOW PAGE – AIRBNB STYLE
+   SHOW PAGE – AIRBNB DARK STYLE
 ================================ */
 
 #show-page {
@@ -274,12 +320,13 @@ body {
 .show-container {
   max-width: 1100px;
   margin: auto;
-  background: #ffffff;
+  background: var(--bg-surface);
   border-radius: 16px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-md);
   display: grid;
   grid-template-columns: 1.2fr 1fr;
   overflow: hidden;
+  border: 1px solid var(--border-color);
 }
 
 /* ===============================
@@ -290,7 +337,7 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  border-radius: 16px;
+  border-right: 1px solid var(--border-color);
 }
 
 .show-slider img {
@@ -312,9 +359,9 @@ body {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.4);
-  color: white;
-  border: none;
+  background-color: rgba(30, 30, 30, 0.7);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
   font-size: 20px;
   cursor: pointer;
   padding: 10px 15px;
@@ -325,7 +372,8 @@ body {
 }
 
 .slider-btn:hover {
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: var(--primary);
+  border-color: var(--primary);
 }
 
 .prev-btn {
@@ -344,6 +392,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  background: var(--bg-surface);
 }
 
 @media (max-width: 600px) {
@@ -356,26 +405,26 @@ body {
 .show-title {
   font-size: 28px;
   font-weight: 600;
-  color: #222;
+  color: var(--text-main);
 }
 
 .show-description {
   font-size: 15px;
-  color: #555;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
 .show-price {
   font-size: 24px;
   font-weight: 600;
-  color: #ff385c;
+  color: var(--primary);
   margin-top: 10px;
 }
 
 .show-location,
 .show-country {
   font-size: 14px;
-  color: #666;
+  color: var(--text-muted);
 }
 
 /* ===============================
@@ -395,25 +444,27 @@ body {
   font-weight: 500;
   text-decoration: none;
   transition: all 0.3s ease;
+  border: none;
 }
 
 .btn-edit {
-  background: #f7f7f7;
-  color: #222;
-  border: 1px solid #ddd;
+  background: var(--bg-input);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
 }
 
 .btn-edit:hover {
-  background: #eaeaea;
+  background: var(--bg-secondary);
+  border-color: var(--text-secondary);
 }
 
 .btn-delete {
-  background: #ff385c;
+  background: var(--primary);
   color: #fff;
 }
 
 .btn-delete:hover {
-  background: #e11d48;
+  background: var(--primary-hover);
 }
 
 /* ===============================
@@ -429,10 +480,10 @@ body {
   font-size: 14px;
   font-weight: 500;
 
-  color: #222;
-  background: #ffffff;
+  color: var(--text-main);
+  background: var(--bg-surface);
 
-  border: 1px solid #dddddd;
+  border: 1px solid var(--border-color);
   border-radius: 10px;
 
   text-decoration: none;
@@ -442,14 +493,13 @@ body {
 }
 
 .btn-back:hover {
-  background: #f7f7f7;
-  border-color: #cccccc;
+  background: var(--bg-secondary);
+  border-color: var(--text-secondary);
   transform: translateY(-1px);
 }
 
 .btn-back:active {
   transform: translateY(0);
-  background: #eeeeee;
 }
 
 .btn-back::before {
@@ -467,13 +517,16 @@ body {
 
   .show-slider {
     height: 300px;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
   }
 }
 
 .show-reviews-section {
   grid-column: 1 / -1;
   padding: 32px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-surface);
 }
 
 @media (max-width: 600px) {
@@ -485,38 +538,53 @@ body {
 /* =====================================================
    FORMS
 ===================================================== */
+/* =====================================================
+   FORMS
+===================================================== */
 .form-container {
   max-width: 520px;
   margin: auto;
 }
 
 .listing-form {
-  background: #fff;
+  background: var(--bg-surface);
   padding: 30px;
   border-radius: 22px;
-  border: 1px solid var(--airbnb-border);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
 }
 
 .form-input {
   width: 100%;
   padding: 12px;
   border-radius: 12px;
-  border: 1px solid var(--airbnb-border);
+  border: 1px solid var(--border-color);
   margin-bottom: 14px;
+  background-color: var(--bg-input);
+  color: var(--text-main);
+  transition: all 0.2s ease;
 }
 
 .form-input:focus {
   outline: none;
-  border-color: var(--airbnb-red);
+  border-color: var(--primary);
+  background-color: var(--bg-secondary);
 }
 
 .form-btn {
   width: 100%;
-  background: var(--airbnb-red);
+  background: var(--primary);
   color: #fff;
   padding: 12px;
   border-radius: 999px;
   font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.form-btn:hover {
+  background: var(--primary-hover);
 }
 
 /* =====================================================
@@ -527,14 +595,16 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: var(--bg-body);
 }
 
 .auth-card {
-  background: #fff;
+  background: var(--bg-surface);
   padding: 35px;
   border-radius: 24px;
   width: 360px;
-  border: 1px solid var(--airbnb-border);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
 }
 
 .auth-form {
@@ -551,13 +621,28 @@ body {
 /* ===============================
    AIRBNB-STYLE FOOTER
 ================================= */
+/* ===============================
+   AIRBNB-STYLE FOOTER (DARK)
+================================= */
 .airbnb-footer {
-  background: #ffffff;
-  /* cleaner white background */
-  border-top: 1px solid #e5e7eb;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-color);
   font-family: "Poppins", "Segoe UI", sans-serif;
-  color: #111;
+  color: var(--text-main);
   padding-top: 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.airbnb-footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  opacity: 0.3;
 }
 
 .footer-container {
@@ -565,17 +650,17 @@ body {
   margin: auto;
   padding: 50px 20px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 40px;
 }
 
 .footer-col h4 {
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 16px;
-  color: #111;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: var(--text-main);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
 }
 
 .footer-col ul {
@@ -585,96 +670,127 @@ body {
 }
 
 .footer-col ul li {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .footer-col ul li a {
   font-size: 14px;
-  color: #717171;
-  transition: all 0.3s ease;
+  color: var(--text-secondary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  display: inline-block;
 }
 
 .footer-col ul li a:hover {
-  color: #ff385c;
-  /* Airbnb pink accent */
-  text-decoration: underline;
+  color: var(--primary);
+  transform: translateX(5px);
 }
 
 /* Newsletter */
 .newsletter p {
   font-size: 14px;
-  margin-bottom: 12px;
-  color: #717171;
+  margin-bottom: 20px;
+  color: var(--text-secondary);
+  line-height: 1.6;
 }
 
 .newsletter-form {
   display: flex;
   margin-top: 8px;
+  background: var(--bg-input);
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  transition: border-color 0.3s ease;
+}
+
+.newsletter-form:focus-within {
+  border-color: var(--primary);
 }
 
 .newsletter-form input {
   flex: 1;
   padding: 10px 14px;
-  border: 1px solid #d9d9d9;
-  border-radius: 8px 0 0 8px;
+  border: none;
   outline: none;
   font-size: 14px;
-  transition: all 0.3s ease;
-}
-
-.newsletter-form input:focus {
-  border-color: #ff385c;
+  background: transparent;
+  color: var(--text-main);
 }
 
 .newsletter-form button {
-  background: #ff385c;
+  background: var(--primary);
   color: #fff;
   border: none;
-  padding: 10px 18px;
+  padding: 10px 20px;
   font-size: 14px;
   font-weight: 600;
-  border-radius: 0 8px 8px 0;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .newsletter-form button:hover {
-  background: #e63251;
+  background: var(--primary-hover);
+  box-shadow: 0 4px 15px rgba(255, 56, 92, 0.3);
 }
 
 /* Social Icons */
+.social-icons {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}
+
 .social-icons a {
-  color: #717171;
-  margin-right: 16px;
-  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  color: var(--text-secondary);
+  font-size: 16px;
   transition: all 0.3s ease;
+  text-decoration: none;
 }
 
 .social-icons a:hover {
-  color: #ff385c;
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(255, 56, 92, 0.3);
 }
 
 /* Bottom Bar */
 .footer-bottom {
-  border-top: 1px solid #e5e7eb;
-  padding: 20px 0;
+  border-top: 1px solid var(--border-color);
+  padding: 30px 20px;
   max-width: 1280px;
   margin: auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 14px;
-  color: #717171;
+  color: var(--text-muted);
+}
+
+.footer-links {
+  display: flex;
+  gap: 20px;
 }
 
 .footer-links a {
-  margin-left: 16px;
-  color: #717171;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
 .footer-links a:hover {
-  text-decoration: underline;
-  color: #ff385c;
+  color: var(--primary);
 }
 
 /* Mobile Responsive */
@@ -737,14 +853,14 @@ body {
 .about-story {
   padding: 80px 20px;
   text-align: center;
-  background: #fafafa;
+  background: var(--bg-surface);
 }
 
 .about-story h2 {
   font-size: 36px;
   margin-bottom: 24px;
   font-weight: 600;
-  color: #222;
+  color: var(--text-main);
 }
 
 .about-story p {
@@ -752,13 +868,13 @@ body {
   max-width: 900px;
   margin: auto;
   line-height: 1.8;
-  color: #555;
+  color: var(--text-secondary);
 }
 
 /* VALUES / FEATURES */
 .about-values {
   padding: 80px 20px;
-  background: #fff;
+  background: var(--bg-body);
 }
 
 .feature-grid {
@@ -770,23 +886,23 @@ body {
 }
 
 .feature-card {
-  background: #fff;
+  background: var(--bg-surface);
   padding: 40px 20px;
   border-radius: 16px;
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
 }
 
 .feature-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-hover);
 }
 
 .feature-card i {
   font-size: 40px;
-  color: #FF5A5F;
-  /* Airbnb accent color */
+  color: var(--primary);
   margin-bottom: 16px;
 }
 
@@ -794,18 +910,19 @@ body {
   font-size: 22px;
   margin-bottom: 12px;
   font-weight: 600;
+  color: var(--text-main);
 }
 
 .feature-card p {
   font-size: 16px;
-  color: #555;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
 /* TEAM SECTION */
 .about-team {
   padding: 80px 20px;
-  background: #fafafa;
+  background: var(--bg-surface);
   text-align: center;
 }
 
@@ -813,6 +930,7 @@ body {
   font-size: 36px;
   margin-bottom: 50px;
   font-weight: 600;
+  color: var(--text-main);
 }
 
 .team-grid {
@@ -824,16 +942,17 @@ body {
 }
 
 .team-card {
-  background: #fff;
+  background: var(--bg-card);
   padding: 30px 20px;
   border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-sm);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid var(--border-color);
 }
 
 .team-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-md);
 }
 
 .team-card img {
@@ -842,27 +961,27 @@ body {
   border-radius: 50%;
   margin-bottom: 16px;
   object-fit: cover;
-  border: 4px solid #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 4px solid var(--bg-surface);
+  box-shadow: var(--shadow-sm);
 }
 
 .team-card h4 {
   font-size: 20px;
   margin-bottom: 6px;
   font-weight: 600;
-  color: #222;
+  color: var(--text-main);
 }
 
 .team-card p {
   font-size: 16px;
-  color: #555;
+  color: var(--text-secondary);
   line-height: 1.5;
 }
 
 /* TESTIMONIALS */
 .about-testimonials {
   padding: 80px 20px;
-  background: #fff;
+  background: var(--bg-body);
   text-align: center;
 }
 
@@ -870,6 +989,7 @@ body {
   font-size: 36px;
   margin-bottom: 50px;
   font-weight: 600;
+  color: var(--text-main);
 }
 
 .testimonial-grid {
@@ -881,30 +1001,31 @@ body {
 }
 
 .testimonial-card {
-  background: #fafafa;
+  background: var(--bg-surface);
   padding: 40px 30px;
   border-radius: 16px;
   font-style: italic;
-  color: #555;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  color: var(--text-secondary);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
 }
 
 .testimonial-card h4 {
   margin-top: 20px;
   font-weight: 600;
   font-style: normal;
-  color: #222;
+  color: var(--text-main);
 }
 
 /* CTA SECTION */
 .about-cta {
-  background: #FF5A5F;
+  background: var(--primary);
   color: #fff;
   padding: 80px 20px;
   text-align: center;
   border-radius: 16px;
   margin: 60px 20px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-lg);
 }
 
 .about-cta h2 {
@@ -922,18 +1043,18 @@ body {
 
 .btn-primary {
   background: #fff;
-  color: #FF5A5F;
+  color: var(--primary);
   padding: 16px 40px;
   border-radius: 12px;
   font-weight: 600;
   text-decoration: none;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-primary:hover {
-  background: #ffecec;
-  color: #ff3b40;
+  background: #f1f1f1;
+  color: var(--primary-hover);
 }
 
 /* RESPONSIVE */
@@ -983,11 +1104,12 @@ body {
 }
 
 .contact-hero .hero-overlay {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
   padding: 40px;
   text-align: center;
   color: #fff;
   border-radius: 12px;
+  backdrop-filter: blur(4px);
 }
 
 .contact-hero h1 {
@@ -1017,23 +1139,25 @@ body {
 }
 
 .info-cards .card {
-  background: #fff;
+  background: var(--bg-surface);
   flex: 1 1 30%;
   padding: 30px 20px;
   border-radius: 16px;
   text-align: center;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-sm);
   transition: transform 0.3s, box-shadow 0.3s;
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
 }
 
 .info-cards .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-hover);
 }
 
 .info-cards .card i {
   font-size: 2rem;
-  color: #ff385c;
+  color: var(--primary);
   margin-bottom: 15px;
   display: block;
 }
@@ -1041,25 +1165,27 @@ body {
 .info-cards .card h3 {
   margin-bottom: 10px;
   font-size: 1.2rem;
+  color: var(--text-main);
 }
 
 /* =========================
    CONTACT FORM
 ========================= */
 .contact-form-section {
-  background: #fff;
+  background: var(--bg-surface);
   padding: 60px 20px;
   border-radius: 16px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-md);
   max-width: 800px;
   margin: 0 auto 60px;
+  border: 1px solid var(--border-color);
 }
 
 .contact-form-section h2 {
   text-align: center;
   margin-bottom: 40px;
   font-size: 2rem;
-  color: #111;
+  color: var(--text-main);
 }
 
 .contact-form-section .form-group {
@@ -1070,6 +1196,7 @@ body {
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
+  color: var(--text-main);
 }
 
 .contact-form-section input,
@@ -1077,20 +1204,23 @@ body {
   width: 100%;
   padding: 15px 20px;
   border-radius: 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   font-size: 1rem;
   transition: border 0.3s;
+  background: var(--bg-input);
+  color: var(--text-main);
 }
 
 .contact-form-section input:focus,
 .contact-form-section textarea:focus {
-  border-color: #ff385c;
+  border-color: var(--primary);
   outline: none;
+  background: var(--bg-secondary);
 }
 
 .contact-form-section button {
   display: inline-block;
-  background-color: #ff385c;
+  background-color: var(--primary);
   color: #fff;
   padding: 15px 35px;
   border-radius: 12px;
@@ -1102,9 +1232,12 @@ body {
 }
 
 .contact-form-section button:hover {
-  background-color: #e03c50;
+  background-color: var(--primary-hover);
 }
 
+/* =========================
+   MAP SECTION
+========================= */
 /* =========================
    MAP SECTION
 ========================= */
@@ -1114,10 +1247,11 @@ body {
 
 .contact-map iframe {
   border-radius: 16px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-md);
   width: 100%;
   height: 350px;
   border: none;
+  filter: invert(90%) hue-rotate(180deg) contrast(90%);
 }
 
 /* =========================
@@ -1166,12 +1300,13 @@ body {
 }
 
 .error-msg {
-  background: #fee2e2;
-  color: #991b1b;
+  background: #3f1111;
+  color: #fecaca;
   padding: 12px 16px;
   border-radius: 8px;
   margin-bottom: 16px;
   font-weight: 500;
+  border: 1px solid #7f1d1d;
 }
 
 /* like button */
@@ -1186,23 +1321,35 @@ body {
   float: right;
   font-size: 22px;
   cursor: pointer;
-  color: #999;
+  color: var(--text-muted);
   transition: transform 0.2s, color 0.2s;
 }
 
 .like-btn.liked {
-  color: #ff385c;
+  color: var(--primary);
 }
 
 .like-btn:hover {
   transform: scale(1.1);
+  color: var(--primary);
 }
 
 /* user profile */
 .user-profile .dropdown-menu {
   min-width: 220px;
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-lg);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+}
+
+.user-profile .dropdown-item {
+  color: var(--text-main);
+}
+
+.user-profile .dropdown-item:hover {
+  background-color: var(--bg-secondary);
 }
 
 .user-profile i {
@@ -1216,8 +1363,7 @@ body {
   display: inline-block;
   margin-top: 10px;
   padding: 8px 16px;
-  background-color: #FF5A5F;
-  /* Airbnb red/pink */
+  background-color: var(--primary);
   color: white;
   border: none;
   border-radius: 6px;
@@ -1228,8 +1374,7 @@ body {
 }
 
 .add-btn:hover {
-  background-color: #e04850;
-  /* slightly darker on hover */
+  background-color: var(--primary-hover);
 }
 
 .add-btn:focus {
@@ -1245,7 +1390,7 @@ body {
   text-align: center;
   padding: 14px;
   margin: 20px 0;
-  background-color: #ff385c;
+  background-color: var(--primary);
   color: #fff;
   font-size: 16px;
   font-weight: 600;
@@ -1254,7 +1399,7 @@ body {
 }
 
 .btn-book:hover {
-  background-color: #e03150;
+  background-color: var(--primary-hover);
 }
 
 
@@ -1264,17 +1409,18 @@ body {
 
 .booking-page {
   padding: 60px 20px;
-  background-color: #f7f7f7;
+  background-color: var(--bg-body);
   min-height: 100vh;
 }
 
 .booking-container {
   max-width: 520px;
   margin: 0 auto;
-  background: #ffffff;
+  background: var(--bg-surface);
   padding: 32px;
   border-radius: 16px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
 }
 
 /* Title */
@@ -1282,13 +1428,13 @@ body {
   font-size: 26px;
   font-weight: 600;
   margin-bottom: 6px;
-  color: #222222;
+  color: var(--text-main);
 }
 
 /* Price (Airbnb style) */
 .booking-price {
   margin-bottom: 28px;
-  color: #222222;
+  color: var(--text-main);
 }
 
 .price-amount {
@@ -1299,7 +1445,7 @@ body {
 .price-unit {
   font-size: 16px;
   font-weight: 400;
-  color: #717171;
+  color: var(--text-secondary);
 }
 
 /* Form */
@@ -1312,21 +1458,24 @@ body {
 .booking-form label {
   font-size: 14px;
   font-weight: 500;
-  color: #222222;
+  color: var(--text-main);
 }
 
 .booking-form input {
   padding: 12px 14px;
   border-radius: 10px;
-  border: 1px solid #dddddd;
+  border: 1px solid var(--border-color);
   font-size: 15px;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background: var(--bg-input);
+  color: var(--text-main);
 }
 
 .booking-form input:focus {
-  border-color: #222222;
-  box-shadow: 0 0 0 1px #222222;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+  background: var(--bg-secondary);
 }
 
 /* Button */
@@ -1363,25 +1512,25 @@ body {
 .booking-total {
   margin-top: 20px;
   padding: 16px 18px;
-  background: #ffffff;
-  border: 1px solid #dddddd;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-sm);
 }
 
 .booking-total .total-label {
-  color: #717171;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .booking-total .total-amount {
   font-size: 18px;
   font-weight: 600;
-  color: #222222;
+  color: var(--text-main);
 }
 
 /* message notification container */
@@ -1412,9 +1561,10 @@ body {
   align-items: center;
   gap: 14px;
 
-  background: #ffffff;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
 
   /* SLIDER BEHAVIOR */
   position: relative;
@@ -1446,16 +1596,16 @@ body {
 
 /* SUCCESS */
 .flash.success {
-  background-color: #f0fdf4;
-  color: #166534;
-  border-left: 4px solid #22c55e;
+  background-color: #064e3b;
+  color: #d1fae5;
+  border-left: 4px solid #34d399;
 }
 
 /* ERROR */
 .flash.error {
-  background-color: #fef2f2;
-  color: #991b1b;
-  border-left: 4px solid #ef4444;
+  background-color: #7f1d1d;
+  color: #fee2e2;
+  border-left: 4px solid #f87171;
 }
 
 /* ICON BASE */
@@ -1474,15 +1624,15 @@ body {
 /* SUCCESS ICON */
 .flash.success::before {
   content: "✓";
-  background: #22c55e;
-  color: #ffffff;
+  background: #34d399;
+  color: #064e3b;
 }
 
 /* ERROR ICON */
 .flash.error::before {
   content: "✕";
-  background: #ef4444;
-  color: #ffffff;
+  background: #f87171;
+  color: #7f1d1d;
 }
 
 
@@ -1490,16 +1640,16 @@ body {
 /* rating*/
 .rating {
   font-size: 1.3rem;
-  color: #ddd;
+  color: var(--text-muted);
 }
 
 .rating .bi-star-fill {
-  color: #ff385c;
+  color: var(--primary);
   /* Airbnb red */
 }
 
 .rating .bi-star {
-  color: #ddd;
+  color: var(--text-muted);
   transition: color 0.2s ease;
 }
 
@@ -1516,12 +1666,12 @@ body {
 }
 
 .star-rating span {
-  color: #ddd;
+  color: var(--text-muted);
   transition: color 0.2s ease, transform 0.15s ease;
 }
 
 .star-rating span.active {
-  color: #ff385c;
+  color: var(--primary);
 }
 
 .star-rating span:hover {
@@ -1537,7 +1687,7 @@ body {
   width: 100%;
   height: 6px;
   border-radius: 12px;
-  background: linear-gradient(to right, #ff385c, #ffd1d9);
+  background: linear-gradient(to right, #ff385c, #555);
   outline: none;
   cursor: pointer;
   margin-top: 6px;
@@ -1549,9 +1699,9 @@ body {
   appearance: none;
   width: 18px;
   height: 18px;
-  background-color: #ff385c;
+  background-color: var(--primary);
   border-radius: 50%;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   transition: transform 0.2s ease;
 }
 
@@ -1562,7 +1712,7 @@ body {
 #rating::-moz-range-thumb {
   width: 18px;
   height: 18px;
-  background-color: #ff385c;
+  background-color: var(--primary);
   border-radius: 50%;
   border: none;
   cursor: pointer;
@@ -1572,7 +1722,7 @@ body {
 #rating::-moz-range-track {
   height: 6px;
   border-radius: 12px;
-  background: linear-gradient(to right, #ff385c, #ffd1d9);
+  background: linear-gradient(to right, #ff385c, #555);
 }
 
 /* ===============================
@@ -1590,13 +1740,13 @@ body {
   height: 100px;
   object-fit: cover;
   border-radius: 8px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
 }
 
 .btn-add-image {
   background-color: transparent;
-  border: 1px dashed #717171;
-  color: #717171;
+  border: 1px dashed var(--text-secondary);
+  color: var(--text-secondary);
   padding: 10px 15px;
   border-radius: 8px;
   cursor: pointer;
@@ -1607,9 +1757,9 @@ body {
 }
 
 .btn-add-image:hover {
-  border-color: #ff385c;
-  color: #ff385c;
-  background-color: #fff0f5;
+  border-color: var(--primary);
+  color: var(--primary);
+  background-color: rgba(255, 56, 92, 0.1);
 }
 
 
@@ -1632,11 +1782,12 @@ body {
 .map-card {
   width: 100%;
   max-width: 850px;
-  background: #fff;
+  background: var(--bg-surface);
   padding: 25px;
   border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-md);
   text-align: center;
+  border: 1px solid var(--border-color);
 }
 
 /* Heading */
@@ -1644,7 +1795,7 @@ body {
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 15px;
-  color: #222;
+  color: var(--text-main);
 }
 
 /* Map box */
@@ -1652,8 +1803,9 @@ body {
   width: 100%;
   height: 420px;
   border-radius: 14px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid var(--border-color);
   overflow: hidden;
+  filter: invert(90%) hue-rotate(180deg) contrast(90%);
 }
 
 /* Responsive */
@@ -1687,7 +1839,7 @@ body {
 }
 
 .star-rating label {
-  color: #ccc;
+  color: var(--text-muted);
   cursor: pointer;
   transition: color 0.2s;
 }
@@ -1697,10 +1849,96 @@ body {
 }
 
 .star-rating input:checked~label {
-  color: gold;
+  color: #fbbf24;
+  /* Gold/Amber for stars */
 }
 
 .star-rating label:hover,
 .star-rating label:hover~label {
-  color: gold;
+  color: #fbbf24;
+}
+
+/* =====================================================
+   BOOTSTRAP DARK OVERRIDES
+===================================================== */
+.card {
+  background-color: var(--bg-card) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-main) !important;
+}
+
+.modal-content {
+  background-color: var(--bg-surface) !important;
+  color: var(--text-main) !important;
+  border-color: var(--border-color) !important;
+}
+
+.modal-header,
+.modal-footer {
+  border-color: var(--border-color) !important;
+}
+
+.modal-header .close,
+.modal-header .btn-close {
+  color: var(--text-main) !important;
+  filter: invert(1);
+}
+
+.dropdown-menu {
+  background-color: var(--bg-surface) !important;
+  border-color: var(--border-color) !important;
+}
+
+.dropdown-item {
+  color: var(--text-main) !important;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-main) !important;
+}
+
+.form-control,
+.form-select {
+  background-color: var(--bg-input) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-main) !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--primary) !important;
+  color: var(--text-main) !important;
+  box-shadow: 0 0 0 0.25rem rgba(255, 56, 92, 0.25) !important;
+}
+
+.input-group-text {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-main) !important;
+}
+
+.alert {
+  background-color: var(--bg-surface) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-main) !important;
+}
+
+hr {
+  border-color: var(--border-color) !important;
+  opacity: 1 !important;
+}
+
+.text-muted {
+  color: var(--text-secondary) !important;
+}
+
+.bg-light {
+  background-color: var(--bg-body) !important;
+}
+
+.bg-white {
+  background-color: var(--bg-surface) !important;
 }

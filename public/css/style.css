@@ -18,12 +18,10 @@
   --accent-glow: rgba(255, 79, 216, 0.6);
 
   /* Night gradient base */
-  --bg-body: radial-gradient(
-      circle at 20% 20%,
+  --bg-body: radial-gradient(circle at 20% 20%,
       #0a0f2c,
       #050714 60%,
-      #02030a 100%
-    );
+      #02030a 100%);
 
   --bg-surface: rgba(15, 20, 40, 0.65);
   --bg-card: rgba(20, 25, 50, 0.55);
@@ -49,12 +47,188 @@
   --shadow-lg: 0 30px 80px rgba(0, 0, 0, 0.9);
   --shadow-neon: 0 0 25px rgba(79, 140, 255, 0.5);
 
+  /* Button Specifics */
+  --btn-radius: 12px;
+  --btn-padding: 12px 24px;
+  --btn-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
   /* Compatibility */
   --airbnb-red: var(--primary);
   --airbnb-dark: var(--bg-surface);
   --airbnb-gray: var(--text-secondary);
   --airbnb-border: var(--border-color);
   --airbnb-bg: #050714;
+}
+
+/* =====================================================
+   INTERACTIVE BUTTON SYSTEM
+===================================================== */
+.btn,
+.form-btn,
+.btn-book,
+.btn-edit,
+.btn-delete,
+.btn-back,
+.slider-btn,
+.btn-airbnb,
+.btn-logout,
+.auth-btn,
+.tab-btn,
+.btn-cancel,
+button:not(.navbar-toggler) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--btn-padding);
+  border-radius: var(--btn-radius);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: var(--btn-transition);
+  position: relative;
+  overflow: hidden;
+  gap: 8px;
+  outline: none;
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* Interactive Effects */
+.btn:hover,
+.form-btn:hover,
+.btn-book:hover,
+.btn-edit:hover,
+.btn-delete:hover,
+.btn-back:hover,
+.slider-btn:hover,
+.btn-airbnb:hover,
+.btn-logout:hover,
+.auth-btn:hover,
+.tab-btn:hover,
+.btn-cancel:hover,
+button:not(.navbar-toggler):hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+  filter: brightness(1.1);
+}
+
+.btn:active,
+.form-btn:active,
+.btn-book:active,
+.btn-edit:active,
+.btn-delete:active,
+.btn-back:active,
+.slider-btn:active,
+.btn-airbnb:active,
+.btn-logout:active,
+.auth-btn:active,
+.tab-btn:active,
+.btn-cancel:active,
+button:not(.navbar-toggler):active {
+  transform: translateY(-1px) scale(0.97);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+  filter: brightness(0.95);
+}
+
+/* Base Primary Style */
+.btn-primary,
+.form-btn,
+.btn-book,
+.btn-airbnb,
+.auth-btn,
+.btn-cancel {
+  background: var(--primary);
+  color: #ffffff !important;
+  box-shadow: 0 4px 15px var(--primary-glow);
+}
+
+.btn-primary:hover,
+.form-btn:hover,
+.btn-book:hover,
+.btn-airbnb:hover,
+.auth-btn:hover,
+.btn-cancel:hover {
+  background: var(--primary-hover);
+  box-shadow: 0 8px 30px var(--primary-glow);
+}
+
+/* Edit / Secondary Style */
+.btn-edit {
+  background: var(--bg-input);
+  color: var(--text-main) !important;
+  border-color: var(--border-color);
+}
+
+.btn-edit:hover {
+  background: var(--bg-secondary);
+  border-color: var(--primary);
+  color: var(--primary) !important;
+}
+
+/* Delete / Warning Style */
+.btn-delete,
+.btn-logout {
+  background: #ff385c;
+  color: #fff !important;
+  box-shadow: 0 4px 15px rgba(255, 56, 92, 0.3);
+}
+
+.btn-delete:hover,
+.btn-logout:hover {
+  background: #e31c5f;
+  box-shadow: 0 8px 30px rgba(255, 56, 92, 0.4);
+}
+
+/* Back / Ghost Style */
+.btn-back {
+  background: transparent;
+  color: var(--text-secondary) !important;
+  border-color: var(--border-color);
+}
+
+.btn-back:hover {
+  background: var(--glass-soft);
+  color: var(--text-main) !important;
+  border-color: var(--text-secondary);
+}
+
+/* Small Variant */
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 13px;
+  border-radius: 8px;
+}
+
+/* Outline Variant */
+.btn-outline,
+.btn-outline-dark,
+.btn-outline-airbnb {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-main) !important;
+}
+
+.btn-outline:hover,
+.btn-outline-dark:hover,
+.btn-outline-airbnb:hover {
+  background: var(--glass-soft);
+  border-color: var(--primary);
+  color: var(--primary) !important;
+}
+
+/* Dark Variant */
+.btn-dark {
+  background: var(--bg-secondary);
+  color: var(--text-main) !important;
+  border-color: var(--border-color);
+}
+
+.btn-dark:hover {
+  background: #000;
+  border-color: var(--text-secondary);
+  color: #fff !important;
 }
 
 
@@ -359,29 +533,48 @@ body {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background-color: rgba(30, 30, 30, 0.7);
-  color: var(--text-main);
-  border: 1px solid var(--border-color);
-  font-size: 20px;
-  cursor: pointer;
-  padding: 10px 15px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  transition: background-color 0.3s;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
   z-index: 10;
-  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  opacity: 0.85;
 }
 
 .slider-btn:hover {
-  background-color: var(--primary);
-  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-50%) scale(1.1);
+  opacity: 1;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
 }
 
+.slider-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+/* ===============================
+   SLIDER BUTTONS
+================================ */
 .prev-btn {
-  left: 10px;
+  left: 20px;
 }
 
 .next-btn {
-  right: 10px;
+  right: 20px;
+  float: right;
 }
 
 /* ===============================
@@ -436,72 +629,10 @@ body {
   margin-top: 18px;
 }
 
-.btn-edit,
-.btn-delete {
-  padding: 10px 18px;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  border: none;
-}
-
-.btn-edit {
-  background: var(--bg-input);
-  color: var(--text-main);
-  border: 1px solid var(--border-color);
-}
-
-.btn-edit:hover {
-  background: var(--bg-secondary);
-  border-color: var(--text-secondary);
-}
-
-.btn-delete {
-  background: var(--primary);
-  color: #fff;
-}
-
-.btn-delete:hover {
-  background: var(--primary-hover);
-}
 
 /* ===============================
    BACK BUTTON
 ================================ */
-.btn-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 14px;
-  justify-content: center;
-  padding: 10px 18px;
-  font-size: 14px;
-  font-weight: 500;
-
-  color: var(--text-main);
-  background: var(--bg-surface);
-
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-
-  text-decoration: none;
-  cursor: pointer;
-
-  transition: all 0.25s ease;
-}
-
-.btn-back:hover {
-  background: var(--bg-secondary);
-  border-color: var(--text-secondary);
-  transform: translateY(-1px);
-}
-
-.btn-back:active {
-  transform: translateY(0);
-}
-
 .btn-back::before {
   content: "←";
   font-size: 15px;
@@ -519,6 +650,21 @@ body {
     height: 300px;
     border-right: none;
     border-bottom: 1px solid var(--border-color);
+  }
+
+  /* Smaller slider buttons on mobile */
+  .slider-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .prev-btn {
+    left: 12px;
+  }
+
+  .next-btn {
+    right: 12px;
   }
 }
 
@@ -573,18 +719,6 @@ body {
 
 .form-btn {
   width: 100%;
-  background: var(--primary);
-  color: #fff;
-  padding: 12px;
-  border-radius: 999px;
-  font-weight: 500;
-  border: none;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.form-btn:hover {
-  background: var(--primary-hover);
 }
 
 /* =====================================================

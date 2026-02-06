@@ -1,11 +1,9 @@
 :root {
   /* Main background (night gradient) */
-  --bg-main: radial-gradient(
-    circle at 20% 20%,
-    #0a0f2c,
-    #050714 60%,
-    #02030a 100%
-  );
+  --bg-main: radial-gradient(circle at 20% 20%,
+      #0a0f2c,
+      #050714 60%,
+      #02030a 100%);
 
   /* Glassy surfaces */
   --bg-card: rgba(20, 25, 50, 0.55);
@@ -114,27 +112,9 @@
   box-shadow: 0 0 0 2px rgba(255, 56, 92, 0.2);
 }
 
-/* Button */
+/* Button Layout */
 .auth-btn {
   width: 100%;
-  padding: 13px;
-  border-radius: 10px;
-  border: none;
-  background: var(--primary);
-  color: white;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
-
-.auth-btn:hover {
-  background: var(--primary-hover);
-  transform: translateY(-1px);
-}
-
-.auth-btn:active {
-  transform: scale(0.98);
 }
 
 /* Error message */

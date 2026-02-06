@@ -10,12 +10,10 @@
   --border: rgba(120, 140, 255, 0.25);
 
   /* Backgrounds */
-  --bg-light: radial-gradient(
-    circle at 20% 20%,
-    #0a0f2c,
-    #050714 60%,
-    #02030a 100%
-  );
+  --bg-light: radial-gradient(circle at 20% 20%,
+      #0a0f2c,
+      #050714 60%,
+      #02030a 100%);
 
   /* Glass card surface */
   --white: rgba(20, 25, 50, 0.55);
@@ -136,14 +134,6 @@ body {
   margin: 0 auto 20px;
 }
 
-.btn {
-  background: var(--white);
-  color: var(--primary);
-  padding: 12px 24px;
-  border-radius: 12px;
-  text-decoration: none;
-  font-weight: 600;
-}
 
 footer {
   margin-top: 80px;

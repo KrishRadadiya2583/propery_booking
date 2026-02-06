@@ -165,26 +165,3 @@ body {
 }
 
 /* cancel button*/
-.btn-cancel {
-  display: inline-block;
-  padding: 12px 20px;
-  background-color: var(--primary);
-  /* Airbnb red */
-  color: #ffffff;
-  font-size: 15px;
-  font-weight: 600;
-  text-decoration: none;
-  border-radius: 8px;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
-  border: none;
-}
-
-.btn-cancel:hover {
-  background-color: var(--primary-hover);
-  transform: translateY(-1px);
-}
-
-.btn-cancel:active {
-  transform: translateY(0);
-}

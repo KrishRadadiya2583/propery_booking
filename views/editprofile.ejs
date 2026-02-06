@@ -8,15 +8,26 @@
 
   <style>
     :root {
-      --primary: #ff385c;
-      --primary-hover: #ff5a78;
-      --bg-body: #0f1115;
-      --bg-card: #181a20;
-      --bg-input: #20232b;
-      --text-main: #ffffff;
-      --text-muted: #a0a4ab;
-      --border-color: #2a2d35;
-    }
+  /* Neon primary accent */
+  --primary: #4f8cff;
+  --primary-hover: #7aa7ff;
+
+  /* Backgrounds */
+  --bg-body: radial-gradient(circle at 20% 20%,
+      #0a0f2c,
+      #050714 60%,
+      #02030a 100%);
+  --bg-card: rgba(20, 25, 50, 0.55);
+  --bg-input: rgba(30, 35, 70, 0.65);
+
+  /* Text */
+  --text-main: #f1f4ff;
+  --text-muted: #aab2d6;
+
+  /* Borders */
+  --border-color: rgba(120, 140, 255, 0.25);
+}
+
 
     * {
       box-sizing: border-box;

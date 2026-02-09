@@ -1,60 +1,32 @@
 var express = require('express');
 var router = express.Router();
+const {helpcenter,safety,cancellation,report,hosting,hostprotection,hostresource,community,carrer,newsroom,investors,privacy,terms,sitemap} = require("../controllers/footer");
+router.get('/help-center', helpcenter);
 
-router.get('/help-center', function(req, res, next) {
-    res.render('footer/help-center');
-});
+router.get('/safety', safety);
 
-router.get('/safety', function(req, res, next) {
-    res.render('footer/safety');
-});
+router.get('/cancellation', cancellation);
 
-router.get('/cancellation', function(req, res, next) {
-    res.render('footer/cancellation');
-});
+router.get('/report', report);
 
-router.get('/report', function(req, res, next) {
-    res.render('footer/report');
-});
+router.get('/hosting', hosting);
 
-router.get('/hosting', function(req, res, next) {
-    res.render('footer/hosting');
-});
+router.get('/host-protection', hostprotection);
 
-router.get('/host-protection', function(req, res, next) {
-    res.render('footer/host-protection');
-});
+router.get('/host-resource', hostresource);
 
-router.get('/host-resource', function(req, res, next) {
-    res.render('footer/host-resource');
-});
+router.get('/community', community);
 
-router.get('/community', function(req, res, next) {
-    res.render('footer/community');
-});
+router.get('/carrer', carrer);
 
-router.get('/carrer', function(req, res, next) {
-    res.render('footer/carrer');
-});
+router.get('/newsroom', newsroom);
 
-router.get('/newsroom', function(req, res, next) {
-    res.render('footer/newsroom');
-});
+router.get('/investors', investors);
 
-router.get('/investors', function(req, res, next) {
-    res.render('footer/investors');
-});
+router.get('/privacy', privacy);
 
-router.get('/privacy', function(req, res, next) {
-    res.render('footer/privacy');
-});
+router.get('/terms', terms);
 
-router.get('/terms', function(req, res, next) {
-    res.render('footer/terms');
-});
-
-router.get('/sitemap', function(req, res, next) {
-    res.render('footer/sitemap');
-});
+router.get('/sitemap', sitemap);
 
 module.exports = router;

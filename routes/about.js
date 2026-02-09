@@ -1,14 +1,7 @@
 var express = require('express');
 var router = express.Router();
-
-router.get('/', function(req, res, next) {
-    try{
-    res.render('about');
-    }
-    catch(err){
-        res.send("something went wrong")
-    }
-});
+const {index} = require("../controllers/about")
+router.get('/', index);
 
 
 

@@ -5,9 +5,15 @@ const listingSchema = new mongoose.Schema({
         type: String,
     },
     description: String,
-    image: [{
-        type: String,
-    }],
+    
+ image: [
+    {
+      url: String,
+      fileId: String,
+    }
+  ],
+
+
     price: {
         type: Number,
     },

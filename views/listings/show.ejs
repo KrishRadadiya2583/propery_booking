@@ -6,7 +6,7 @@
       <!-- IMAGE SLIDER -->
       <div class="show-slider">
         <% listing.image.forEach((img, index)=> { %>
-          <img src="<%= img %>" class="<%= index === 0 ? 'active' : '' %>">
+          <img src="<%= img.url %>" class="<%= index === 0 ? 'active' : '' %>">
           <% }) %>
             <button class="slider-btn prev-btn" onclick="changeSlide(-1)">&#10094;</button>
             <button class="slider-btn next-btn" onclick="changeSlide(1)">&#10095;</button>

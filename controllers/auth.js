@@ -74,3 +74,9 @@ req.flash("error", "Login failed. Please try again.");
     });
   }
 }
+
+module.exports.logout = (req, res) => {
+  req.session.destroy(() => {
+    res.redirect("/");
+  });
+};

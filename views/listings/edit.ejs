@@ -16,10 +16,10 @@
         <div class="current-images-grid" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
           <% listing.image.forEach((img, index)=> { %>
             <div class="current-image-wrapper" style="position: relative;">
-              <img src="<%= img %>" class="preview-img"
+              <img src="<%= img.url %>" class="preview-img"
                 style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">
               <div style="text-align: center; margin-top: 5px;">
-                <input type="checkbox" id="img-<%= index %>" name="deleteImages[]" value="<%= img %>">
+                <input type="checkbox" id="img-<%= index %>" name="deleteImages[]" value="<%= img.fileId %>">
                 <label for="img-<%= index %>" style="font-size: 12px;">Delete</label>
               </div>
             </div>

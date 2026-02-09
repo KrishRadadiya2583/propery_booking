@@ -19,5 +19,4 @@ router.get("/bookings", isLoggedIn, bookings);
 
 router.get("/listings", isLoggedIn, listings);
 
-
 module.exports = router;

@@ -4,6 +4,7 @@ const Booking = require('../models/booking');
 
 const razorpay = require("../config/razorpay");
 const upload = require('../middlewares/multer');
+const imagekit = require("../config/imagekit");
 
 module.exports.index = async (req, res) => {
   try {
@@ -43,20 +44,35 @@ module.exports.create = async (req, res) => {
 
     // Handle uploaded images
     listing.image = [];
+
     if (req.files && req.files.length > 0) {
-      listing.image = req.files.map(f => "/uploads/" + f.filename);
+      for (let file of req.files) {
+        const result = await imagekit.upload({
+          file: file.buffer,
+          fileName: file.originalname,
+          folder: "/listings",   // <-- specific folder
+        });
+
+        listing.image.push({
+          url: result.url,
+          fileId: result.fileId,
+        });
+      }
     }
 
     const newListing = new Listing(listing);
     await newListing.save();
+
     console.log("Listing created successfully");
     req.flash("success", "Listing Added successfully");
     res.redirect("/listings");
+
   } catch (err) {
     console.log(err);
     res.send("Something went wrong");
   }
 }
+
 
 
 module.exports.edit =async (req, res) => {
@@ -75,37 +91,77 @@ module.exports.update = async (req, res) => {
     const { id } = req.params;
     const listingData = req.body.listing;
 
+    // 1. Update basic listing data
+    const listing = await Listing.findByIdAndUpdate(
+      id,
+      listingData,
+      { new: true, runValidators: true }
+    );
+
+    // 2. Upload new images (if any)
+    if (req.files && req.files.length > 0) {
+      let newImages = [];
+
+      for (let file of req.files) {
+        const result = await imagekit.upload({
+          file: file.buffer,
+          fileName: file.originalname,
+          folder: "/listings",
+        });
+
+        newImages.push({
+          url: result.url,
+          fileId: result.fileId,
+        });
+      }
+
+      listing.image.push(...newImages);
+      await listing.save();
+    }
+
+    // 3. Delete selected images
+    if (req.body.deleteImages) {
+      let imagesToDelete = req.body.deleteImages;
+
+      // ensure array
+      if (!Array.isArray(imagesToDelete)) {
+        imagesToDelete = [imagesToDelete];
+      }
+
+      
+    //   // delete from ImageKit
+    //   for (let fileId of imagesToDelete) {
+    //     await imagekit.deleteFile(fileId);
+    //   }
+
+     for (let fileId of imagesToDelete) {
     try {
-      await Listing.findByIdAndUpdate(
-        id,
-        listingData,
-        { new: true, runValidators: true }
-      );
+      // check if file exists in ImageKit
+      await imagekit.getFileDetails(fileId);
 
-      if (req.files && req.files.length > 0) {
-        const newImages = req.files.map(f => "/uploads/" + f.filename);
-        await Listing.findByIdAndUpdate(id, { $push: { image: { $each: newImages } } });
-      }
+      // if exists → delete it
+      await imagekit.deleteFile(fileId);
+      console.log(`Deleted from ImageKit: ${fileId}`);
 
-      if (req.body.deleteImages) {
-        // Ensure deleteImages is an array (it might be a single string if only 1 checkbox is checked)
-        let imagesToDelete = req.body.deleteImages;
-        if (!Array.isArray(imagesToDelete)) {
-          imagesToDelete = [imagesToDelete];
-        }
-        await Listing.findByIdAndUpdate(id, { $pull: { image: { $in: imagesToDelete } } });
-      }
-
-      console.log("Listing updated successfully");
-      req.flash("success", "Listing Updated successfully");
-      res.redirect(`/listings/${id}`);
     } catch (err) {
-      console.error(err);
-      res.send("Something went wrong");
+      console.log(`File not found in ImageKit: ${fileId}`);
+      // skip if not found
     }
   }
-  catch (err) {
-    res.send("something went wrong")
+
+      // remove from MongoDB
+      await Listing.findByIdAndUpdate(id, {
+        $pull: { image: { fileId: { $in: imagesToDelete } } },
+      });
+    }
+
+    console.log("Listing updated successfully");
+    req.flash("success", "Listing Updated successfully");
+    res.redirect(`/listings/${id}`);
+
+  } catch (err) {
+    console.error(err);
+    res.send("Something went wrong");
   }
 }
 
@@ -113,8 +169,15 @@ module.exports.update = async (req, res) => {
 module.exports.delete = async (req, res) => {
   try {
     const { id } = req.params;
+const listing = await Listing.findById(id);
 
+if(listing.image.length > 0){
+    for(let image of listing.image){
+        await imagekit.deleteFile(image.fileId);
+    }
+}
     Listing.findByIdAndDelete(id).then(() => {
+
       console.log("Listing deleted successfully");
     }).catch((err) => {
       console.log("Something went wrong");

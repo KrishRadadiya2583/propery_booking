@@ -12,7 +12,7 @@
 
                         <a href="/listings/<%= listing._id %>">
                             <% if (listing.image && listing.image.length> 0) { %>
-                                <img class="listing-image" src="<%= listing.image[0] %>" alt="<%= listing.title %>"
+                                <img class="listing-image" src="<%= listing.image[0].url %>" alt="<%= listing.title %>"
                                     loading="lazy">
                                 <% } else { %>
                                     <img class="listing-image"

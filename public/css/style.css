@@ -1460,12 +1460,12 @@ body {
 }
 
 .like-btn.liked {
-  color: var(--primary);
+  color: red;
 }
 
 .like-btn:hover {
   transform: scale(1.1);
-  color: var(--primary);
+  color: red;
 }
 
 /* user profile */

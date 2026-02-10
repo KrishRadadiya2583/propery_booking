@@ -1,0 +1,21 @@
+<%- layout("./admin/layouts/adminboilerplate.ejs") %>
+
+<h1 class="page-title">All Listings</h1>
+
+<div class="listings-grid">
+  <% listings.forEach(listing => { %>
+    <div class="listing-card">
+      <div class="card-body">
+        <h3 class="listing-title"><%= listing.title %></h3>
+        <p class="listing-email"><strong>User:</strong> <%= listing.useremail %></p>
+        <p class="listing-location"><strong>Location:</strong> <%= listing.location %></p>
+        <p class="listing-price">₹<%= listing.price %></p>
+      </div>
+
+      <div class="card-actions">
+        <a href="/listings/<%= listing._id %>" class="btn view-btn">View</a>
+        <a href="/admin/delete/<%= listing._id %>" class="btn delete-btn">Delete</a>
+      </div>
+    </div>
+  <% }) %>
+</div>

@@ -6,7 +6,6 @@ const { validateBooking } = require('../middlewares/bookingValidation');
 const { validateImages } = require('../middlewares/validateimage');
 const {index,new:newListing,show,create,edit,update,delete:deleteListing,bookingform,createBooking,savebooking,cancelbooking} = require("../controllers/listing")
 
-const razorpay = require("../config/razorpay");
 const upload = require('../middlewares/multer');
 
 router.get('/', isLoggedIn, index);

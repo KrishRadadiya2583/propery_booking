@@ -19,6 +19,7 @@ const contactRouter = require("./routes/contact");
 const profileRouter = require("./routes/profile");
 const footerRouter = require("./routes/footer");
 const reviewsRouter = require("./routes/reviews");
+const adminRouter = require("./routes/admin/admin");
 const flash = require("connect-flash");
 const ratelimit = require("./middlewares/ratelimit");
 const morgan = require("morgan");
@@ -79,7 +80,7 @@ app.use("/about", aboutRouter);
 app.use("/contact", contactRouter)
 app.use("/profile", profileRouter);
 app.use("/footer", footerRouter);
-
+app.use("/admin", adminRouter);
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);

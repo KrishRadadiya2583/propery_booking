@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="/css/admindashboard.css">
+</head>
+
+<body>
+
+<div class="admin-container">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2 class="logo">Admin</h2>
+    <nav>
+      <a href="/admin">Dashboard</a>
+      <a href="/admin/listings">Listings</a>
+      <a href="/admin/bookings">Bookings</a>
+      <a href="/admin/users">Users</a>
+      <a href="/logout">Logout</a>
+    </nav>
+  </aside>
+
+  <!-- Main Area -->
+  <main class="main-content">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <h1>Admin Panel</h1>
+      <div class="admin-profile">Admin</div>
+    </header>
+
+    <!-- Page Content -->
+    <section class="page-content">
+      <%- body %>
+    </section>
+
+  </main>
+
+</div>
+
+</body>
+</html>

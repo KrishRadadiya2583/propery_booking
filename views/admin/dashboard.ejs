@@ -1,0 +1,29 @@
+<%- layout("./admin/layouts/adminboilerplate.ejs") %>
+
+<h2>Dashboard</h2>
+
+<div class="stats">
+  <div class="card">
+    <h3>Total Listings</h3>
+    <p><%= totalListings %></p>
+  
+  </div>
+
+  <div class="card">
+    <h3>Total Users</h3>
+    <p><%= totalUsers %></p>
+
+  </div>
+
+  <div class="card">
+    <h3>Total Bookings</h3>
+    <p><%= totalBookings %></p>
+    
+  </div>
+
+  <div class="card">
+    <h3>Revenue</h3>
+    <p><%= totalRevenue %></p>
+    
+  </div>
+</div>

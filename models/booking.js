@@ -24,7 +24,7 @@ const bookingschema = new mongoose.Schema({
         type:String,
     },
     totalPrice:{
-        type:String,
+        type:Number,
     },
     paymentId:{
         type:String,

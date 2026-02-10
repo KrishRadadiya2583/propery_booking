@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login</title>
+<style>
+    /* Reset default */
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #f4f6f8;
+    }
+
+    .login-container {
+        background: #fff;
+        padding: 40px 30px;
+        border-radius: 8px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        width: 350px;
+        text-align: center;
+    }
+
+    .login-container h2 {
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .login-container input {
+        width: 100%;
+        padding: 12px 15px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+        transition: border 0.3s;
+    }
+
+    .login-container input:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    .login-container button {
+        width: 100%;
+        padding: 12px;
+        background-color: #007bff;
+        color: #fff;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .login-container button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Optional small text */
+    .login-container .note {
+        margin-top: 15px;
+        font-size: 12px;
+        color: #888;
+    }
+</style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Admin Login</h2>
+    <form action="/admin/login" method="post">
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+    </form>
+    <p class="note">Only admins can access this panel</p>
+</div>
+
+</body>
+</html>

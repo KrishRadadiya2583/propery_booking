@@ -29,7 +29,7 @@
             <a href="/listings/<%= listing._id %>" class="image-wrapper">
               <% if (listing.image && listing.image.length > 0) { %>
                 <img
-                  src="<%= listing.image[0] %>"
+                  src="<%= listing.image[0].url %>"
                   alt="<%= listing.title %>"
                 >
               <% } else { %>

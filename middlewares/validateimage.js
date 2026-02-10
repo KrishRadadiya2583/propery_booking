@@ -11,9 +11,9 @@ module.exports.validateImages = (req, res, next) => {
     }
 
       // optional: size check (e.g. 2MB)
-      const maxSize = 2 * 1024 * 1024;
+      const maxSize = 10 * 1024 * 1024;
       if (file.size > maxSize) {
-        req.flash("error", "Image size must be less than 2MB.");
+        req.flash("error", "Image size must be less than 10MB.");
   return res.redirect(req.get("Referer"));
     }
     }

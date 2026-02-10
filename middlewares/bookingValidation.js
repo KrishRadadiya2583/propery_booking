@@ -1,5 +1,6 @@
-module.exports.validateBooking = (req, res, next) => {
+module.exports.validateBooking = async(req, res, next) => {
     let { name, email, phone, checkIn, checkOut, guests } = req.body;
+
 
     if (!name || name.trim() === "") {
         req.flash("error", "Name is required");

@@ -2076,3 +2076,21 @@ hr {
 .bg-white {
   background-color: var(--bg-surface) !important;
 }
+
+.amenities-modal {
+  border-radius: 20px;
+}
+
+.amenities-body {
+  max-height: 75vh;
+  overflow-y: auto;
+  padding-bottom: 30px;
+}
+
+.amenity-item {
+  padding: 12px 0;
+}
+
+.modal-xl {
+  max-width: 1000px;
+}

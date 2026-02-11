@@ -29,6 +29,10 @@
           <strong>Payment ID:</strong> <%= booking.paymentId %>
         </p>
 
+        <div class="card-actions">
+        <a href="/admin/bookings/<%= booking._id %>/delete" class="btn delete-btn">Delete</a>
+      </div>
+
       </div>
     </div>
   <% }) %>

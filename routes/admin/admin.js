@@ -72,4 +72,29 @@ router.get("/users", async (req, res) => {
 });
 
 
+router.get("/users/:id/delete", async (req, res) => {
+    const { id } = req.params;
+    await User.findByIdAndDelete(id);
+    res.redirect("/admin/users");
+});
+
+router.get("/listings/:id/delete", async (req, res) => {
+    const { id } = req.params;
+    await Listing.findByIdAndDelete(id);
+    res.redirect("/admin/listings");
+});
+
+router.get("/bookings/:id/delete", async (req, res) => {
+    const { id } = req.params;
+    await Booking.findByIdAndDelete(id);
+    res.redirect("/admin/bookings");
+});
+
+
+router.get("/logout", (req, res) => {
+    res.redirect("/");
+});
+
+
+
 module.exports = router;

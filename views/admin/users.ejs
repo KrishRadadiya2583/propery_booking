@@ -16,6 +16,7 @@
             <th>ID</th>
             <th>Name</th>
             <th>Email</th>
+            <th>Delete</th>
           </tr>
         </thead>
 
@@ -26,6 +27,9 @@
               <td class="fw-semibold"><%= user.name %></td>
               <td><%= user.email %></td>
               
+              <td>
+                <a href="/admin/users/<%= user._id %>/delete" class="btn btn-danger btn-sm">Delete</a>
+              </td>
             </tr>
           <% }) %>
         </tbody>

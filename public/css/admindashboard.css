@@ -517,3 +517,63 @@ td.fw-semibold {
   }
 }
 
+/* =========================
+   CHARTS
+========================= */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.card-icon { 
+  font-size: 2rem; 
+  margin-right: 15px; 
+}
+
+/* Charts Grid: 2 per row */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 charts per row */
+  gap: 30px;
+  margin-top: 20px;
+}
+
+/* Each chart card */
+.charts-grid canvas {
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  height: 300px !important;   /* medium height */
+  width: 100% !important;
+}
+
+.charts-grid canvas:hover {
+  transform: scale(1.05);      /* slightly bigger */
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+/* Recent Bookings */
+.recent-list { 
+  margin-top: 10px; 
+  list-style: none; 
+}
+
+.recent-list li { 
+  margin-bottom: 8px; 
+  padding: 8px; 
+  background: #f9f9f9; 
+  border-radius: 6px; 
+  font-size: 0.9rem;  
+}

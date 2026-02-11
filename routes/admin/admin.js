@@ -41,6 +41,42 @@ router.get("/dashboard",isAdminLoggedIn, async (req, res) => {
     const totalListings = listings;
     const totalBookings = bookings;
     const totalUsers = users;
+
+const bookingschart = await Booking.find();
+const userschart = await User.find();
+const listingschart = await Listing.find();
+function groupByMonth(data, key) {
+  const result = {};
+
+  data.forEach(item => {
+    if (!item[key]) return; // skip if date is missing
+
+    const date = new Date(item[key]); // ensure it's a Date object
+    if (isNaN(date)) return;       // skip invalid dates
+
+    const month = date.toLocaleString('default', { month: 'short' });
+    if (!result[month]) result[month] = 0;
+    result[month] += 1;
+  });
+
+  return result;
+}
+
+const bookingsByMonth = groupByMonth(bookingschart, 'createdAt');
+const usersByMonth = groupByMonth(userschart, 'createdAt');
+const listingsByMonth = groupByMonth(listingschart, 'createdAt');
+
+// Revenue by month
+const revenueByMonth = {};
+bookingschart.forEach(b => {
+  const month = b.createdAt.toLocaleString('default', { month: 'short' });
+  if (!revenueByMonth[month]) revenueByMonth[month] = 0;
+  revenueByMonth[month] += b.totalPrice;
+});
+
+
+
+    
     const result = await Booking.aggregate([
     {
       $group: {
@@ -61,7 +97,12 @@ const recentBookings = await Booking.find().sort({ createdAt: -1 }).limit(5);
 
     const totalRevenue = result[0].totalAmount;
     
-    res.render("admin/dashboard", { totalListings, totalBookings, totalUsers, totalRevenue, recentBookings });
+    res.render("admin/dashboard", { totalListings, totalBookings, totalUsers, totalRevenue, recentBookings,charts: {
+    listings: listingsByMonth,
+    users: usersByMonth,
+    bookings: bookingsByMonth,
+    revenue: revenueByMonth
+  } });
 });
 
 

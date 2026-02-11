@@ -30,6 +30,10 @@ const listingSchema = new mongoose.Schema({
             ref: "Review",
         },
     ],
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
 });
 
 const Listing = mongoose.model("Listing", listingSchema);

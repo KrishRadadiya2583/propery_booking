@@ -13,9 +13,9 @@ Safe travels and enjoy your stay! ✨ `,
     from: process.env.TWILIO_PHONE,
     to: to,
   });
-}
-catch(err){
-    req.flash("error", "Something went wrong");
+  console.log("SMS sent successfully");
+    }
+        catch(err){
     console.log(err);
 
 }

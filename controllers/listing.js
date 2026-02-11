@@ -7,6 +7,7 @@ const upload = require('../middlewares/multer');
 const imagekit = require("../config/imagekit");
 
 const sendSMS = require("../utils/sms");
+const sendEmail = require("../utils/email");
 
 module.exports.index = async (req, res) => {
   try {
@@ -253,12 +254,12 @@ module.exports.savebooking =  async (req, res) => {
       totalPrice: req.body.totalPrice,
       paymentId: req.body.paymentId,
     });
-
+   
     await booking.save();
     res.json({ success: true });
 
-    sendSMS(`+91${booking.phone}`, booking);
-
+    await sendSMS(`+91${booking.phone}`, booking);
+     await sendEmail(booking.email, booking);
   } catch (err) {
     console.log(err);
     res.status(500).json({ success: false });

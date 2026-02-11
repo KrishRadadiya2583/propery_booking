@@ -11,7 +11,14 @@
 
   <!-- Sidebar -->
   <aside class="sidebar">
-    <h2 class="logo">Admin</h2>
+  <h2 class="logo">
+  <svg class="logo-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 2L2 7v7c0 5 5 9 10 9s10-4 10-9V7l-10-5z" fill="#3b82f6"/>
+    <path d="M12 12l-3 3h6l-3-3z" fill="#fff"/>
+  </svg>
+  <span class="logo-text">AdminPro</span>
+</h2>
+
     <nav>
       <a href="/admin/dashboard">Dashboard</a>
       <a href="/admin/listings">Listings</a>
@@ -27,8 +34,22 @@
     <!-- Topbar -->
     <header class="topbar">
       <h1>Admin Panel</h1>
-      <div class="admin-profile">Admin</div>
+       
+      <div class="admin-profile"><span class="icon">👤</span>Admin</div>
     </header>
+      <div class="flash-container">
+      <% if (success.length> 0) { %>
+        <div class="flash success">
+          <%= success[0] %>
+        </div>
+        <% } %>
+
+          <% if (error.length> 0) { %>
+            <div class="flash error">
+              <%= error[0] %>
+            </div>
+            <% } %>
+    </div>
 
     <!-- Page Content -->
     <section class="page-content">

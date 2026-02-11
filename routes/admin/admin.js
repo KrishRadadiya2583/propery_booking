@@ -1,10 +1,12 @@
 var express = require("express");
+const session = require("express-session");
 var router = express.Router();
 const Admin = require("../../models/admin");
 const bcrypt = require("bcrypt");
 const Listing = require("../../models/listing");
 const Booking = require("../../models/booking");
 const User = require("../../models/user");
+const {isAdminLoggedIn} = require("../../middlewares/adminvalidator");
 
 
 router.get("/", (req, res) => {
@@ -16,17 +18,23 @@ router.post("/login", async (req, res) => {
 
     const admin = await Admin.findOne({email});
     if(!admin){
-        return res.send("Admin not found");
+        req.flash("error", "Admin not found");
+        return res.redirect("/admin");
     }
     const isPasswordValid = await bcrypt.compare(password, admin.password);
     if(!isPasswordValid){
-        return res.send("Invalid password");
+       req.flash("error", "Invalid password");
+        return res.redirect("/admin");
     }
+    req.session.admin = admin;
+    req.session.save();
+    req.flash("success", "Admin logged in successfully");
+    console.log("Admin logged in successfully",req.session.admin);
     res.redirect("/admin/dashboard");
    
 })
 
-router.get("/dashboard", async (req, res) => {
+router.get("/dashboard",isAdminLoggedIn, async (req, res) => {
     const listings = await Listing.find().countDocuments();
     const bookings = await Booking.find().countDocuments();
     const users = await User.find().countDocuments();
@@ -49,49 +57,53 @@ router.get("/dashboard", async (req, res) => {
   ]);
  
 
+const recentBookings = await Booking.find().sort({ createdAt: -1 }).limit(5);
+
     const totalRevenue = result[0].totalAmount;
     
-    res.render("admin/dashboard", { totalListings, totalBookings, totalUsers, totalRevenue });
+    res.render("admin/dashboard", { totalListings, totalBookings, totalUsers, totalRevenue, recentBookings });
 });
 
 
-router.get("/listings", async (req, res) => {
+router.get("/listings",isAdminLoggedIn, async (req, res) => {
     const listings = await Listing.find();
     res.render("admin/listing", { listings });
   
 })
 
-router.get("/bookings", async (req, res) => {
+router.get("/bookings",isAdminLoggedIn, async (req, res) => {
     const bookings = await Booking.find();
     res.render("admin/bookings", { bookings });
 });
 
-router.get("/users", async (req, res) => {
+router.get("/users",isAdminLoggedIn, async (req, res) => {
     const users = await User.find();
     res.render("admin/users", { users });
 });
 
 
-router.get("/users/:id/delete", async (req, res) => {
+router.get("/users/:id/delete",isAdminLoggedIn, async (req, res) => {
     const { id } = req.params;
     await User.findByIdAndDelete(id);
     res.redirect("/admin/users");
 });
 
-router.get("/listings/:id/delete", async (req, res) => {
+router.get("/listings/:id/delete",isAdminLoggedIn, async (req, res) => {
     const { id } = req.params;
     await Listing.findByIdAndDelete(id);
     res.redirect("/admin/listings");
 });
 
-router.get("/bookings/:id/delete", async (req, res) => {
+router.get("/bookings/:id/delete",isAdminLoggedIn, async (req, res) => {
     const { id } = req.params;
     await Booking.findByIdAndDelete(id);
     res.redirect("/admin/bookings");
 });
 
 
-router.get("/logout", (req, res) => {
+router.get("/logout",isAdminLoggedIn, (req, res) => {
+  req.flash("success", "Admin logged out successfully");
+    req.session.destroy();
     res.redirect("/");
 });
 

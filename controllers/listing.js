@@ -6,6 +6,8 @@ const razorpay = require("../config/razorpay");
 const upload = require('../middlewares/multer');
 const imagekit = require("../config/imagekit");
 
+const sendSMS = require("../utils/sms");
+
 module.exports.index = async (req, res) => {
   try {
     const listings = await Listing.find().lean();
@@ -254,6 +256,8 @@ module.exports.savebooking =  async (req, res) => {
 
     await booking.save();
     res.json({ success: true });
+
+    sendSMS(`+91${booking.phone}`, booking);
 
   } catch (err) {
     console.log(err);

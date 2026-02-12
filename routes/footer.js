@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const {helpcenter,safety,cancellation,report,hosting,hostprotection,hostresource,community,carrer,newsroom,investors,privacy,terms,sitemap} = require("../controllers/footer");
+const { helpcenter, safety, cancellation, report, hosting, hostprotection, hostresource, community, carrer, newsroom, investors, privacy, terms, sitemap } = require("../controllers/footer");
 router.get('/help-center', helpcenter);
 
 router.get('/safety', safety);

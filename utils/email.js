@@ -9,12 +9,12 @@ const transporter = nodemailer.createTransport({
 });
 
 module.exports = async function sendEmail(to, booking) {
-    try{
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to,
-    subject: "Booking Confirmation",
-    html: `
+  try {
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to,
+      subject: "Booking Confirmation",
+      html: `
       <!DOCTYPE html>
 
 <html>
@@ -102,12 +102,12 @@ module.exports = async function sendEmail(to, booking) {
 </html>
 
     `,
-  };
+    };
 
-  await transporter.sendMail(mailOptions);
-  console.log("Email sent successfully");
-    }
-    catch(err){
-        console.log(err);
-    }
+    await transporter.sendMail(mailOptions);
+    console.log("Email sent successfully");
+  }
+  catch (err) {
+    console.log(err);
+  }
 };

@@ -96,7 +96,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
 }
 
 .admin-profile {
@@ -127,14 +127,14 @@ body {
   background: white;
   padding: 25px;
   border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
   text-align: center;
   transition: all 0.3s ease;
 }
 
 .card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
 }
 
 .card h3 {
@@ -171,13 +171,13 @@ body {
   background: white;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .stat-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 .card-icon {
@@ -218,7 +218,7 @@ body {
   padding: 10px 15px;
   margin-bottom: 8px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   transition: background 0.2s;
 }
 
@@ -242,7 +242,7 @@ body {
   background: white;
   border-radius: 16px;
   padding: 20px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   transition: all 0.3s ease;
@@ -250,7 +250,7 @@ body {
 
 .listing-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
 }
 
 .listing-title {
@@ -332,7 +332,7 @@ form {
   background: white;
   padding: 35px;
   border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
 form input {
@@ -424,6 +424,7 @@ td.fw-semibold {
   .stats {
     grid-template-columns: repeat(2, 1fr);
   }
+
   .listings-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -433,19 +434,24 @@ td.fw-semibold {
   .admin-container {
     flex-direction: column;
   }
+
   .sidebar {
     width: 100%;
     flex-direction: row;
     justify-content: space-around;
     padding: 12px 0;
   }
+
   .sidebar nav {
     display: flex;
     gap: 10px;
   }
-  .stats, .listings-grid {
+
+  .stats,
+  .listings-grid {
     grid-template-columns: 1fr;
   }
+
   .topbar {
     flex-direction: column;
     gap: 12px;
@@ -459,7 +465,8 @@ td.fw-semibold {
 ========================= */
 /* Flash container */
 .flash-container {
-  position: fixed; /* Stays on top */
+  position: fixed;
+  /* Stays on top */
   top: 20px;
   right: 20px;
   z-index: 1000;
@@ -473,23 +480,28 @@ td.fw-semibold {
   border-radius: 8px;
   font-size: 14px;
   font-weight: 500;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   animation: slideIn 0.4s ease forwards;
   opacity: 0;
 }
 
 /* Success message */
 .flash.success {
-  background-color: #d1fae5; /* Soft green */
+  background-color: #d1fae5;
+  /* Soft green */
   color: #065f46;
-  border-left: 5px solid #10b981; /* Bright green accent */
+  border-left: 5px solid #10b981;
+  /* Bright green accent */
 }
 
 /* Error message */
 .flash.error {
-  background-color: #fee2e2; /* Soft red/pink */
-  color: #b91c1c; /* Deep red text */
-  border-left: 5px solid #ef4444; /* Bright red accent */
+  background-color: #fee2e2;
+  /* Soft red/pink */
+  color: #b91c1c;
+  /* Deep red text */
+  border-left: 5px solid #ef4444;
+  /* Bright red accent */
 }
 
 /* Slide-in animation */
@@ -498,6 +510,7 @@ td.fw-semibold {
     opacity: 1;
     transform: translateY(0);
   }
+
   from {
     opacity: 0;
     transform: translateY(-20px);
@@ -533,18 +546,19 @@ td.fw-semibold {
   border-radius: 12px;
   display: flex;
   align-items: center;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.card-icon { 
-  font-size: 2rem; 
-  margin-right: 15px; 
+.card-icon {
+  font-size: 2rem;
+  margin-right: 15px;
 }
 
 /* Charts Grid: 2 per row */
 .charts-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 charts per row */
+  grid-template-columns: repeat(2, 1fr);
+  /* 2 charts per row */
   gap: 30px;
   margin-top: 20px;
 }
@@ -554,26 +568,28 @@ td.fw-semibold {
   background: #fff;
   border-radius: 12px;
   padding: 10px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  height: 300px !important;   /* medium height */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 300px !important;
+  /* medium height */
   width: 100% !important;
 }
 
 .charts-grid canvas:hover {
-  transform: scale(1.05);      /* slightly bigger */
-  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+  transform: scale(1.05);
+  /* slightly bigger */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 /* Recent Bookings */
-.recent-list { 
-  margin-top: 10px; 
-  list-style: none; 
+.recent-list {
+  margin-top: 10px;
+  list-style: none;
 }
 
-.recent-list li { 
-  margin-bottom: 8px; 
-  padding: 8px; 
-  background: #f9f9f9; 
-  border-radius: 6px; 
-  font-size: 0.9rem;  
+.recent-list li {
+  margin-bottom: 8px;
+  padding: 8px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  font-size: 0.9rem;
 }

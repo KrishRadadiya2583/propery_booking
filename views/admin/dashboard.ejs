@@ -1,113 +1,123 @@
 <%- layout("./admin/layouts/adminboilerplate.ejs") %>
 
-<h1 class="dashboard-title">Admin Dashboard</h1>
+  <h1 class="dashboard-title">Admin Dashboard</h1>
 
-<div class="stats-grid">
-  <div class="stat-card">
-    <div class="card-icon">🏠</div>
-    <div class="card-info">
-      <h3>Total Listings</h3>
-      <p><%= totalListings %></p>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="card-icon">🏠</div>
+      <div class="card-info">
+        <h3>Total Listings</h3>
+        <p>
+          <%= totalListings %>
+        </p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="card-icon">👤</div>
+      <div class="card-info">
+        <h3>Total Users</h3>
+        <p>
+          <%= totalUsers %>
+        </p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="card-icon">📅</div>
+      <div class="card-info">
+        <h3>Total Bookings</h3>
+        <p>
+          <%= totalBookings %>
+        </p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="card-icon">💰</div>
+      <div class="card-info">
+        <h3>Revenue</h3>
+        <p>₹<%= totalRevenue %>
+        </p>
+      </div>
     </div>
   </div>
 
-  <div class="stat-card">
-    <div class="card-icon">👤</div>
-    <div class="card-info">
-      <h3>Total Users</h3>
-      <p><%= totalUsers %></p>
+  <section class="graph-section">
+    <h2>Analytics</h2>
+    <div class="charts-grid">
+      <canvas id="listingsChart"></canvas>
+      <canvas id="usersChart"></canvas>
+      <canvas id="bookingsChart"></canvas>
+      <canvas id="revenueChart"></canvas>
     </div>
-  </div>
+  </section>
 
-  <div class="stat-card">
-    <div class="card-icon">📅</div>
-    <div class="card-info">
-      <h3>Total Bookings</h3>
-      <p><%= totalBookings %></p>
-    </div>
-  </div>
+  <section class="recent-section">
+    <h2>Recent Bookings</h2>
+    <ul class="recent-list">
+      <% recentBookings.forEach(booking=> { %>
+        <li>
+          <%= booking.userEmail %> booked <%= booking.listingTitle %> - $<%= booking.totalPrice %>
+        </li>
+        <% }) %>
+    </ul>
+  </section>
 
-  <div class="stat-card">
-    <div class="card-icon">💰</div>
-    <div class="card-info">
-      <h3>Revenue</h3>
-      <p>₹<%= totalRevenue %></p>
-    </div>
-  </div>
-</div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const chartsData = <% - JSON.stringify(charts) %>;
 
-<section class="graph-section">
-  <h2>Analytics</h2>
-  <div class="charts-grid">
-    <canvas id="listingsChart"></canvas>
-    <canvas id="usersChart"></canvas>
-    <canvas id="bookingsChart"></canvas>
-    <canvas id="revenueChart"></canvas>
-  </div>
-</section>
-
-<section class="recent-section">
-  <h2>Recent Bookings</h2>
-  <ul class="recent-list">
-    <% recentBookings.forEach(booking => { %>
-      <li><%= booking.userEmail %> booked <%= booking.listingTitle %> - $<%= booking.totalPrice %></li>
-    <% }) %>
-  </ul>
-</section>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-   const chartsData = <%- JSON.stringify(charts) %>;
-
-const colorPalette = [
-  '#FF6384',
-  '#36A2EB',
-  '#FFCE56',
-  '#4BC0C0',
-  '#9966FF',
-  '#FF9F40',
-  '#8DD17E',
-  '#E7E9ED'
-];
+    const colorPalette = [
+      '#FF6384',
+      '#36A2EB',
+      '#FFCE56',
+      '#4BC0C0',
+      '#9966FF',
+      '#FF9F40',
+      '#8DD17E',
+      '#E7E9ED'
+    ];
 
 
- function createChart(id, label, data, type='line', color='rgba(54, 162, 235, 0.7)') {
-  const canvas = document.getElementById(id);
-  canvas.height = 300;  // medium height
-  const ctx = canvas.getContext('2d');
+    function createChart(id, label, data, type = 'line', color = 'rgba(54, 162, 235, 0.7)') {
+      const canvas = document.getElementById(id);
+      canvas.height = 300;  // medium height
+      const ctx = canvas.getContext('2d');
 
-  return new Chart(ctx, {
-    type,
-    data: {
-      labels: Object.keys(data),
-      datasets: [{
-        label,
-        data: Object.values(data),
-        backgroundColor: colorPalette,
-        borderColor: color.replace('0.7','1'),
-        borderWidth: 2,
-        tension: 0.3,
-        
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false, // respect canvas height
-      plugins: { legend: { display: true } ,tooltip: {
-      bodyFont: { size: 50 },       // bigger text for tooltip
-      titleFont: { size: 50 },      // bigger title
-      padding: 10
-    }},
-     
-      scales: { y: { beginAtZero: true } }
+      return new Chart(ctx, {
+        type,
+        data: {
+          labels: Object.keys(data),
+          datasets: [{
+            label,
+            data: Object.values(data),
+            backgroundColor: colorPalette,
+            borderColor: color.replace('0.7', '1'),
+            borderWidth: 2,
+            tension: 0.3,
+
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false, // respect canvas height
+          plugins: {
+            legend: { display: true }, tooltip: {
+              bodyFont: { size: 50 },       // bigger text for tooltip
+              titleFont: { size: 50 },      // bigger title
+              padding: 10
+            }
+          },
+
+          scales: { y: { beginAtZero: true } }
+        }
+      });
     }
-  });
-}
 
 
-  createChart('listingsChart', 'Listings per Month', chartsData.listings,'doughnut', 'rgba(54, 162, 235, 0.3)');
-  createChart('usersChart', 'Users per Month', chartsData.users, 'bar', 'rgba(255, 99, 132, 0.7)');
-  createChart('bookingsChart', 'Bookings per Month', chartsData.bookings, 'pie', 'rgba(255, 206, 86, 0.7)');
-  createChart('revenueChart', 'Revenue per Month', chartsData.revenue, 'bar', 'rgba(75, 192, 192, 0.7)');
-</script>
-
+    createChart('listingsChart', 'Listings per Month', chartsData.listings, 'doughnut', 'rgba(54, 162, 235, 0.3)');
+    createChart('usersChart', 'Users per Month', chartsData.users, 'bar', 'rgba(255, 99, 132, 0.7)');
+    createChart('bookingsChart', 'Bookings per Month', chartsData.bookings, 'pie', 'rgba(255, 206, 86, 0.7)');
+    createChart('revenueChart', 'Revenue per Month', chartsData.revenue, 'bar', 'rgba(75, 192, 192, 0.7)');
+  </script>

@@ -1,213 +1,214 @@
 <% layout("layouts/boilerplate") %>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
-<div class="container mt-5">
-  <div class="availability-glass p-4">
+    <div class="container mt-5">
+        <div class="availability-glass p-4">
 
-    <h2 class="text-center mb-4 neon-title">
-      Availability for <span><%= listing.title %></span>
-    </h2>
+            <h2 class="text-center mb-4 neon-title">
+                Availability for <span>
+                    <%= listing.title %>
+                </span>
+            </h2>
 
-    <!-- Legend -->
-    <div class="legend mb-4">
-      <div class="legend-item">
-        <span class="legend-color booked-box"></span>
-        Booked
-      </div>
-      <div class="legend-item">
-        <span class="legend-color available-box"></span>
-        Available
-      </div>
+            <!-- Legend -->
+            <div class="legend mb-4">
+                <div class="legend-item">
+                    <span class="legend-color booked-box"></span>
+                    Booked
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color available-box"></span>
+                    Available
+                </div>
+            </div>
+
+            <!-- Calendar -->
+            <div class="calendar-wrapper">
+                <div id="calendar"></div>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="/listings/<%= listing._id %>" class="neon-btn">
+                    Back to Listing
+                </a>
+            </div>
+
+        </div>
     </div>
 
-    <!-- Calendar -->
-    <div class="calendar-wrapper">
-      <div id="calendar"></div>
-    </div>
+    <style>
+        body {
+            background: var(--bg-body);
+            color: var(--text-main);
+        }
 
-    <div class="text-center mt-4">
-      <a href="/listings/<%= listing._id %>" class="neon-btn">
-        Back to Listing
-      </a>
-    </div>
+        /* Glass Card */
+        .availability-glass {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            box-shadow: var(--shadow-lg);
+            max-width: 650px;
+            margin: auto;
+        }
 
-  </div>
-</div>
+        /* Title */
+        .neon-title span {
+            color: var(--primary);
+            text-shadow: 0 0 15px var(--primary-glow);
+        }
 
-<style>
-  body {
-  background: var(--bg-body);
-  color: var(--text-main);
-}
+        /* Legend */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
 
-/* Glass Card */
-.availability-glass {
-  background: var(--bg-card);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--border-color);
-  border-radius: 18px;
-  box-shadow: var(--shadow-lg);
-  max-width: 650px;
-  margin: auto;
-}
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-/* Title */
-.neon-title span {
-  color: var(--primary);
-  text-shadow: 0 0 15px var(--primary-glow);
-}
+        .legend-color {
+            width: 18px;
+            height: 18px;
+            border-radius: 6px;
+        }
 
-/* Legend */
-.legend {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  font-size: 14px;
-  color: var(--text-secondary);
-}
+        .booked-box {
+            background: var(--accent);
+            box-shadow: 0 0 12px var(--accent-glow);
+        }
 
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+        .available-box {
+            background: var(--primary);
+            box-shadow: 0 0 12px var(--primary-glow);
+        }
 
-.legend-color {
-  width: 18px;
-  height: 18px;
-  border-radius: 6px;
-}
+        .calendar-wrapper {
+            display: flex;
+            justify-content: center;
+        }
 
-.booked-box {
-  background: var(--accent);
-  box-shadow: 0 0 12px var(--accent-glow);
-}
+        /* Flatpickr base */
+        .flatpickr-calendar {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+            color: var(--text-main);
+        }
 
-.available-box {
-  background: var(--primary);
-  box-shadow: 0 0 12px var(--primary-glow);
-}
+        /* Month title */
+        .flatpickr-current-month {
+            color: var(--text-main);
+            font-weight: 600;
+        }
 
-.calendar-wrapper {
-  display: flex;
-  justify-content: center;
-}
+        /* Weekday names */
+        .flatpickr-weekday {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
 
-/* Flatpickr base */
-.flatpickr-calendar {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  box-shadow: var(--shadow-md);
-  color: var(--text-main);
-}
+        /* Day numbers */
+        .flatpickr-day {
+            color: var(--text-main);
+            border-radius: 8px;
+        }
 
-/* Month title */
-.flatpickr-current-month {
-  color: var(--text-main);
-  font-weight: 600;
-}
+        /* Hover effect */
+        .flatpickr-day:hover {
+            background: var(--bg-secondary);
+            color: var(--text-main);
+        }
 
-/* Weekday names */
-.flatpickr-weekday {
-  color: var(--text-secondary);
-  font-weight: 500;
-}
+        /* Today highlight */
+        .flatpickr-day.today {
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
 
-/* Day numbers */
-.flatpickr-day {
-  color: var(--text-main);
-  border-radius: 8px;
-}
+        /* Available */
+        .available {
+            background: rgba(79, 140, 255, 0.25) !important;
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 8px var(--primary-glow);
+            color: #ffffff !important;
+        }
 
-/* Hover effect */
-.flatpickr-day:hover {
-  background: var(--bg-secondary);
-  color: var(--text-main);
-}
+        /* Booked */
+        .booked {
+            background: rgba(255, 79, 216, 0.25) !important;
+            border: 1px solid var(--accent);
+            box-shadow: 0 0 8px var(--accent-glow);
+            color: #ffffff !important;
+        }
 
-/* Today highlight */
-.flatpickr-day.today {
-  border: 1px solid var(--primary);
-  color: var(--primary);
-}
+        /* Navigation arrows */
+        .flatpickr-prev-month,
+        .flatpickr-next-month {
+            color: var(--text-main);
+            fill: var(--text-main);
+        }
 
-/* Available */
-.available {
-  background: rgba(79, 140, 255, 0.25) !important;
-  border: 1px solid var(--primary);
-  box-shadow: 0 0 8px var(--primary-glow);
-  color: #ffffff !important;
-}
+        .flatpickr-prev-month:hover,
+        .flatpickr-next-month:hover {
+            color: var(--primary);
+        }
 
-/* Booked */
-.booked {
-  background: rgba(255, 79, 216, 0.25) !important;
-  border: 1px solid var(--accent);
-  box-shadow: 0 0 8px var(--accent-glow);
-  color: #ffffff !important;
-}
+        /* Neon Button */
+        .neon-btn {
+            display: inline-block;
+            padding: var(--btn-padding);
+            border-radius: var(--btn-radius);
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            transition: var(--btn-transition);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
 
-/* Navigation arrows */
-.flatpickr-prev-month,
-.flatpickr-next-month {
-  color: var(--text-main);
-  fill: var(--text-main);
-}
+        .neon-btn:hover {
+            background: var(--primary-hover);
+            box-shadow: 0 0 25px var(--primary-glow);
+        }
+    </style>
 
-.flatpickr-prev-month:hover,
-.flatpickr-next-month:hover {
-  color: var(--primary);
-}
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-/* Neon Button */
-.neon-btn {
-  display: inline-block;
-  padding: var(--btn-padding);
-  border-radius: var(--btn-radius);
-  background: var(--primary);
-  color: white;
-  text-decoration: none;
-  transition: var(--btn-transition);
-  box-shadow: 0 0 15px var(--primary-glow);
-}
+    <script>
+        const bookedDates = <% - JSON.stringify(dates) %>;
 
-.neon-btn:hover {
-  background: var(--primary-hover);
-  box-shadow: 0 0 25px var(--primary-glow);
-}
+        const disabledRanges = bookedDates.map(b => {
+            return {
+                from: new Date(b.checkIn),
+                to: new Date(b.checkOut)
+            };
+        });
 
-</style>
+        flatpickr("#calendar", {
+            inline: true,
+            minDate: "today",
+            disable: disabledRanges,
+            onDayCreate: function (dObj, dStr, fp, dayElem) {
+                const date = dayElem.dateObj;
 
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+                let isBooked = disabledRanges.some(range => {
+                    return date >= range.from && date <= range.to;
+                });
 
-<script>
-  const bookedDates = <%- JSON.stringify(dates) %>;
-
-  const disabledRanges = bookedDates.map(b => {
-    return {
-      from: new Date(b.checkIn),
-      to: new Date(b.checkOut)
-    };
-  });
-
-  flatpickr("#calendar", {
-    inline: true,
-    minDate: "today",
-    disable: disabledRanges,
-    onDayCreate: function(dObj, dStr, fp, dayElem) {
-      const date = dayElem.dateObj;
-
-      let isBooked = disabledRanges.some(range => {
-        return date >= range.from && date <= range.to;
-      });
-
-      if (isBooked) {
-        dayElem.classList.add("booked");
-      } else {
-        dayElem.classList.add("available");
-      }
-    }
-  });
-</script>
+                if (isBooked) {
+                    dayElem.classList.add("booked");
+                } else {
+                    dayElem.classList.add("available");
+                }
+            }
+        });
+    </script>

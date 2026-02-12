@@ -1,8 +1,8 @@
-module.exports.index = function(req, res, next) {
-    try{
-    res.render('about');
+module.exports.index = function (req, res, next) {
+    try {
+        res.render('about');
     }
-    catch(err){
+    catch (err) {
         req.flash("error", "Something went wrong");
         res.redirect("/about");
     }

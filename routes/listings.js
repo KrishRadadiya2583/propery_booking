@@ -4,7 +4,7 @@ const { isLoggedIn } = require('../middlewares/loginmiddleware');
 const { isuser } = require('../middlewares/authenticate');
 const { validateBooking } = require('../middlewares/bookingValidation');
 const { validateImages } = require('../middlewares/validateimage');
-const {index,new:newListing,show,create,edit,update,delete:deleteListing,bookingform,createBooking,savebooking,cancelbooking,showavailability} = require("../controllers/listing")
+const { index, new: newListing, show, create, edit, update, delete: deleteListing, bookingform, createBooking, savebooking, cancelbooking, showavailability } = require("../controllers/listing")
 
 const upload = require('../middlewares/multer');
 
@@ -19,7 +19,7 @@ router.get('/:id', isLoggedIn, show);
 
 
 
-router.post("/", isLoggedIn, upload.array("listing[image]"), validateImages,create);
+router.post("/", isLoggedIn, upload.array("listing[image]"), validateImages, create);
 
 
 // edit listing route
@@ -35,19 +35,19 @@ router.post('/:id/edit', isLoggedIn, upload.array("listing[image]"), validateIma
 router.get('/:id/delete', isLoggedIn, isuser, deleteListing)
 
 // booking router for listings
-router.get("/:id/booking", isLoggedIn,bookingform);
+router.get("/:id/booking", isLoggedIn, bookingform);
 
 
 
 
 
 
-router.post("/:id/booking", isLoggedIn, validateBooking,createBooking );
+router.post("/:id/booking", isLoggedIn, validateBooking, createBooking);
 
 /* ===============================
    SAVE BOOKING AFTER PAYMENT
 ================================ */
-router.post("/confirm", isLoggedIn, validateBooking,savebooking);
+router.post("/confirm", isLoggedIn, validateBooking, savebooking);
 
 
 

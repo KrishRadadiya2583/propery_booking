@@ -1,4 +1,4 @@
-const sampleListings =[
+const sampleListings = [
   {
     "title": "Modern Farm House",
     "description": "Peaceful farmhouse surrounded by green fields with sustainable energy features.",

@@ -4,10 +4,10 @@ const bcrypt = require("bcrypt");
 
 
 module.exports.index = (req, res) => {
-    res.render("auth", { error: null });
+  res.render("auth", { error: null });
 };
 
-module.exports.register=async (req, res) => {
+module.exports.register = async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
@@ -18,9 +18,9 @@ module.exports.register=async (req, res) => {
       });
     }
 
-    const hashedpassword  = await bcrypt.hash(password,10)
+    const hashedpassword = await bcrypt.hash(password, 10)
 
-    const user = new User({ name:name, email:email,password: hashedpassword }); 
+    const user = new User({ name: name, email: email, password: hashedpassword });
     await user.save();
 
     req.session.user = {
@@ -28,11 +28,11 @@ module.exports.register=async (req, res) => {
       name: user.name,
       email: user.email
     };
-req.flash("success", "register successful");
+    req.flash("success", "register successful");
     res.redirect("/listings");
   } catch (err) {
     console.error(err);
-req.flash("error", "Registration failed. Please try again.");
+    req.flash("error", "Registration failed. Please try again.");
     res.render("auth", {
       error: "Registration failed. Please try again."
     });
@@ -63,12 +63,12 @@ module.exports.login = async (req, res) => {
       name: user.name,
       email: user.email
     };
-req.flash("success", "login successful");
+    req.flash("success", "login successful");
     res.redirect("/listings");
 
   } catch (err) {
     console.error("error generated");
-req.flash("error", "Login failed. Please try again.");
+    req.flash("error", "Login failed. Please try again.");
     res.render("auth", {
       error: "Login failed. Please try again."
     });

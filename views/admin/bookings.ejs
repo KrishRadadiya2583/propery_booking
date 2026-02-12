@@ -1,39 +1,45 @@
 <%- layout("./admin/layouts/adminboilerplate.ejs") %>
 
-<h2>Bookings</h2>
+  <h2>Bookings</h2>
 
-<div class="listings-grid">
-  <% bookings.forEach(booking => { %>
-    <div class="listing-card">
-      <div class="card-body">
-        <h3 class="listing-title"><%= booking.listingtitle %></h3>
+  <div class="listings-grid">
+    <% bookings.forEach(booking=> { %>
+      <div class="listing-card">
+        <div class="card-body">
+          <h3 class="listing-title">
+            <%= booking.listingtitle %>
+          </h3>
 
-        <p class="listing-email">
-          <strong>User:</strong> <%= booking.email %>
-        </p>
+          <p class="listing-email">
+            <strong>User:</strong>
+            <%= booking.email %>
+          </p>
 
-        <p class="listing-location">
-          <strong>Check-in:</strong> <%= booking.checkIn %>
-        </p>
+          <p class="listing-location">
+            <strong>Check-in:</strong>
+            <%= booking.checkIn %>
+          </p>
 
-        <p class="listing-location">
-          <strong>Check-out:</strong> <%= booking.checkOut %>
-        </p>
+          <p class="listing-location">
+            <strong>Check-out:</strong>
+            <%= booking.checkOut %>
+          </p>
 
-        <p class="listing-price">
-          ₹<%= booking.totalPrice %>
-        </p>
+          <p class="listing-price">
+            ₹<%= booking.totalPrice %>
+          </p>
 
-        
-        <p style="color: red;" class="listing-paymentId">
-          <strong>Payment ID:</strong> <%= booking.paymentId %>
-        </p>
 
-        <div class="card-actions">
-        <a href="/admin/bookings/<%= booking._id %>/delete" class="btn delete-btn">Delete</a>
+          <p style="color: red;" class="listing-paymentId">
+            <strong>Payment ID:</strong>
+            <%= booking.paymentId %>
+          </p>
+
+          <div class="card-actions">
+            <a href="/admin/bookings/<%= booking._id %>/delete" class="btn delete-btn">Delete</a>
+          </div>
+
+        </div>
       </div>
-
-      </div>
-    </div>
-  <% }) %>
-</div>
+      <% }) %>
+  </div>

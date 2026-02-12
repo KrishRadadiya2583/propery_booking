@@ -1,14 +1,14 @@
 module.exports.index = (req, res) => {
-    res.render("contact");
+  res.render("contact");
 };
 
-module.exports.create =  async (req, res) => {
+module.exports.create = async (req, res) => {
   try {
     const { name, email, message } = req.body;
-    if(!name || !email || !message){
+    if (!name || !email || !message) {
       return res.status(400).json({ error: 'All fields are required' });
     }
-    if(email !== req.session.user.email){
+    if (email !== req.session.user.email) {
       return res.status(400).json({ error: 'You are not authorized to send message' });
     }
 

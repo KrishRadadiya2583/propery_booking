@@ -20,7 +20,7 @@ module.exports.index = async (req, res) => {
 }
 
 
-module.exports.new =(req, res) => {
+module.exports.new = (req, res) => {
   try {
     res.render("listings/new");
   }
@@ -78,7 +78,7 @@ module.exports.create = async (req, res) => {
 
 
 
-module.exports.edit =async (req, res) => {
+module.exports.edit = async (req, res) => {
   try {
     let { id } = req.params;
     const listing = await Listing.findById(id);
@@ -123,28 +123,28 @@ module.exports.update = async (req, res) => {
     if (req.body.deleteImages) {
       let imagesToDelete = req.body.deleteImages;
 
-     
+
       if (!Array.isArray(imagesToDelete)) {
         imagesToDelete = [imagesToDelete];
       }
 
 
-     for (let fileId of imagesToDelete) {
-    try {
-      // check if file exists in ImageKit
-      await imagekit.getFileDetails(fileId);
+      for (let fileId of imagesToDelete) {
+        try {
+          // check if file exists in ImageKit
+          await imagekit.getFileDetails(fileId);
 
-      // if exists → delete it
-      await imagekit.deleteFile(fileId);
-      console.log(`Deleted from ImageKit: ${fileId}`);
+          // if exists → delete it
+          await imagekit.deleteFile(fileId);
+          console.log(`Deleted from ImageKit: ${fileId}`);
 
-    } catch (err) {
-      console.log(`File not found in ImageKit: ${fileId}`);
-   
-    }
-  }
+        } catch (err) {
+          console.log(`File not found in ImageKit: ${fileId}`);
 
-   
+        }
+      }
+
+
       await Listing.findByIdAndUpdate(id, {
         $pull: { image: { fileId: { $in: imagesToDelete } } },
       });
@@ -164,13 +164,13 @@ module.exports.update = async (req, res) => {
 module.exports.delete = async (req, res) => {
   try {
     const { id } = req.params;
-const listing = await Listing.findById(id);
+    const listing = await Listing.findById(id);
 
-if(listing.image.length > 0){
-    for(let image of listing.image){
+    if (listing.image.length > 0) {
+      for (let image of listing.image) {
         await imagekit.deleteFile(image.fileId);
+      }
     }
-}
     Listing.findByIdAndDelete(id).then(() => {
 
       console.log("Listing deleted successfully");
@@ -186,7 +186,7 @@ if(listing.image.length > 0){
 }
 
 
-module.exports.bookingform =  async (req, res) => {
+module.exports.bookingform = async (req, res) => {
   try {
     if (!req.session.user) {
       return res.render("profile", { currentUser: null });
@@ -227,7 +227,7 @@ module.exports.createBooking = async (req, res) => {
 }
 
 
-module.exports.savebooking =  async (req, res) => {
+module.exports.savebooking = async (req, res) => {
   try {
 
     console.log(req.body);
@@ -246,12 +246,12 @@ module.exports.savebooking =  async (req, res) => {
       totalPrice: req.body.totalPrice,
       paymentId: req.body.paymentId,
     });
-   
+
     await booking.save();
     res.json({ success: true });
 
     await sendSMS(`+91${booking.phone}`, booking);
-     await sendEmail(booking.email, booking);
+    await sendEmail(booking.email, booking);
   } catch (err) {
     console.log(err);
     res.status(500).json({ success: false });
@@ -282,13 +282,13 @@ module.exports.cancelbooking = async (req, res) => {
 module.exports.showavailability = async (req, res) => {
   try {
     const listing = await Listing.findById(req.params.id);
-    const availability = await Booking.find({listingtitle: listing.title});
-const dates = availability.map(booking => {
-  return {
-    checkIn: new Date(booking.checkIn),
-    checkOut: new Date(booking.checkOut)
-  }
-})
+    const availability = await Booking.find({ listingtitle: listing.title });
+    const dates = availability.map(booking => {
+      return {
+        checkIn: new Date(booking.checkIn),
+        checkOut: new Date(booking.checkOut)
+      }
+    })
     res.render("listings/availability", { listing, dates });
   }
   catch (err) {

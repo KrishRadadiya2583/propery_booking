@@ -3,13 +3,13 @@ const router = express.Router();
 
 const { isLoggedIn } = require("../middlewares/loginmiddleware");
 
-const {index,editprofile,updateprofile,bookings,listings} = require("../controllers/profile");
+const { index, editprofile, updateprofile, bookings, listings } = require("../controllers/profile");
 
-router.get("/", isLoggedIn, index );
+router.get("/", isLoggedIn, index);
 
-router.get("/edit-profile",isLoggedIn,editprofile );
+router.get("/edit-profile", isLoggedIn, editprofile);
 
-router.post("/edit-profile", isLoggedIn, updateprofile );
+router.post("/edit-profile", isLoggedIn, updateprofile);
 
 
 // show your  bookings page

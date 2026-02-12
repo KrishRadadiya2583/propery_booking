@@ -1,37 +1,37 @@
 const mongoose = require("mongoose");
 
 const bookingschema = new mongoose.Schema({
-    
-    name:{
-        type:String,
+
+    name: {
+        type: String,
     },
-    email:{
-        type:String,
+    email: {
+        type: String,
     },
-    phone:{
-        type:String,
+    phone: {
+        type: String,
     },
-    listingtitle:{
-        type:String,
+    listingtitle: {
+        type: String,
     },
-    checkIn:{
-        type:String,
+    checkIn: {
+        type: String,
     },
-    checkOut:{
-        type:String,
+    checkOut: {
+        type: String,
     },
-    guests:{
-        type:String,
+    guests: {
+        type: String,
     },
-    totalPrice:{
-        type:Number,
+    totalPrice: {
+        type: Number,
     },
-    paymentId:{
-        type:String,
+    paymentId: {
+        type: String,
     },
-    createdAt:{
-        type:Date,
-        default:Date.now(),
+    createdAt: {
+        type: Date,
+        default: Date.now(),
     }
 })
 

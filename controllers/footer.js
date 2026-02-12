@@ -1,139 +1,139 @@
-module.exports.helpcenter = function(req, res, next) {
-    try{
+module.exports.helpcenter = function (req, res, next) {
+    try {
 
-    res.render('footer/help-center');
+        res.render('footer/help-center');
     }
-    catch(err){
+    catch (err) {
         req.flash("error", "Something went wrong");
         res.redirect("/footer/help-center");
     }
 }
 
-module.exports.safety = function(req, res, next) {
-    try{
-    res.render('footer/safety');
+module.exports.safety = function (req, res, next) {
+    try {
+        res.render('footer/safety');
     }
-    catch(err){
+    catch (err) {
         req.flash("error", "Something went wrong");
         res.redirect("/footer/safety");
     }
 }
 
-module.exports.cancellation = function(req, res, next) {
-    try{
-    res.render('footer/cancellation');
+module.exports.cancellation = function (req, res, next) {
+    try {
+        res.render('footer/cancellation');
     }
-    catch(err){
+    catch (err) {
         req.flash("error", "Something went wrong");
         res.redirect("/footer/cancellation");
     }
 }
 
-module.exports.report = function(req, res, next) {
-    try{
-    res.render('footer/report');
+module.exports.report = function (req, res, next) {
+    try {
+        res.render('footer/report');
     }
-    catch(err){
+    catch (err) {
         req.flash("error", "Something went wrong");
         res.redirect("/footer/report");
     }
 }
 
-module.exports.hosting = function(req, res, next) {
-    try{
-    res.render('footer/hosting');
+module.exports.hosting = function (req, res, next) {
+    try {
+        res.render('footer/hosting');
     }
-    catch(err){
+    catch (err) {
         req.flash("error", "Something went wrong");
         res.redirect("/footer/hosting");
     }
 }
 
-module.exports.hostprotection = function(req, res, next) {
-    try{
-    res.render('footer/host-protection');
+module.exports.hostprotection = function (req, res, next) {
+    try {
+        res.render('footer/host-protection');
     }
-    catch(err){
+    catch (err) {
         req.flash("error", "Something went wrong");
         res.redirect("/footer/host-protection");
     }
 }
 
-module.exports.hostresource = function(req, res, next) {
-    try{
-    res.render('footer/host-resource');
+module.exports.hostresource = function (req, res, next) {
+    try {
+        res.render('footer/host-resource');
     }
-    catch(err){
+    catch (err) {
         req.flash("error", "Something went wrong");
         res.redirect("/footer/host-resource");
     }
 }
 
-module.exports.community = function(req, res, next) {
-    try{
-    res.render('footer/community');
+module.exports.community = function (req, res, next) {
+    try {
+        res.render('footer/community');
     }
-    catch(err){
+    catch (err) {
         req.flash("error", "Something went wrong");
         res.redirect("/footer/community");
     }
 }
 
-module.exports.carrer = function(req, res, next) {
-    try{
-    res.render('footer/carrer');
+module.exports.carrer = function (req, res, next) {
+    try {
+        res.render('footer/carrer');
     }
-    catch(err){
+    catch (err) {
         req.flash("error", "Something went wrong");
         res.redirect("/footer/carrer");
     }
 }
 
-module.exports.newsroom = function(req, res, next) {
-    try{
-    res.render('footer/newsroom');
+module.exports.newsroom = function (req, res, next) {
+    try {
+        res.render('footer/newsroom');
     }
-    catch(err){
+    catch (err) {
         req.flash("error", "Something went wrong");
         res.redirect("/footer/newsroom");
     }
 }
 
-module.exports.investors = function(req, res, next) {
-    try{
-    res.render('footer/investors');
+module.exports.investors = function (req, res, next) {
+    try {
+        res.render('footer/investors');
     }
-    catch(err){
+    catch (err) {
         req.flash("error", "Something went wrong");
         res.redirect("/footer/investors");
     }
 }
 
-module.exports.privacy = function(req, res, next) {
-    try{
-    res.render('footer/privacy');
+module.exports.privacy = function (req, res, next) {
+    try {
+        res.render('footer/privacy');
     }
-    catch(err){
+    catch (err) {
         req.flash("error", "Something went wrong");
         res.redirect("/footer/privacy");
     }
 }
 
-module.exports.terms = function(req, res, next) {
-    try{
-    res.render('footer/terms');
+module.exports.terms = function (req, res, next) {
+    try {
+        res.render('footer/terms');
     }
-    catch(err){
+    catch (err) {
         req.flash("error", "Something went wrong");
         res.redirect("/footer/terms");
     }
 }
 
-module.exports.sitemap = function(req, res, next) {
-    try{
-    res.render('footer/sitemap');
+module.exports.sitemap = function (req, res, next) {
+    try {
+        res.render('footer/sitemap');
     }
-    catch(err){
+    catch (err) {
         req.flash("error", "Something went wrong");
         res.redirect("/footer/sitemap");
     }

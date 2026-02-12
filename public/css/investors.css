@@ -10,12 +10,10 @@
   --border: rgba(120, 140, 255, 0.25);
 
   /* Backgrounds */
-  --bg-light: radial-gradient(
-    circle at 20% 20%,
-    #0a0f2c,
-    #050714 60%,
-    #02030a 100%
-  );
+  --bg-light: radial-gradient(circle at 20% 20%,
+      #0a0f2c,
+      #050714 60%,
+      #02030a 100%);
 
   /* Glass card surface */
   --white: rgba(20, 25, 50, 0.55);
@@ -35,7 +33,7 @@ body {
 
 /* HERO */
 .investors-hero {
- background: linear-gradient(120deg, #4f8cff, #6aa8ff);
+  background: linear-gradient(120deg, #4f8cff, #6aa8ff);
   color: var(--white);
   padding: 80px 20px;
   text-align: center;

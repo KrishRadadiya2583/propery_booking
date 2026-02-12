@@ -1,40 +1,46 @@
 <%- layout("./admin/layouts/adminboilerplate.ejs") %>
 
-<div class="container mt-5">
-  <div class="card shadow-lg border-0">
-    
-    <!-- Header -->
-    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-      <h4 class="mb-0">User Management</h4>
-    </div>
+  <div class="container mt-5">
+    <div class="card shadow-lg border-0">
 
-    <!-- Table -->
-    <div class="card-body p-0">
-      <table class="table table-hover align-middle mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
+      <!-- Header -->
+      <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">User Management</h4>
+      </div>
 
-        <tbody>
-          <% users.forEach(user => { %>
+      <!-- Table -->
+      <div class="card-body p-0">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
             <tr>
-              <td class="text-muted"><%= user._id %></td>
-              <td class="fw-semibold"><%= user.name %></td>
-              <td><%= user.email %></td>
-              
-              <td>
-                <a href="/admin/users/<%= user._id %>/delete" class="btn btn-danger btn-sm">Delete</a>
-              </td>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Delete</th>
             </tr>
-          <% }) %>
-        </tbody>
-      </table>
-    </div>
+          </thead>
 
+          <tbody>
+            <% users.forEach(user=> { %>
+              <tr>
+                <td class="text-muted">
+                  <%= user._id %>
+                </td>
+                <td class="fw-semibold">
+                  <%= user.name %>
+                </td>
+                <td>
+                  <%= user.email %>
+                </td>
+
+                <td>
+                  <a href="/admin/users/<%= user._id %>/delete" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+              </tr>
+              <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
   </div>
-</div>

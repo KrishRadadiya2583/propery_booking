@@ -5,13 +5,13 @@ const listingSchema = new mongoose.Schema({
         type: String,
     },
     description: String,
-    
- image: [
-    {
-      url: String,
-      fileId: String,
-    }
-  ],
+
+    image: [
+        {
+            url: String,
+            fileId: String,
+        }
+    ],
 
 
     price: {

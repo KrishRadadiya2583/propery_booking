@@ -1,4 +1,4 @@
-module.exports.validateBooking = async(req, res, next) => {
+module.exports.validateBooking = async (req, res, next) => {
     let { name, email, phone, checkIn, checkOut, guests } = req.body;
 
 

@@ -4,7 +4,7 @@ const { isLoggedIn } = require('../middlewares/loginmiddleware');
 const { isuser } = require('../middlewares/authenticate');
 const { validateBooking } = require('../middlewares/bookingValidation');
 const { validateImages } = require('../middlewares/validateimage');
-const {index,new:newListing,show,create,edit,update,delete:deleteListing,bookingform,createBooking,savebooking,cancelbooking} = require("../controllers/listing")
+const {index,new:newListing,show,create,edit,update,delete:deleteListing,bookingform,createBooking,savebooking,cancelbooking,showavailability} = require("../controllers/listing")
 
 const upload = require('../middlewares/multer');
 
@@ -54,5 +54,10 @@ router.post("/confirm", isLoggedIn, validateBooking,savebooking);
 
 // cancel Booking
 router.get("/:id/cancelbooking", isLoggedIn, cancelbooking)
+
+
+
+// availability route
+router.get("/:id/availability", isLoggedIn, showavailability);
 
 module.exports = router;

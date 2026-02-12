@@ -94,14 +94,12 @@ module.exports.update = async (req, res) => {
     const { id } = req.params;
     const listingData = req.body.listing;
 
-    // 1. Update basic listing data
     const listing = await Listing.findByIdAndUpdate(
       id,
       listingData,
       { new: true, runValidators: true }
     );
 
-    // 2. Upload new images (if any)
     if (req.files && req.files.length > 0) {
       let newImages = [];
 
@@ -122,20 +120,14 @@ module.exports.update = async (req, res) => {
       await listing.save();
     }
 
-    // 3. Delete selected images
     if (req.body.deleteImages) {
       let imagesToDelete = req.body.deleteImages;
 
-      // ensure array
+     
       if (!Array.isArray(imagesToDelete)) {
         imagesToDelete = [imagesToDelete];
       }
 
-      
-    //   // delete from ImageKit
-    //   for (let fileId of imagesToDelete) {
-    //     await imagekit.deleteFile(fileId);
-    //   }
 
      for (let fileId of imagesToDelete) {
     try {
@@ -148,11 +140,11 @@ module.exports.update = async (req, res) => {
 
     } catch (err) {
       console.log(`File not found in ImageKit: ${fileId}`);
-      // skip if not found
+   
     }
   }
 
-      // remove from MongoDB
+   
       await Listing.findByIdAndUpdate(id, {
         $pull: { image: { fileId: { $in: imagesToDelete } } },
       });
@@ -284,5 +276,22 @@ module.exports.cancelbooking = async (req, res) => {
   catch (err) {
     req.flash("error", "Something went wrong");
     res.redirect("/profile/bookings");
+  }
+}
+
+module.exports.showavailability = async (req, res) => {
+  try {
+    const listing = await Listing.findById(req.params.id);
+    const availability = await Booking.find({listingtitle: listing.title});
+const dates = availability.map(booking => {
+  return {
+    checkIn: new Date(booking.checkIn),
+    checkOut: new Date(booking.checkOut)
+  }
+})
+    res.render("listings/availability", { listing, dates });
+  }
+  catch (err) {
+    res.send("something went wrong")
   }
 }

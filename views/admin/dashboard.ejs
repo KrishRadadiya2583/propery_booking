@@ -54,15 +54,26 @@
   </section>
 
   <section class="recent-section">
-    <h2>Recent Bookings</h2>
-    <ul class="recent-list">
-      <% recentBookings.forEach(booking=> { %>
-        <li>
-          <%= booking.userEmail %> booked <%= booking.listingTitle %> - $<%= booking.totalPrice %>
-        </li>
-        <% }) %>
-    </ul>
-  </section>
+  <h2 class="section-title">Recent Bookings</h2>
+
+  <ul class="recent-list">
+    <% recentBookings.forEach(booking => { %>
+      <li class="recent-item">
+        <div class="recent-left">
+          <span class="recent-icon">📩</span>
+          <div>
+            <p class="recent-title"><%= booking.listingtitle %></p>
+            <p class="recent-email"><%= booking.email %></p>
+          </div>
+        </div>
+
+        <div class="recent-price">
+          $<%= booking.totalPrice %>
+        </div>
+      </li>
+    <% }) %>
+  </ul>
+</section>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>

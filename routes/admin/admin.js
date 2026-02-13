@@ -35,12 +35,12 @@ router.post("/login", async (req, res) => {
 })
 
 router.get("/dashboard", isAdminLoggedIn, async (req, res) => {
-  const listings = await Listing.find().countDocuments();
-  const bookings = await Booking.find().countDocuments();
-  const users = await User.find().countDocuments();
-  const totalListings = listings;
-  const totalBookings = bookings;
-  const totalUsers = users;
+  const listings = await Listing.find();
+  const bookings = await Booking.find()
+  const users = await User.find();
+  const totalListings = listings.length;
+  const totalBookings = bookings.length;
+  const totalUsers = users.length;
 
   const bookingschart = await Booking.find();
   const userschart = await User.find();

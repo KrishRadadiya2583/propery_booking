@@ -184,7 +184,7 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
-        const bookedDates = <% - JSON.stringify(dates) %>;
+        const bookedDates = <%- JSON.stringify(dates) %>;
 
         const disabledRanges = bookedDates.map(b => {
             return {

@@ -1,46 +1,105 @@
 <%- layout("./admin/layouts/adminboilerplate.ejs") %>
 
-  <div class="container mt-5">
-    <div class="card shadow-lg border-0">
+  <div class="page-header">
+    <div class="heading">
+      <h2>Users</h2>
+      <p>Every account that has signed up on WonderLust.</p>
+    </div>
+    <div class="actions">
+      <span class="metric-pill"><i class="bi bi-people"></i> <strong><%= users.length %></strong> users</span>
+    </div>
+  </div>
 
-      <!-- Header -->
-      <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-        <h4 class="mb-0">User Management</h4>
+  <div class="data-table-wrap">
+    <div class="data-toolbar">
+      <div class="search">
+        <i class="bi bi-search"></i>
+        <input type="text" id="userSearch" placeholder="Search by name or email…">
       </div>
+      <div class="spacer"></div>
+      <span class="count" id="userCount"><%= users.length %> users</span>
+    </div>
 
-      <!-- Table -->
-      <div class="card-body p-0">
-        <table class="table table-hover align-middle mb-0">
-          <thead class="table-light">
+    <% if (users.length === 0) { %>
+      <div class="empty">
+        <i class="bi bi-person-slash"></i>
+        <h3>No users yet</h3>
+        <p>Sign-ups will show up here.</p>
+      </div>
+    <% } else { %>
+      <div class="data-table-scroll">
+        <table class="data-table" id="userTable">
+          <thead>
             <tr>
-              <th>ID</th>
-              <th>Name</th>
+              <th>User</th>
               <th>Email</th>
-              <th>Delete</th>
+              <th>Bookings</th>
+              <th>Total Spent</th>
+              <th>Joined</th>
+              <th style="text-align:right;">Actions</th>
             </tr>
           </thead>
-
           <tbody>
-            <% users.forEach(user=> { %>
+            <% users.forEach(user => { %>
               <tr>
-                <td class="text-muted">
-                  <%= user._id %>
-                </td>
-                <td class="fw-semibold">
-                  <%= user.name %>
-                </td>
                 <td>
-                  <%= user.email %>
+                  <div class="user-chip">
+                    <div class="avatar-sm"><%= (user.name || "?").charAt(0).toUpperCase() %></div>
+                    <div>
+                      <div class="u-name"><%= user.name %></div>
+                      <small class="cell-id"><%= user._id %></small>
+                    </div>
+                  </div>
                 </td>
-
+                <td class="cell-strong"><%= user.email %></td>
                 <td>
-                  <a href="/admin/users/<%= user._id %>/delete" class="btn btn-danger btn-sm">Delete</a>
+                  <% if (user.bookingCount > 0) { %>
+                    <span class="status-pill confirmed"><%= user.bookingCount %></span>
+                  <% } else { %>
+                    <span class="cell-muted">0</span>
+                  <% } %>
+                </td>
+                <td class="cell-price">₹<%= (user.totalSpent || 0).toLocaleString("en-IN") %></td>
+                <td class="cell-muted">
+                  <%= user.createdAt ? new Date(user.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—" %>
+                </td>
+                <td style="text-align:right;">
+                  <div class="row-actions" style="justify-content:flex-end;">
+                    <a href="mailto:<%= user.email %>" class="btn btn-soft btn-sm" title="Email user">
+                      <i class="bi bi-envelope"></i>
+                    </a>
+                    <a href="/admin/users/<%= user._id %>/delete"
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('Delete this user? This cannot be undone.');">
+                      <i class="bi bi-trash"></i>
+                    </a>
+                  </div>
                 </td>
               </tr>
-              <% }) %>
+            <% }) %>
           </tbody>
         </table>
       </div>
-
-    </div>
+    <% } %>
   </div>
+
+  <script>
+    (function () {
+      var search = document.getElementById("userSearch");
+      var count = document.getElementById("userCount");
+      var table = document.getElementById("userTable");
+      if (!table) return;
+      var rows = Array.prototype.slice.call(table.querySelectorAll("tbody tr"));
+
+      search.addEventListener("input", function () {
+        var q = (search.value || "").toLowerCase().trim();
+        var shown = 0;
+        rows.forEach(function (r) {
+          var ok = !q || r.textContent.toLowerCase().indexOf(q) !== -1;
+          r.style.display = ok ? "" : "none";
+          if (ok) shown++;
+        });
+        count.textContent = shown + " user" + (shown === 1 ? "" : "s");
+      });
+    })();
+  </script>

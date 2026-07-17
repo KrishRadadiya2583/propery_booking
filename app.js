@@ -1,3 +1,6 @@
+const dns = require("dns");
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
+
 if (process.env.NODE_ENV !== "production") {
     require("dotenv").config();
 }
@@ -6,9 +9,10 @@ if (process.env.NODE_ENV !== "production") {
 
 const bodyParser = require("body-parser");
 const express = require("express");
+const http = require("http");
 const app = express();
+const server = http.createServer(app);
 const mongoose = require("mongoose");
-const Listing = require("./models/listing").default;
 const path = require("path");
 const ejsMate = require("ejs-mate");
 const session = require("express-session");
@@ -20,6 +24,8 @@ const profileRouter = require("./routes/profile");
 const footerRouter = require("./routes/footer");
 const reviewsRouter = require("./routes/reviews");
 const adminRouter = require("./routes/admin/admin");
+const apiRouter = require("./routes/api");
+const realtime = require("./utils/realtime");
 const flash = require("connect-flash");
 const ratelimit = require("./middlewares/ratelimit");
 const morgan = require("morgan");
@@ -72,6 +78,8 @@ main().then(() => {
     console.log(err);
 })
 
+app.use("/api/v1", apiRouter);
+
 app.use("/listings", listingsRouter);
 app.use("/listings/:id/reviews", reviewsRouter);
 
@@ -81,7 +89,10 @@ app.use("/contact", contactRouter)
 app.use("/profile", profileRouter);
 app.use("/footer", footerRouter);
 app.use("/admin", adminRouter);
+
+realtime.init(server);
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}`);
+server.listen(PORT, () => {
+    console.log(`Server started on port ${PORT} (realtime + REST enabled)`);
 });

@@ -1,27 +1,119 @@
 <%- layout("./admin/layouts/adminboilerplate.ejs") %>
 
-  <h1 class="page-title">All Listings</h1>
-
-  <div class="listings-grid">
-    <% listings.forEach(listing=> { %>
-      <div class="listing-card">
-        <div class="card-body">
-          <h3 class="listing-title">
-            <%= listing.title %>
-          </h3>
-          <p class="listing-email"><strong>User:</strong>
-            <%= listing.useremail %>
-          </p>
-          <p class="listing-location"><strong>Location:</strong>
-            <%= listing.location %>
-          </p>
-          <p class="listing-price">₹<%= listing.price %>
-          </p>
-        </div>
-
-        <div class="card-actions">
-          <a href="/admin/listings/<%= listing._id %>/delete" class="btn delete-btn">Delete</a>
-        </div>
-      </div>
-      <% }) %>
+  <div class="page-header">
+    <div class="heading">
+      <h2>Listings</h2>
+      <p>Manage every property published on WonderLust.</p>
+    </div>
+    <div class="actions">
+      <span class="metric-pill"><i class="bi bi-house-door"></i> <strong><%= listings.length %></strong> listings</span>
+    </div>
   </div>
+
+  <div class="data-table-wrap">
+    <div class="data-toolbar">
+      <div class="search">
+        <i class="bi bi-search"></i>
+        <input type="text" id="listingSearch" placeholder="Search title, location, host, category…">
+      </div>
+      <select id="listingCategory">
+        <option value="">All categories</option>
+        <% var cats = []; listings.forEach(l => { if (l.category && cats.indexOf(l.category) === -1) cats.push(l.category); }); cats.sort().forEach(c => { %>
+          <option value="<%= c %>"><%= c %></option>
+        <% }) %>
+      </select>
+      <div class="spacer"></div>
+      <span class="count" id="listingCount"><%= listings.length %> listings</span>
+    </div>
+
+    <% if (listings.length === 0) { %>
+      <div class="empty">
+        <i class="bi bi-house-slash"></i>
+        <h3>No listings yet</h3>
+        <p>Once hosts publish properties, they'll show up here.</p>
+      </div>
+    <% } else { %>
+      <div class="data-table-scroll">
+        <table class="data-table" id="listingTable">
+          <thead>
+            <tr>
+              <th>Listing</th>
+              <th>Host</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Guests</th>
+              <th>Created</th>
+              <th style="text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% listings.forEach(listing => { %>
+              <tr data-category="<%= listing.category || '' %>">
+                <td>
+                  <div class="listing-row">
+                    <% var img = (listing.image && listing.image[0] && listing.image[0].url) || ''; %>
+                    <% if (img) { %>
+                      <img class="thumb" src="<%= img %>" alt="" loading="lazy">
+                    <% } else { %>
+                      <div class="thumb" style="display:grid;place-items:center;color:var(--ds-text-3);"><i class="bi bi-house"></i></div>
+                    <% } %>
+                    <div class="info">
+                      <b><%= listing.title || "Untitled" %></b>
+                      <small><i class="bi bi-geo-alt"></i> <%= listing.location || "—" %><%= listing.country ? ", " + listing.country : "" %></small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="cell-strong"><%= listing.hostName || "—" %></div>
+                  <div class="cell-muted"><%= listing.useremail || "" %></div>
+                </td>
+                <td><span class="chip"><%= listing.category || "all" %></span></td>
+                <td class="cell-price">₹<%= (listing.price || 0).toLocaleString("en-IN") %></td>
+                <td class="cell-strong"><%= listing.maxGuests || 1 %></td>
+                <td class="cell-muted">
+                  <%= listing.createdAt ? new Date(listing.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—" %>
+                </td>
+                <td style="text-align:right;">
+                  <div class="row-actions" style="justify-content:flex-end;">
+                    <a href="/admin/listings/<%= listing._id %>/delete"
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('Delete this listing? This cannot be undone.');">
+                      <i class="bi bi-trash"></i> Delete
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+
+  <script>
+    (function () {
+      var search = document.getElementById("listingSearch");
+      var catSel = document.getElementById("listingCategory");
+      var count = document.getElementById("listingCount");
+      var table = document.getElementById("listingTable");
+      if (!table) return;
+      var rows = Array.prototype.slice.call(table.querySelectorAll("tbody tr"));
+
+      function apply() {
+        var q = (search.value || "").toLowerCase().trim();
+        var cat = catSel.value;
+        var shown = 0;
+        rows.forEach(function (r) {
+          var text = r.textContent.toLowerCase();
+          var matchText = !q || text.indexOf(q) !== -1;
+          var matchCat = !cat || r.getAttribute("data-category") === cat;
+          var ok = matchText && matchCat;
+          r.style.display = ok ? "" : "none";
+          if (ok) shown++;
+        });
+        count.textContent = shown + " listing" + (shown === 1 ? "" : "s");
+      }
+      search.addEventListener("input", apply);
+      catSel.addEventListener("change", apply);
+    })();
+  </script>

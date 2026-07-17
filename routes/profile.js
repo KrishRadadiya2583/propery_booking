@@ -3,7 +3,7 @@ const router = express.Router();
 
 const { isLoggedIn } = require("../middlewares/loginmiddleware");
 
-const { index, editprofile, updateprofile, bookings, listings } = require("../controllers/profile");
+const { index, editprofile, updateprofile, bookings, listings, wishlist } = require("../controllers/profile");
 
 router.get("/", isLoggedIn, index);
 
@@ -18,5 +18,7 @@ router.get("/bookings", isLoggedIn, bookings);
 
 
 router.get("/listings", isLoggedIn, listings);
+
+router.get("/wishlist", isLoggedIn, wishlist);
 
 module.exports = router;

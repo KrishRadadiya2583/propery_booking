@@ -1,11 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const passwordvalidator = require("../middlewares/passwordvalidator");
-const { index, register, login, logout } = require("../controllers/auth");
+const { landing, index, register, login, logout } = require("../controllers/auth");
 
 
+// Public landing page
+router.get("/", landing);
 
-router.get("/", index);
+// Auth page (sign in / create account)
+router.get("/login", index);
+router.get("/signin", index);
+router.get("/register", index);
 
 
 // POST register

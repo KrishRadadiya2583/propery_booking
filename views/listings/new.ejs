@@ -1,36 +1,109 @@
 <% layout("/layouts/boilerplate") %>
 
-  <section id="form-page">
-    <div class="container form-container">
-      <form class="listing-form" action="/listings" method="POST" enctype="multipart/form-data">
-        <h2 class="form-title">Add New Listing</h2>
-        <label for="listing[useremail]">useremail</label>
-        <input class="form-input" type="email" value="<%= currentUser.email %>" name="listing[useremail]"
-          placeholder="Contact Email" required>
-        <label for="listing[title]">title</label>
-        <input class="form-input" name="listing[title]" placeholder="Title" required>
-        <label for="listing[description]">description</label>
-        <input class="form-input" name="listing[description]" placeholder="Description" required>
-        <label for="listing[price]">price</label>
-        <input class="form-input" type="number" name="listing[price]" placeholder="Price" required>
-        <label for="listing[location]">location</label>
-        <input class="form-input" name="listing[location]" placeholder="Location" required>
-        <label for="listing[country]">country</label>
-        <input class="form-input" name="listing[country]" placeholder="Country" required>
+  <section id="form-page" style="width:var(--ds-container);margin:0 auto;padding:20px 0 60px">
+    <div class="ds-card" style="padding:32px">
+      <h2 style="font-size:26px;font-weight:700;margin:0 0 6px">Host your place</h2>
+      <p style="color:var(--ds-text-3);margin:0 0 26px">Fill in the details below. All fields marked * are required.</p>
 
-        <!-- Image Upload -->
-        <label>Upload Images</label>
-        <div id="image-upload-wrapper">
-          <div class="image-input-group">
-            <input class="form-input" type="file" name="listing[image]" multiple required onchange="previewAllImages()">
+      <form class="listing-form" action="/listings" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="listing[useremail]" value="<%= currentUser ? currentUser.email : '' %>">
+
+        <div class="ds-field">
+          <label class="ds-label" for="title">Title *</label>
+          <input class="ds-input" id="title" name="listing[title]" placeholder="A cozy cabin in the pines" required>
+        </div>
+
+        <div class="ds-field" style="margin-top:14px">
+          <label class="ds-label" for="description">Description *</label>
+          <textarea class="ds-textarea" id="description" name="listing[description]" rows="4" placeholder="What makes your place special?" required></textarea>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+          <div class="ds-field">
+            <label class="ds-label" for="price">Price per night (₹) *</label>
+            <input class="ds-input" id="price" type="number" min="0" name="listing[price]" placeholder="2500" required>
+          </div>
+          <div class="ds-field">
+            <label class="ds-label" for="category">Category</label>
+            <select class="ds-select" id="category" name="listing[category]">
+              <option value="cabins">Cabins</option>
+              <option value="beach">Beach</option>
+              <option value="mountain">Mountain</option>
+              <option value="countryside">Countryside</option>
+              <option value="lakefront">Lakefront</option>
+              <option value="farmstay">Farmstay</option>
+              <option value="treehouse">Treehouse</option>
+              <option value="camping">Camping</option>
+              <option value="villa">Villa</option>
+              <option value="cottage">Cottage</option>
+              <option value="eco_stay">Eco stay</option>
+              <option value="all">Other</option>
+            </select>
           </div>
         </div>
 
-        <button type="button" class="btn-add-image" onclick="addImageField()">+ Add Another Image</button>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+          <div class="ds-field">
+            <label class="ds-label" for="location">Location *</label>
+            <input class="ds-input" id="location" name="listing[location]" placeholder="e.g. Manali" required>
+          </div>
+          <div class="ds-field">
+            <label class="ds-label" for="country">Country *</label>
+            <input class="ds-input" id="country" name="listing[country]" placeholder="India" required>
+          </div>
+        </div>
 
-        <div id="image-preview" class="image-preview-container"></div>
-        <br><br>
-        <button class="form-btn" type="submit">Add Listing</button>
+        <h3 style="font-size:16px;font-weight:700;margin:22px 0 10px">Rooms & capacity</h3>
+        <div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:14px">
+          <div class="ds-field">
+            <label class="ds-label">Guests</label>
+            <input class="ds-input" type="number" min="1" name="listing[maxGuests]" value="4">
+          </div>
+          <div class="ds-field">
+            <label class="ds-label">Bedrooms</label>
+            <input class="ds-input" type="number" min="0" name="listing[bedrooms]" value="1">
+          </div>
+          <div class="ds-field">
+            <label class="ds-label">Beds</label>
+            <input class="ds-input" type="number" min="0" name="listing[beds]" value="1">
+          </div>
+          <div class="ds-field">
+            <label class="ds-label">Baths</label>
+            <input class="ds-input" type="number" min="0" name="listing[bathrooms]" value="1">
+          </div>
+        </div>
+
+        <h3 style="font-size:16px;font-weight:700;margin:22px 0 10px">Amenities</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px">
+          <% const amenityOptions = [
+            ['wifi','Wi-Fi'],['parking','Parking'],['kitchen','Kitchen'],['tv','Smart TV'],
+            ['ac','AC'],['heating','Heating'],['workspace','Workspace'],['washer','Washer'],
+            ['pool','Pool'],['hot_tub','Hot tub'],['gym','Gym'],['breakfast','Breakfast'],
+            ['fireplace','Fireplace'],['pet_friendly','Pet friendly'],['garden','Garden'],
+            ['balcony','Balcony'],['sea_view','Sea view'],['mountain_view','Mountain view'],
+            ['ev_charger','EV charger'],['smoke_alarm','Smoke alarm']
+          ]; %>
+          <% amenityOptions.forEach(function (a) { %>
+            <label style="display:flex;align-items:center;gap:8px;padding:10px;border:1px solid var(--ds-border);border-radius:10px;background:var(--ds-glass);cursor:pointer">
+              <input type="checkbox" name="listing[amenities]" value="<%= a[0] %>"> <span><%= a[1] %></span>
+            </label>
+          <% }) %>
+        </div>
+
+        <h3 style="font-size:16px;font-weight:700;margin:22px 0 10px">Photos</h3>
+        <div id="image-upload-wrapper">
+          <div class="image-input-group">
+            <input class="ds-input" type="file" name="listing[image]" multiple required onchange="previewAllImages()">
+          </div>
+        </div>
+        <button type="button" class="ds-btn ds-btn-ghost ds-btn-sm" style="margin-top:8px" onclick="addImageField()"><i class="bi bi-plus-lg"></i> Add another image</button>
+
+        <div id="image-preview" class="image-preview-container" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"></div>
+
+        <div style="display:flex;gap:10px;margin-top:26px">
+          <button class="ds-btn ds-btn-primary ds-btn-lg" type="submit"><i class="bi bi-house-add"></i> Publish listing</button>
+          <a class="ds-btn ds-btn-ghost ds-btn-lg" href="/listings">Cancel</a>
+        </div>
       </form>
     </div>
   </section>
@@ -41,18 +114,14 @@
       const div = document.createElement('div');
       div.className = 'image-input-group';
       div.style.marginTop = "10px";
-      div.innerHTML = `
-        <input class="form-input" type="file" name="listing[image]" multiple onchange="previewAllImages()">
-      `;
+      div.innerHTML = `<input class="ds-input" type="file" name="listing[image]" multiple onchange="previewAllImages()">`;
       wrapper.appendChild(div);
     }
 
     function previewAllImages() {
       const previewContainer = document.getElementById('image-preview');
       previewContainer.innerHTML = '';
-
       const inputs = document.querySelectorAll('input[name="listing[image]"]');
-
       inputs.forEach(input => {
         if (input.files) {
           Array.from(input.files).forEach(file => {
@@ -60,7 +129,7 @@
             reader.onload = function (e) {
               const img = document.createElement('img');
               img.src = e.target.result;
-              img.classList.add('preview-img');
+              img.style.cssText = "width:120px;height:120px;object-fit:cover;border-radius:10px;border:1px solid var(--ds-border)";
               previewContainer.appendChild(img);
             }
             reader.readAsDataURL(file);

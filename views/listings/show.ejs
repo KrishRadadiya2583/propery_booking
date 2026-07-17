@@ -1,425 +1,382 @@
 <% layout("/layouts/boilerplate") %>
 
-  <section id="show-page">
-    <div class="container show-container">
-
-      <!-- IMAGE SLIDER -->
-      <div class="show-slider">
-        <% listing.image.forEach((img, index)=> { %>
-          <img src="<%= img.url %>" class="<%= index === 0 ? 'active' : '' %>">
-          <% }) %>
-            <button class="slider-btn prev-btn" onclick="changeSlide(-1)">&#10094;</button>
-            <button class="slider-btn next-btn" onclick="changeSlide(1)">&#10095;</button>
+  <section class="ds-show" data-listing-id="<%= listing._id %>">
+    <!-- HEADER -->
+    <div class="ds-show-header">
+      <div>
+        <h1><%= listing.title %></h1>
+        <div class="ds-show-meta">
+          <span><i class="bi bi-star-fill" style="color:#f4b942"></i> <%= listing.reviews && listing.reviews.length ? (listing.reviews.reduce((s,r)=>s+(r.rating||0),0) / listing.reviews.length).toFixed(1) : "New" %></span>
+          <span>·</span>
+          <span><i class="bi bi-chat-left-text"></i> <%= listing.reviews ? listing.reviews.length : 0 %> reviews</span>
+          <span>·</span>
+          <span><i class="bi bi-geo-alt-fill"></i> <%= listing.location %>, <%= listing.country %></span>
+          <span>·</span>
+          <span class="ds-viewers" id="liveViewers" hidden><span class="live-dot"></span> <span id="liveViewersCount">1</span> viewing now</span>
+        </div>
       </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <button type="button" class="ds-btn ds-btn-ghost ds-btn-sm" data-wl-listing="<%= listing._id %>">
+          <i class="bi bi-heart"></i> Save
+        </button>
+        <a class="ds-btn ds-btn-ghost ds-btn-sm" href="/listings"><i class="bi bi-arrow-left"></i> Back</a>
+        <% if (currentUser && (currentUser.email === listing.useremail || currentUser.email === "milspatel21@gmail.com")) { %>
+          <a class="ds-btn ds-btn-soft ds-btn-sm" href="/listings/<%= listing._id %>/edit"><i class="bi bi-pencil"></i> Edit</a>
+          <a class="ds-btn ds-btn-danger ds-btn-sm" href="/listings/<%= listing._id %>/delete" onclick="return confirm('Delete this listing?')"><i class="bi bi-trash"></i> Delete</a>
+        <% } %>
+      </div>
+    </div>
 
-      <!-- CONTENT -->
-      <div class="show-content">
-        <h1 class="show-title">
-          <%= listing.title %>
-        </h1>
-        <p class="show-description">
-          <%= listing.description %>
-        </p>
-        <p class="show-price">₹ <%= listing.price.toLocaleString("en-IN") %> <span>/night</span></p>
-        <p class="show-location">📍 <%= listing.location %>
-        </p>
-        <p class="show-country">🌍 <%= listing.country %>
-        </p>
+    <!-- Quick specs -->
+    <div style="display:flex;gap:18px;flex-wrap:wrap;margin:6px 0 22px;color:var(--ds-text-2);font-size:14px">
+      <span><i class="bi bi-people"></i> Up to <b><%= listing.maxGuests || 4 %></b> guests</span>
+      <span><i class="bi bi-door-closed"></i> <b><%= listing.bedrooms || 1 %></b> bedroom(s)</span>
+      <span><i class="bi bi-moon-stars"></i> <b><%= listing.beds || 1 %></b> bed(s)</span>
+      <span><i class="bi bi-water"></i> <b><%= listing.bathrooms || 1 %></b> bath(s)</span>
+      <% if (listing.category && listing.category !== 'all') { %>
+        <span class="ds-metric"><i class="bi bi-tree"></i> <%= listing.category.replace('_',' ') %></span>
+      <% } %>
+    </div>
 
-        <a href="/listings/<%= listing._id %>/booking" class="btn-book">Book Now</a>
+    <!-- GALLERY -->
+    <% const imgs = (listing.image && listing.image.length) ? listing.image : []; %>
+    <% const galleryClass = imgs.length === 1 ? 'only-1' : imgs.length === 2 ? 'only-2' : imgs.length === 3 ? 'only-3' : ''; %>
+    <div class="ds-gallery <%= galleryClass %>">
+      <% if (imgs.length === 0) { %>
+        <img class="g-main" src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=70" alt="<%= listing.title %>">
+      <% } else { %>
+        <img class="g-main" src="<%= imgs[0].url %>" alt="<%= listing.title %>">
+        <% for (let i = 1; i < Math.min(5, imgs.length); i++) { %>
+          <img src="<%= imgs[i].url %>" alt="<%= listing.title %> photo <%= i+1 %>">
+        <% } %>
+      <% } %>
+    </div>
 
+    <!-- BODY -->
+    <div class="ds-show-body">
+      <div>
+        <section class="ds-section">
+          <h3>About this place</h3>
+          <p><%= listing.description %></p>
+        </section>
 
-        <% if (currentUser && currentUser.email===listing.useremail || currentUser.email==="milspatel21@gmail.com" ) {
+        <section class="ds-section">
+          <h3>What this place offers</h3>
+          <%
+            const AMENITY_MAP = {
+              wifi:          { icon: 'bi-wifi',            label: 'High-speed Wi-Fi' },
+              parking:       { icon: 'bi-car-front',       label: 'Free parking' },
+              kitchen:       { icon: 'bi-cup-hot',         label: 'Kitchen' },
+              tv:            { icon: 'bi-tv',              label: 'Smart TV' },
+              ac:            { icon: 'bi-snow',            label: 'Air conditioning' },
+              heating:       { icon: 'bi-thermometer-sun', label: 'Heating' },
+              washer:        { icon: 'bi-droplet',         label: 'Washer' },
+              dryer:         { icon: 'bi-wind',            label: 'Dryer' },
+              workspace:     { icon: 'bi-laptop',          label: 'Workspace' },
+              pool:          { icon: 'bi-water',           label: 'Pool' },
+              hot_tub:       { icon: 'bi-droplet-half',    label: 'Hot tub' },
+              gym:           { icon: 'bi-bicycle',         label: 'Gym' },
+              breakfast:     { icon: 'bi-egg-fried',       label: 'Breakfast' },
+              fireplace:     { icon: 'bi-fire',            label: 'Fireplace' },
+              pet_friendly:  { icon: 'bi-heart',           label: 'Pet friendly' },
+              smoke_alarm:   { icon: 'bi-bell',            label: 'Smoke alarm' },
+              first_aid:     { icon: 'bi-bandaid',         label: 'First aid kit' },
+              ev_charger:    { icon: 'bi-plug',            label: 'EV charger' },
+              garden:        { icon: 'bi-flower1',         label: 'Garden' },
+              balcony:       { icon: 'bi-door-open',       label: 'Balcony' },
+              sea_view:      { icon: 'bi-sunrise',         label: 'Sea view' },
+              mountain_view: { icon: 'bi-triangle',        label: 'Mountain view' },
+            };
+            const listingAmenities = (listing.amenities && listing.amenities.length)
+              ? listing.amenities
+              : ['wifi', 'parking', 'kitchen', 'tv', 'ac', 'garden'];
           %>
-          <div class="show-actions">
-            <a class="btn-edit" href="/listings/<%= listing._id %>/edit">Edit</a>
-            <a class="btn-delete" href="/listings/<%= listing._id %>/delete">Delete</a>
+          <div class="ds-amenity-grid">
+            <% listingAmenities.slice(0, 8).forEach(function (key) {
+                 const a = AMENITY_MAP[key] || { icon: 'bi-check2', label: key };
+            %>
+              <div class="ds-amenity"><i class="bi <%= a.icon %>"></i><span><%= a.label %></span></div>
+            <% }) %>
           </div>
+          <% if (listingAmenities.length > 8) { %>
+            <button class="ds-btn ds-btn-ghost" data-bs-toggle="modal" data-bs-target="#amenitiesModal" style="margin-top:14px">Show all <%= listingAmenities.length %> amenities</button>
           <% } %>
+        </section>
 
-            <br>
-            <a class="btn-back" href="/listings">Back</a>
+        <section class="ds-section">
+          <h3>Where you'll be</h3>
+          <div id="listing-map" class="ds-map"></div>
+        </section>
+
+        <section class="ds-section">
+          <h3>Reviews</h3>
+          <div id="reviewList">
+            <% if (listing.reviews && listing.reviews.length > 0) { %>
+              <div class="row" style="margin:0 -8px">
+                <% for (const review of listing.reviews) { %>
+                  <div class="col-12 col-md-6" style="padding:8px">
+                    <div class="ds-card" style="padding:18px">
+                      <div style="display:flex;justify-content:space-between;align-items:center">
+                        <strong>@<%= review.name %></strong>
+                        <span style="color:#fbbf24"><% for (let s=0;s<review.rating;s++) { %>★<% } %></span>
+                      </div>
+                      <p style="color:var(--ds-text-2);margin:10px 0 0"><%= review.comment %></p>
+                      <p style="color:var(--ds-text-3);margin:8px 0 0;font-size:12px">
+                        <%= new Date(review.createdAt).toLocaleDateString("en-US", { year:'numeric', month:'long', day:'numeric' }) %>
+                      </p>
+                      <% if (currentUser && currentUser.name === review.name) { %>
+                        <form method="GET" action="/listings/<%= listing._id %>/reviews/<%= review._id %>/delete" style="margin-top:10px">
+                          <button class="ds-btn ds-btn-danger ds-btn-sm">Delete</button>
+                        </form>
+                      <% } %>
+                    </div>
+                  </div>
+                <% } %>
+              </div>
+            <% } else { %>
+              <p style="color:var(--ds-text-3)">No reviews yet. Be the first to share your experience.</p>
+            <% } %>
+          </div>
+
+          <% if (currentUser) { %>
+            <div class="ds-card" style="padding:20px;margin-top:18px">
+              <h4 style="margin:0 0 12px;font-size:16px;font-weight:700">Leave a review</h4>
+              <form action="/listings/<%= listing.id %>/reviews" method="POST" novalidate>
+                <input type="hidden" name="review[name]" value="<%= currentUser.name %>">
+                <label class="ds-label">Rating</label>
+                <div class="star-rating" style="flex-direction:row-reverse">
+                  <input type="radio" id="star5" name="review[rating]" value="5"><label for="star5"></label>
+                  <input type="radio" id="star4" name="review[rating]" value="4"><label for="star4"></label>
+                  <input type="radio" id="star3" name="review[rating]" value="3"><label for="star3"></label>
+                  <input type="radio" id="star2" name="review[rating]" value="2"><label for="star2"></label>
+                  <input type="radio" id="star1" name="review[rating]" value="1" required><label for="star1"></label>
+                </div>
+                <div class="ds-field" style="margin-top:10px">
+                  <label class="ds-label" for="comment">Comments</label>
+                  <textarea class="ds-textarea" name="review[comment]" id="comment" rows="4" required placeholder="How was your stay?"></textarea>
+                </div>
+                <button class="ds-btn ds-btn-primary" style="margin-top:12px">Post review</button>
+              </form>
+            </div>
+          <% } %>
+        </section>
       </div>
 
+      <!-- STICKY BOOKING CARD -->
+      <aside>
+        <div class="ds-booking-card">
+          <div class="price-row">
+            <span class="price">₹<%= Number(listing.price).toLocaleString("en-IN") %></span>
+            <span class="per">/ night</span>
+          </div>
 
-      <!-- Trigger Button -->
-      <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#amenitiesModal">
-        Show all amenities
-      </button>
+          <div class="ds-avail-indicator available" id="availIndicator">
+            <span class="dot"></span>
+            <span id="availText">Live availability — check dates to see</span>
+          </div>
 
-      <!-- Modal -->
-      <div class="modal fade" id="amenitiesModal" tabindex="-1">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-          <div class="modal-content amenities-modal">
-
-            <!-- Header -->
-            <div class="modal-header border-0 px-4 pt-4">
-              <h3 class="modal-title fw-bold">What this place offers</h3>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <div class="date-grid">
+            <div class="cell">
+              <label for="chkIn">Check-in</label>
+              <input type="date" id="chkIn">
             </div>
+            <div class="cell">
+              <label for="chkOut">Check-out</label>
+              <input type="date" id="chkOut">
+            </div>
+          </div>
+          <select class="ds-guests-select" id="guestsSelect">
+            <% for (let g=1; g<=10; g++) { %>
+              <option value="<%= g %>"><%= g %> guest<%= g>1?'s':'' %></option>
+            <% } %>
+          </select>
 
-            <!-- Scrollable Body -->
-            <div class="modal-body amenities-body px-4">
+          <a id="reserveBtn" class="ds-btn ds-btn-primary ds-btn-block ds-btn-lg" href="/listings/<%= listing._id %>/booking">
+            <i class="bi bi-calendar-check"></i> Reserve
+          </a>
 
-              <!-- Scenic & Views -->
-              <h4 class="fw-bold mt-4">Scenic & Views</h4>
-              <div class="row g-4 mb-4">
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-sun fs-2"></i>
-                  <span class="fs-5">Sunset view</span>
-                </div>
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-stars fs-2"></i>
-                  <span class="fs-5">Starry night view</span>
-                </div>
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-tree fs-2"></i>
-                  <span class="fs-5">Forest view</span>
-                </div>
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-water fs-2"></i>
-                  <span class="fs-5">Lake view</span>
-                </div>
-              </div>
+          <div class="ds-price-breakdown" style="margin-top:16px" id="breakdownRow" hidden>
+            <span id="breakdownLabel">— × ₹<%= Number(listing.price).toLocaleString("en-IN") %></span>
+            <span id="breakdownSub"></span>
+          </div>
+          <div class="ds-price-total" id="totalRow" hidden>
+            <span>Total</span>
+            <span id="totalAmount"></span>
+          </div>
 
-              <hr>
+          <a class="ds-btn ds-btn-ghost ds-btn-block" href="/listings/<%= listing._id %>/availability" style="margin-top:12px"><i class="bi bi-calendar-week"></i> View calendar</a>
 
-              <!-- Essentials -->
-              <h4 class="fw-bold mt-4">Essentials</h4>
-              <div class="row g-4 mb-4">
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-wifi fs-2"></i>
-                  <span class="fs-5">High-speed Wifi</span>
-                </div>
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-lightning fs-2"></i>
-                  <span class="fs-5">24/7 Power Backup</span>
-                </div>
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-droplet fs-2"></i>
-                  <span class="fs-5">Hot water</span>
-                </div>
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-cup-hot fs-2"></i>
-                  <span class="fs-5">Kitchen essentials</span>
-                </div>
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-shop fs-2"></i>
-                  <span class="fs-5">Nearby groceries</span>
-                </div>
-              </div>
+          <p style="text-align:center;color:var(--ds-text-3);font-size:12px;margin:14px 0 0">You won't be charged yet</p>
+        </div>
+      </aside>
+    </div>
 
-              <hr>
-
-              <!-- Comfort & Safety -->
-              <h4 class="fw-bold mt-4">Comfort & Safety</h4>
-              <div class="row g-4 mb-4">
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-fan fs-2"></i>
-                  <span class="fs-5">Ceiling fans</span>
-                </div>
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-thermometer fs-2"></i>
-                  <span class="fs-5">Heater</span>
-                </div>
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-shield-lock fs-2"></i>
-                  <span class="fs-5">Smart lock</span>
-                </div>
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-shield-check fs-2"></i>
-                  <span class="fs-5">Security system</span>
-                </div>
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-fire fs-2"></i>
-                  <span class="fs-5">Fire extinguisher</span>
-                </div>
-              </div>
-
-              <hr>
-
-              <!-- Family & Kids -->
-              <h4 class="fw-bold mt-4">Family & Kids</h4>
-              <div class="row g-4 mb-4">
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="fas fa-baby"></i>
-                  <span class="fs-5">Crib</span>
-                </div>
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-person fs-2"></i>
-                  <span class="fs-5">Child-friendly environment</span>
-                </div>
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-basket fs-2"></i>
-                  <span class="fs-5">Toy collection</span>
-                </div>
-              </div>
-
-              <hr>
-
-              <!-- Outdoor & Recreation -->
-              <h4 class="fw-bold mt-4">Outdoor & Recreation</h4>
-              <div class="row g-4 mb-4">
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-bicycle fs-2"></i>
-                  <span class="fs-5">Bicycle rental</span>
-                </div>
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="fas fa-person-swimming"></i>
-                  <span class="fs-5">Swimming pool</span>
-                </div>
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="fas fa-child"></i>
-                  <span class="fs-5">Playground</span>
-                </div>
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-tree fs-2"></i>
-                  <span class="fs-5">Garden/Backyard</span>
-                </div>
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-cup-straw fs-2"></i>
-                  <span class="fs-5">BBQ grill</span>
-                </div>
-              </div>
-
-              <hr>
-
-              <!-- Entertainment & Work -->
-              <h4 class="fw-bold mt-4">Entertainment & Work</h4>
-              <div class="row g-4 mb-4">
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-tv fs-2"></i>
-                  <span class="fs-5">Smart TV</span>
-                </div>
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-laptop fs-2"></i>
-                  <span class="fs-5">Work desk</span>
-                </div>
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-speaker fs-2"></i>
-                  <span class="fs-5">Bluetooth speaker</span>
-                </div>
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-camera-video fs-2"></i>
-                  <span class="fs-5">Projector</span>
-                </div>
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="fas fa-gamepad fs-2"></i>
-
-                  <span class="fs-5">Gaming console</span>
-                </div>
-              </div>
-
-              <hr>
-
-              <!-- Accessibility & Transport -->
-              <h4 class="fw-bold mt-4">Accessibility & Transport</h4>
-              <div class="row g-4 mb-4">
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-door-open fs-2"></i>
-                  <span class="fs-5">Wheelchair accessible</span>
-                </div>
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-car-front fs-2"></i>
-                  <span class="fs-5">Free parking</span>
-                </div>
-                <div class="col-md-6 d-flex align-items-center gap-3 amenity-item">
-                  <i class="bi bi-bus-front fs-2"></i>
-                  <span class="fs-5">Nearby public transport</span>
-                </div>
-              </div>
-
-              <!-- This brings total to ~45 unique amenities -->
-
+    <!-- Amenities modal (kept, styled by design system) -->
+    <div class="modal fade" id="amenitiesModal" tabindex="-1">
+      <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">What this place offers</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="ds-amenity-grid">
+              <div class="ds-amenity"><i class="bi bi-wifi"></i><span>Wi-Fi</span></div>
+              <div class="ds-amenity"><i class="bi bi-lightning"></i><span>Power backup</span></div>
+              <div class="ds-amenity"><i class="bi bi-droplet"></i><span>Hot water</span></div>
+              <div class="ds-amenity"><i class="bi bi-cup-hot"></i><span>Kitchen</span></div>
+              <div class="ds-amenity"><i class="bi bi-tv"></i><span>Smart TV</span></div>
+              <div class="ds-amenity"><i class="bi bi-fan"></i><span>Ceiling fans</span></div>
+              <div class="ds-amenity"><i class="bi bi-shield-lock"></i><span>Smart lock</span></div>
+              <div class="ds-amenity"><i class="bi bi-shield-check"></i><span>Security</span></div>
+              <div class="ds-amenity"><i class="bi bi-fire"></i><span>Fire extinguisher</span></div>
+              <div class="ds-amenity"><i class="bi bi-car-front"></i><span>Free parking</span></div>
+              <div class="ds-amenity"><i class="bi bi-bus-front"></i><span>Public transport</span></div>
+              <div class="ds-amenity"><i class="bi bi-laptop"></i><span>Work desk</span></div>
             </div>
           </div>
         </div>
       </div>
-
-
-      <a href="/listings/<%= listing._id %>/availability" class="btn btn-outline-dark">Check Availability</a>
-
-
     </div>
-
-
-    <div class="map-wrapper">
-      <div class="map-card">
-        <h3 class="map-heading">Where you'll be</h3>
-        <div id="listing-map"></div>
-      </div>
-    </div>
-
-
-    <div class="show-reviews-section">
-      <% if(currentUser) { %>
-        <h4>Leave a Review</h4>
-        <form action="/listings/<%= listing.id %>/reviews" method="POST" novalidate class="needs-validation">
-
-          <div class="mb-3 mt-3">
-            <label for="name" class="form-label">Name</label>
-            <input type="text" value="<%= currentUser.name %>" id="name" name="review[name]" class="form-control"
-              required>
-
-            <label for="rating" class="form-label">Rating</label>
-            <div class="star-rating">
-              <input type="radio" id="star5" name="review[rating]" value="5">
-              <label for="star5"></label>
-
-              <input type="radio" id="star4" name="review[rating]" value="4">
-              <label for="star4"></label>
-
-              <input type="radio" id="star3" name="review[rating]" value="3">
-              <label for="star3"></label>
-
-              <input type="radio" id="star2" name="review[rating]" value="2">
-              <label for="star2"></label>
-
-              <input type="radio" id="star1" name="review[rating]" value="1" required>
-              <label for="star1"></label>
-
-
-            </div>
-            <p id="ratingValue">Rating: 0</p>
-            <br>
-            <label for="comment" class="form-label">Comments</label>
-            <textarea name="review[comment]" id="comment" cols="30" rows="5" class="form-control" required></textarea>
-          </div>
-          <button class="btn btn-outline-dark">Submit</button>
-        </form>
-        <hr>
-        <% } %>
-
-          <% if(listing.reviews.length> 0) { %>
-            <p><b>All Reviews</b></p>
-            <div class="row">
-              <% for(review of listing.reviews) { %>
-                <div class="card col-12 col-md-5 ms-md-3 mb-3">
-                  <div class="card-body">
-                    <h5 class="card-title">@<%= review.name %>
-                    </h5>
-                    <div class="star-rating" data-rating="<%= review.rating %>">
-                      <span data-value="5">★</span>
-                      <span data-value="4">★</span>
-                      <span data-value="3">★</span>
-                      <span data-value="2">★</span>
-                      <span data-value="1">★</span>
-                    </div>
-
-                    <p class="text-muted small mb-2">
-                      <%= new Date(review.createdAt).toLocaleDateString("en-US", { year: 'numeric' , month: 'long' ,
-                        day: 'numeric' }) %>
-                    </p>
-
-                    <p class="card-text">
-                      <%= review.comment %>
-                    </p>
-                    <% if(currentUser && currentUser.name==review.name) { %>
-                      <form class="mb-3" method="GET"
-                        action="/listings/<%= listing._id %>/reviews/<%= review._id %>/delete">
-                        <button class="btn btn-sm btn-dark">Delete</button>
-                      </form>
-                      <% } %>
-                  </div>
-                </div>
-                <% } %>
-            </div>
-            <% } %>
-    </div>
-
-
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <script>
-      const listingLocation = "<%= listing.location %>";
-      const listingCountry = "<%= listing.country %>";
-
-      // Initialize map
-      const map = L.map('listing-map').setView([20.5937, 78.9629], 5); // Default to India
-
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      }).addTo(map);
-
-      // Fetch coordinates from Nominatim (Free OpenStreetMap Geocoder)
-      const query = `${listingLocation}, ${listingCountry}`;
-      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
-        .then(response => response.json())
-        .then(data => {
-          if (data && data.length > 0) {
-            const lat = parseFloat(data[0].lat);
-            const lon = parseFloat(data[0].lon);
-
-            map.setView([lat, lon], 13);
-
-            L.marker([lat, lon]).addTo(map)
-              .bindPopup(`<b>${listingLocation}</b><br>Exact location provided after booking.`)
-              .openPopup();
-
-            // Add a circle to show approximate area
-            L.circle([lat, lon], {
-              color: '#ff385c',
-              fillColor: '#ff385c',
-              fillOpacity: 0.2,
-              radius: 500
-            }).addTo(map);
-
-          } else {
-            console.log("Location not found");
-          }
-        })
-        .catch(err => console.error("Error fetching location:", err));
-    </script>
   </section>
 
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script>
-    // IMAGE SLIDER
-    const slides = document.querySelectorAll('.show-slider img');
-    let current = 0;
+    (function () {
+      const LISTING_ID = "<%= listing._id %>";
+      const PRICE = Number("<%= listing.price %>") || 0;
+      const chkIn = document.getElementById("chkIn");
+      const chkOut = document.getElementById("chkOut");
+      const guests = document.getElementById("guestsSelect");
+      const reserveBtn = document.getElementById("reserveBtn");
+      const availIndicator = document.getElementById("availIndicator");
+      const availText = document.getElementById("availText");
+      const breakdown = document.getElementById("breakdownRow");
+      const breakdownLabel = document.getElementById("breakdownLabel");
+      const breakdownSub = document.getElementById("breakdownSub");
+      const totalRow = document.getElementById("totalRow");
+      const totalAmount = document.getElementById("totalAmount");
 
-    // Show first slide initially
-    if (slides.length > 0) slides[0].classList.add('active');
+      const today = new Date().toISOString().slice(0, 10);
+      if (chkIn) chkIn.min = today;
+      if (chkOut) chkOut.min = today;
 
-    function changeSlide(direction) {
-      if (slides.length === 0) return;
-
-      slides[current].classList.remove('active');
-
-      current = current + direction;
-
-      // Loop boundaries
-      if (current >= slides.length) {
-        current = 0;
-      } else if (current < 0) {
-        current = slides.length - 1;
+      function nights() {
+        if (!chkIn.value || !chkOut.value) return 0;
+        return Math.max(0, Math.ceil((new Date(chkOut.value) - new Date(chkIn.value)) / (1000 * 60 * 60 * 24)));
       }
 
-      slides[current].classList.add('active');
-    }
-
-    // Auto-play slider
-    setInterval(() => changeSlide(1), 3000);
-
-    document.querySelectorAll('.star-rating').forEach(rating => {
-      const value = Number(rating.dataset.rating) || 0
-
-      rating.querySelectorAll('span').forEach(star => {
-        if (star.dataset.value <= value) {
-          star.classList.add('active')
+      function updateTotal() {
+        const n = nights();
+        if (n <= 0) {
+          breakdown.hidden = true;
+          totalRow.hidden = true;
+          return;
         }
-      })
-    })
+        const g = Number(guests.value) || 1;
+        const subtotal = n * PRICE * g;
+        breakdown.hidden = false;
+        totalRow.hidden = false;
+        breakdownLabel.textContent = `${n} night${n > 1 ? "s" : ""} × ₹${PRICE.toLocaleString("en-IN")} × ${g}`;
+        breakdownSub.textContent = "₹" + subtotal.toLocaleString("en-IN");
+        totalAmount.textContent = "₹" + subtotal.toLocaleString("en-IN");
+      }
 
+      async function checkAvailability() {
+        if (!chkIn.value || !chkOut.value) {
+          availIndicator.classList.remove("busy");
+          availIndicator.classList.add("available");
+          availText.textContent = "Live availability — pick dates";
+          reserveBtn.classList.remove("ds-btn-danger");
+          reserveBtn.classList.add("ds-btn-primary");
+          reserveBtn.innerHTML = '<i class="bi bi-calendar-check"></i> Reserve';
+          return;
+        }
+        try {
+          const r = await fetch(`/api/v1/listings/${LISTING_ID}/availability?from=${chkIn.value}&to=${chkOut.value}`);
+          const data = await r.json();
+          const ok = data && data.data && data.data.available;
+          availIndicator.classList.toggle("busy", !ok);
+          availIndicator.classList.toggle("available", ok);
+          if (ok) {
+            availText.textContent = "Available for your dates ✨";
+            reserveBtn.classList.remove("ds-btn-danger");
+            reserveBtn.classList.add("ds-btn-primary");
+            reserveBtn.href = `/listings/${LISTING_ID}/booking`;
+            reserveBtn.innerHTML = '<i class="bi bi-calendar-check"></i> Reserve';
+          } else {
+            availText.textContent = "Those dates are already booked";
+            reserveBtn.classList.remove("ds-btn-primary");
+            reserveBtn.classList.add("ds-btn-danger");
+            reserveBtn.href = `/listings/${LISTING_ID}/availability`;
+            reserveBtn.innerHTML = '<i class="bi bi-calendar-x"></i> See available dates';
+          }
+        } catch (e) {}
+      }
 
+      [chkIn, chkOut, guests].forEach(el => el && el.addEventListener("change", () => { updateTotal(); checkAvailability(); }));
 
-    const stars = document.querySelectorAll('input[name="review[rating]"]');
-    const display = document.getElementById("ratingValue");
+      // Realtime: subscribe to booking updates for this listing
+      const viewersPill = document.getElementById("liveViewers");
+      const viewersCount = document.getElementById("liveViewersCount");
 
-    stars.forEach(star => {
-      star.addEventListener("change", () => {
-        display.textContent = "Rating: " + star.value;
-      });
-    });
+      function setViewers(n) {
+        if (!viewersPill || !viewersCount) return;
+        viewersCount.textContent = String(n);
+        viewersPill.hidden = n <= 1;
+      }
+
+      if (window.WL_SOCKET) {
+        const joinWhenReady = function () {
+          window.WL_JOIN_LISTING && window.WL_JOIN_LISTING(LISTING_ID);
+        };
+        if (window.WL_SOCKET.connected) joinWhenReady();
+        window.WL_SOCKET.on("connect", joinWhenReady);
+
+        window.WL_SOCKET.on("listing:viewers", function (payload) {
+          if (!payload || payload.listingId !== LISTING_ID) return;
+          setViewers(payload.count || 0);
+        });
+        window.WL_SOCKET.on("listing:booked", function (payload) {
+          if (!payload || payload.listingId !== LISTING_ID) return;
+          if (window.WL_TOAST) {
+            window.WL_TOAST({ badge: "JUST BOOKED", title: "Someone just booked this stay", message: (payload.checkIn || "") + " → " + (payload.checkOut || "") });
+          }
+          checkAvailability();
+        });
+        window.WL_SOCKET.on("listing:cancelled", function (payload) {
+          if (!payload || payload.listingId !== LISTING_ID) return;
+          if (window.WL_TOAST) window.WL_TOAST({ badge: "OPENED", title: "Dates just opened up", message: (payload.checkIn || "") + " → " + (payload.checkOut || "") });
+          checkAvailability();
+        });
+        window.WL_SOCKET.on("listing:review", function (payload) {
+          if (!payload || payload.listingId !== LISTING_ID) return;
+          if (window.WL_TOAST && payload.review) window.WL_TOAST({ badge: "NEW REVIEW", title: "@" + payload.review.name, message: (payload.review.comment || "").slice(0, 80) });
+        });
+
+        window.addEventListener("beforeunload", function () {
+          window.WL_LEAVE_LISTING && window.WL_LEAVE_LISTING(LISTING_ID);
+        });
+      }
+    })();
+
+    // Map
+    try {
+      const listingLocation = "<%= listing.location %>";
+      const listingCountry = "<%= listing.country %>";
+      const map = L.map('listing-map').setView([20.5937, 78.9629], 5);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
+      const query = `${listingLocation}, ${listingCountry}`;
+      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
+        .then(r => r.json())
+        .then(d => {
+          if (d && d.length > 0) {
+            const lat = parseFloat(d[0].lat); const lon = parseFloat(d[0].lon);
+            map.setView([lat, lon], 13);
+            L.marker([lat, lon]).addTo(map).bindPopup(`<b>${listingLocation}</b>`).openPopup();
+            L.circle([lat, lon], { color: '#3f8f5a', fillColor: '#3f8f5a', fillOpacity: 0.2, radius: 500 }).addTo(map);
+          }
+        });
+    } catch (e) { console.warn(e); }
   </script>

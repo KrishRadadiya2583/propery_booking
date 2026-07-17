@@ -1,66 +1,301 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <title>Auth</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in · WonderLust</title>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("wl-theme");
+        if (!t) t = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) { document.documentElement.setAttribute("data-theme", "dark"); }
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/auth.css">
+  <link rel="stylesheet" href="/css/design-system.css">
+  <style>body { padding-top: 0; }</style>
 </head>
+<body>
 
-<body id="auth-body">
+  <button type="button" id="themeToggle" class="ds-theme-toggle" aria-label="Toggle theme"
+          style="position:fixed;top:20px;right:20px;z-index:100">
+    <span class="ic ic-sun"><i class="bi bi-sun-fill"></i></span>
+    <span class="ic ic-moon"><i class="bi bi-moon-stars-fill"></i></span>
+  </button>
 
-  <div id="auth-container">
-    <div class="auth-card">
-      <% if (error) { %>
-        <div class="error-msg">
-          <%= error %>
+  <div class="ds-auth">
+    <!-- =============== HERO SIDE =============== -->
+    <aside class="ds-auth-hero">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <a href="/listings" class="brand" style="color:#fff;text-decoration:none">
+          <i class="bi bi-tree-fill" style="font-size:24px"></i>
+          WonderLust
+        </a>
+        <span class="brand-tag"><span class="live-dot"></span> Live realtime</span>
+      </div>
+
+      <div>
+        <h1 class="headline">Find stays that feel <span>closer to nature.</span></h1>
+        <p class="lede">Handpicked cabins, cottages and eco-stays across the country. Real-time availability, verified hosts, and prices you can trust.</p>
+
+        <ul class="ds-auth-features">
+          <li>
+            <span class="tick"><i class="bi bi-broadcast"></i></span>
+            <span class="txt">
+              <strong>Live availability</strong>
+              <span>See open dates the moment a booking changes — no double-bookings.</span>
+            </span>
+          </li>
+          <li>
+            <span class="tick"><i class="bi bi-shield-check"></i></span>
+            <span class="txt">
+              <strong>Verified hosts</strong>
+              <span>Every host reviewed and their identity verified before listing.</span>
+            </span>
+          </li>
+          <li>
+            <span class="tick"><i class="bi bi-heart"></i></span>
+            <span class="txt">
+              <strong>Wishlist &amp; alerts</strong>
+              <span>Save places you love, get notified when prices drop.</span>
+            </span>
+          </li>
+        </ul>
+
+        <div class="ds-auth-testimonial">
+          <div class="quote">"Weekend cabin near Manali booked in under 90 seconds. Everything just… worked. Beautiful place, honest photos."</div>
+          <div class="who">
+            <span class="avatar">A</span>
+            <div>
+              <div><strong>Ananya S.</strong></div>
+              <div style="opacity:0.7">Delhi · booked 3 stays</div>
+            </div>
+            <span class="stars">★★★★★</span>
+          </div>
         </div>
+      </div>
+
+      <div style="display:flex;gap:20px;font-size:12.5px;opacity:0.75;flex-wrap:wrap">
+        <span><i class="bi bi-lock-fill"></i> 256-bit encryption</span>
+        <span><i class="bi bi-patch-check-fill"></i> PCI DSS compliant</span>
+        <span><i class="bi bi-cup-hot-fill"></i> 24/7 support</span>
+      </div>
+    </aside>
+
+    <!-- =============== FORM SIDE =============== -->
+    <div class="ds-auth-form-wrap">
+      <div class="ds-auth-form">
+        <a href="/listings" class="form-brand">
+          <span class="mark"><i class="bi bi-tree-fill"></i></span>
+          WonderLust
+        </a>
+
+        <h2 id="formTitle">Welcome back</h2>
+        <p class="subtitle" id="formSubtitle">Sign in to book stays, manage trips, and continue where you left off.</p>
+
+        <% if (error) { %>
+          <div class="error-msg" style="margin-bottom:18px;display:flex;align-items:center;gap:8px">
+            <i class="bi bi-exclamation-circle-fill"></i>
+            <span><%= error %></span>
+          </div>
         <% } %>
-          <br>
-          <div class="auth-tabs">
-            <button id="loginTab" class="tab-btn active">Login</button>
-            <button id="registerTab" class="tab-btn">Register</button>
+
+        <div class="ds-tab-row" role="tablist">
+          <button id="loginTab"    class="tab-btn active" role="tab" aria-selected="true"><i class="bi bi-box-arrow-in-right"></i> Sign in</button>
+          <button id="registerTab" class="tab-btn"        role="tab" aria-selected="false"><i class="bi bi-person-plus"></i> Create account</button>
+        </div>
+
+        <!-- ============== LOGIN FORM ============== -->
+        <form id="loginForm" class="auth-form active" action="/login" method="POST" novalidate>
+          <div class="ds-field">
+            <label class="ds-label" for="loginEmail">Email address</label>
+            <div class="ds-input-icon">
+              <i class="bi bi-envelope"></i>
+              <input class="ds-input" id="loginEmail" name="email" type="email" placeholder="you@example.com" required autocomplete="email">
+            </div>
           </div>
 
-          <form id="loginForm" class="auth-form active" action="/login" method="POST">
-            <input class="auth-input" name="email" type="email" placeholder="Email" required>
-            <input class="auth-input" name="password" type="password" placeholder="Password" required>
+          <div class="ds-field">
+            <label class="ds-label" for="loginPassword">
+              <span>Password</span>
+              <a href="#" onclick="return false" title="Password reset — coming soon">Forgot?</a>
+            </label>
+            <div class="ds-input-icon ds-password-wrap">
+              <i class="bi bi-lock"></i>
+              <input class="ds-input" id="loginPassword" name="password" type="password" placeholder="Enter your password" required minlength="6" autocomplete="current-password">
+              <button type="button" class="ds-toggle-pw" aria-label="Show password" data-target="loginPassword">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+          </div>
 
-            <button class="auth-btn">Login</button>
-          </form>
+          <div class="ds-auth-row">
+            <label class="ds-checkbox">
+              <input type="checkbox" name="remember" checked>
+              <span>Keep me signed in</span>
+            </label>
+            <a href="#" onclick="return false">Need help?</a>
+          </div>
 
-          <form id="registerForm" class="auth-form" action="/register" method="POST">
-            <input class="auth-input" name="name" placeholder="Name" required>
-            <input class="auth-input" name="email" type="email" placeholder="Email" required>
-            <input class="auth-input" name="password" type="password" placeholder="Password" required>
+          <button type="submit" class="ds-btn ds-btn-primary ds-btn-lg ds-btn-block" data-loading>
+            <span class="btn-text"><i class="bi bi-box-arrow-in-right"></i> Sign in</span>
+          </button>
+        </form>
 
-            <button class="auth-btn">Register</button>
-          </form>
-          <br>
+        <!-- ============== REGISTER FORM ============== -->
+        <form id="registerForm" class="auth-form" action="/register" method="POST" novalidate>
+          <div class="ds-field">
+            <label class="ds-label" for="regName">Full name</label>
+            <div class="ds-input-icon">
+              <i class="bi bi-person"></i>
+              <input class="ds-input" id="regName" name="name" placeholder="Your full name" required autocomplete="name" pattern="[A-Za-z\s]+" title="Letters and spaces only">
+            </div>
+          </div>
 
+          <div class="ds-field">
+            <label class="ds-label" for="regEmail">Email address</label>
+            <div class="ds-input-icon">
+              <i class="bi bi-envelope"></i>
+              <input class="ds-input" id="regEmail" name="email" type="email" placeholder="you@example.com" required autocomplete="email">
+            </div>
+          </div>
 
+          <div class="ds-field">
+            <label class="ds-label" for="regPassword">
+              <span>Password</span>
+              <span class="req">Min 6 characters</span>
+            </label>
+            <div class="ds-input-icon ds-password-wrap">
+              <i class="bi bi-lock"></i>
+              <input class="ds-input" id="regPassword" name="password" type="password" placeholder="Create a strong password" required minlength="6" autocomplete="new-password">
+              <button type="button" class="ds-toggle-pw" aria-label="Show password" data-target="regPassword">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+            <div class="ds-pw-strength" aria-hidden="true"><div class="bar" id="pwBar"></div></div>
+            <div class="ds-pw-hint" id="pwHint">Use 8+ characters with a mix of letters, numbers and symbols.</div>
+          </div>
 
+          <label class="ds-checkbox" style="margin-top:2px">
+            <input type="checkbox" name="agree" required>
+            <span>I agree to the <a href="/footer/terms" style="color:var(--ds-primary)">Terms</a> &amp; <a href="/footer/privacy" style="color:var(--ds-primary)">Privacy Policy</a>.</span>
+          </label>
+
+          <button type="submit" class="ds-btn ds-btn-primary ds-btn-lg ds-btn-block" data-loading>
+            <span class="btn-text"><i class="bi bi-person-plus"></i> Create account</span>
+          </button>
+        </form>
+
+        <div class="ds-divider">or continue with</div>
+        <div class="ds-social-row">
+          <button type="button" class="ds-social-btn" onclick="alert('Social sign-in coming soon')">
+            <i class="bi bi-google"></i> Google
+          </button>
+          <button type="button" class="ds-social-btn" onclick="alert('Social sign-in coming soon')">
+            <i class="bi bi-apple"></i> Apple
+          </button>
+        </div>
+
+        <p class="ds-auth-hint" id="authHint">
+          New to WonderLust? <a href="#" id="switchToRegister">Create an account</a>
+        </p>
+
+        <p class="ds-auth-legal">
+          Protected by industry-standard encryption. By continuing you accept our
+          <a href="/footer/terms">Terms of Service</a> and <a href="/footer/privacy">Privacy Policy</a>.
+        </p>
+      </div>
     </div>
   </div>
 
   <script>
-    loginTab.onclick = () => {
-      loginForm.classList.add("active");
-      registerForm.classList.remove("active");
-      loginTab.classList.add("active");
-      registerTab.classList.remove("active");
-    };
+    (function () {
+      const loginTab    = document.getElementById("loginTab");
+      const registerTab = document.getElementById("registerTab");
+      const loginForm   = document.getElementById("loginForm");
+      const registerForm= document.getElementById("registerForm");
+      const hint        = document.getElementById("authHint");
+      const title       = document.getElementById("formTitle");
+      const subtitle    = document.getElementById("formSubtitle");
 
-    registerTab.onclick = () => {
-      registerForm.classList.add("active");
-      loginForm.classList.remove("active");
-      registerTab.classList.add("active");
-      loginTab.classList.remove("active");
-    };
+      function bindHintSwitch() {
+        const toReg = document.getElementById("switchToRegister");
+        if (toReg) toReg.onclick = (e) => { e.preventDefault(); showRegister(); };
+        const toLog = document.getElementById("switchToLogin");
+        if (toLog) toLog.onclick = (e) => { e.preventDefault(); showLogin(); };
+      }
 
+      function showLogin() {
+        loginForm.classList.add("active"); registerForm.classList.remove("active");
+        loginTab.classList.add("active");   registerTab.classList.remove("active");
+        loginTab.setAttribute("aria-selected", "true");
+        registerTab.setAttribute("aria-selected", "false");
+        title.textContent = "Welcome back";
+        subtitle.textContent = "Sign in to book stays, manage trips, and continue where you left off.";
+        hint.innerHTML = 'New to WonderLust? <a href="#" id="switchToRegister">Create an account</a>';
+        bindHintSwitch();
+      }
+      function showRegister() {
+        registerForm.classList.add("active"); loginForm.classList.remove("active");
+        registerTab.classList.add("active");   loginTab.classList.remove("active");
+        registerTab.setAttribute("aria-selected", "true");
+        loginTab.setAttribute("aria-selected", "false");
+        title.textContent = "Create your account";
+        subtitle.textContent = "Join thousands of travellers finding nature stays in seconds.";
+        hint.innerHTML = 'Already have an account? <a href="#" id="switchToLogin">Sign in</a>';
+        bindHintSwitch();
+      }
+      loginTab.onclick = showLogin;
+      registerTab.onclick = showRegister;
+      bindHintSwitch();
 
+      // Password reveal toggles
+      document.querySelectorAll(".ds-toggle-pw").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          const input = document.getElementById(btn.getAttribute("data-target"));
+          if (!input) return;
+          const isPw = input.type === "password";
+          input.type = isPw ? "text" : "password";
+          const icon = btn.querySelector("i");
+          if (icon) icon.className = isPw ? "bi bi-eye-slash" : "bi bi-eye";
+          btn.setAttribute("aria-label", isPw ? "Hide password" : "Show password");
+        });
+      });
+
+      // Password strength meter
+      const pw = document.getElementById("regPassword");
+      const bar = document.getElementById("pwBar");
+      const pwHint = document.getElementById("pwHint");
+      if (pw && bar) {
+        pw.addEventListener("input", function () {
+          const v = pw.value;
+          let score = 0;
+          if (v.length >= 6) score += 1;
+          if (v.length >= 10) score += 1;
+          if (/[A-Z]/.test(v)) score += 1;
+          if (/[0-9]/.test(v)) score += 1;
+          if (/[^A-Za-z0-9]/.test(v)) score += 1;
+          const pct = Math.min(100, (score / 5) * 100);
+          bar.style.width = pct + "%";
+          const labels = ["Very weak", "Weak", "Fair", "Good", "Strong", "Excellent"];
+          pwHint.textContent = v ? "Strength: " + labels[score] : "Use 8+ characters with a mix of letters, numbers and symbols.";
+        });
+      }
+
+      // Loading state on submit
+      document.querySelectorAll("form.auth-form").forEach(function (form) {
+        form.addEventListener("submit", function () {
+          const btn = form.querySelector("button[data-loading]");
+          if (btn) btn.classList.add("is-loading");
+        });
+      });
+    })();
   </script>
-
+  <script src="/js/theme.js" defer></script>
 </body>
-
 </html>

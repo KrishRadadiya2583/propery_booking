@@ -1,45 +1,125 @@
 <%- layout("./admin/layouts/adminboilerplate.ejs") %>
 
-  <h2>Bookings</h2>
-
-  <div class="listings-grid">
-    <% bookings.forEach(booking=> { %>
-      <div class="listing-card">
-        <div class="card-body">
-          <h3 class="listing-title">
-            <%= booking.listingtitle %>
-          </h3>
-
-          <p class="listing-email">
-            <strong>User:</strong>
-            <%= booking.email %>
-          </p>
-
-          <p class="listing-location">
-            <strong>Check-in:</strong>
-            <%= booking.checkIn %>
-          </p>
-
-          <p class="listing-location">
-            <strong>Check-out:</strong>
-            <%= booking.checkOut %>
-          </p>
-
-          <p class="listing-price">
-            ₹<%= booking.totalPrice %>
-          </p>
-
-
-          <p style="color: red;" class="listing-paymentId">
-            <strong>Payment ID:</strong>
-            <%= booking.paymentId %>
-          </p>
-
-          <div class="card-actions">
-            <a href="/admin/bookings/<%= booking._id %>/delete" class="btn delete-btn">Delete</a>
-          </div>
-
-        </div>
-      </div>
-      <% }) %>
+  <div class="page-header">
+    <div class="heading">
+      <h2>Bookings</h2>
+      <p>Track every reservation and update its status on the fly.</p>
+    </div>
+    <div class="actions">
+      <span class="metric-pill"><i class="bi bi-calendar-check"></i> <strong><%= bookings.length %></strong> bookings</span>
+    </div>
   </div>
+
+  <div class="data-table-wrap">
+    <div class="data-toolbar">
+      <div class="search">
+        <i class="bi bi-search"></i>
+        <input type="text" id="bookingSearch" placeholder="Search by name, email, listing, payment ID…">
+      </div>
+      <select id="bookingStatus">
+        <option value="">All statuses</option>
+        <% statuses.forEach(s => { %>
+          <option value="<%= s %>"><%= s.charAt(0).toUpperCase() + s.slice(1) %></option>
+        <% }) %>
+      </select>
+      <div class="spacer"></div>
+      <span class="count" id="bookingCount"><%= bookings.length %> bookings</span>
+    </div>
+
+    <% if (bookings.length === 0) { %>
+      <div class="empty">
+        <i class="bi bi-inbox"></i>
+        <h3>No bookings yet</h3>
+        <p>When guests book a stay, you'll see them here.</p>
+      </div>
+    <% } else { %>
+      <div class="data-table-scroll">
+        <table class="data-table" id="bookingTable">
+          <thead>
+            <tr>
+              <th>Guest</th>
+              <th>Listing</th>
+              <th>Stay</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Payment</th>
+              <th style="text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% bookings.forEach(booking => { %>
+              <tr data-status="<%= booking.status || 'confirmed' %>">
+                <td>
+                  <div class="user-chip">
+                    <div class="avatar-sm"><%= (booking.name || booking.email || "?").charAt(0).toUpperCase() %></div>
+                    <div>
+                      <div class="u-name"><%= booking.name || "Guest" %></div>
+                      <small class="u-email"><%= booking.email || "—" %></small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="cell-strong"><%= booking.listingtitle || "Listing" %></div>
+                  <div class="cell-muted"><i class="bi bi-geo-alt"></i> <%= booking.listingLocation || "—" %></div>
+                </td>
+                <td>
+                  <div class="cell-strong"><%= booking.checkIn || "—" %> → <%= booking.checkOut || "—" %></div>
+                  <div class="cell-muted"><%= booking.nights || 0 %> night<%= booking.nights === 1 ? "" : "s" %> · <%= booking.guests || 1 %> guest<%= booking.guests == 1 ? "" : "s" %></div>
+                </td>
+                <td class="cell-price">₹<%= (booking.totalPrice || 0).toLocaleString("en-IN") %></td>
+                <td>
+                  <form action="/admin/bookings/<%= booking._id %>/status" method="post" class="status-form">
+                    <select name="status" onchange="this.form.submit()">
+                      <% statuses.forEach(s => { %>
+                        <option value="<%= s %>" <%= booking.status === s ? "selected" : "" %>><%= s %></option>
+                      <% }) %>
+                    </select>
+                  </form>
+                </td>
+                <td class="cell-muted" style="font-family:monospace;font-size:11.5px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="<%= booking.paymentId || '' %>">
+                  <%= booking.paymentId || "—" %>
+                </td>
+                <td style="text-align:right;">
+                  <div class="row-actions" style="justify-content:flex-end;">
+                    <a href="/admin/bookings/<%= booking._id %>/delete"
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('Delete this booking? This cannot be undone.');">
+                      <i class="bi bi-trash"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+
+  <script>
+    (function () {
+      var search = document.getElementById("bookingSearch");
+      var statusSel = document.getElementById("bookingStatus");
+      var count = document.getElementById("bookingCount");
+      var table = document.getElementById("bookingTable");
+      if (!table) return;
+      var rows = Array.prototype.slice.call(table.querySelectorAll("tbody tr"));
+
+      function apply() {
+        var q = (search.value || "").toLowerCase().trim();
+        var s = statusSel.value;
+        var shown = 0;
+        rows.forEach(function (r) {
+          var text = r.textContent.toLowerCase();
+          var matchText = !q || text.indexOf(q) !== -1;
+          var matchStatus = !s || r.getAttribute("data-status") === s;
+          var ok = matchText && matchStatus;
+          r.style.display = ok ? "" : "none";
+          if (ok) shown++;
+        });
+        count.textContent = shown + " booking" + (shown === 1 ? "" : "s");
+      }
+      search.addEventListener("input", apply);
+      statusSel.addEventListener("change", apply);
+    })();
+  </script>

@@ -1,68 +1,60 @@
 <% layout("/layouts/boilerplate") %>
-  <link rel="stylesheet" href="/css/profile.css">
 
-  <div class="profile-container">
-
+  <section class="ds-profile-container">
     <% if (!currentUser) { %>
-
-      <!-- USER NOT FOUND -->
-      <div class="profile-card profile-not-found text-center">
-
-        <i class="fa-solid fa-circle-exclamation profile-avatar warning-icon"></i>
-
-        <h2 class="not-found-title">User not found</h2>
-        <p class="not-found-text">
-          Please log in to access your profile and manage your account.
-        </p>
-
-        <a href="/" class="btn btn-airbnb mt-3">
-          Log in
-        </a>
-
+      <div class="ds-card" style="padding:60px 30px;text-align:center;max-width:520px;margin:60px auto">
+        <i class="bi bi-exclamation-triangle" style="font-size:48px;color:var(--ds-sun)"></i>
+        <h2 style="margin:16px 0 8px">You're not signed in</h2>
+        <p style="color:var(--ds-text-3);margin:0 0 20px">Please log in to access your profile, bookings and listings.</p>
+        <a class="ds-btn ds-btn-primary ds-btn-lg" href="/">Sign in</a>
+      </div>
+    <% } else { %>
+      <div class="ds-profile-header">
+        <div class="ds-avatar"><%= (currentUser.name || 'U').charAt(0).toUpperCase() %></div>
+        <div>
+          <h2><%= currentUser.name %></h2>
+          <div class="email"><i class="bi bi-envelope-fill"></i> <%= currentUser.email %></div>
+          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+            <span class="ds-metric"><i class="bi bi-shield-check"></i> Verified</span>
+            <span class="ds-metric"><i class="bi bi-broadcast"></i> Realtime enabled</span>
+          </div>
+        </div>
+        <div class="ds-profile-actions">
+          <a class="ds-btn ds-btn-soft" href="/profile/edit-profile"><i class="bi bi-pencil"></i> Edit profile</a>
+          <form action="/logout" method="POST" style="margin:0">
+            <button type="submit" class="ds-btn ds-btn-danger"><i class="bi bi-box-arrow-right"></i> Logout</button>
+          </form>
+        </div>
       </div>
 
+      <nav class="ds-tabs">
+        <a href="/profile" class="active"><i class="bi bi-grid"></i> Overview</a>
+        <a href="/profile/bookings"><i class="bi bi-calendar-check"></i> Bookings</a>
+        <a href="/profile/wishlist"><i class="bi bi-heart"></i> Wishlist</a>
+        <a href="/profile/listings"><i class="bi bi-house-door"></i> Properties</a>
+      </nav>
 
-      <% } else { %>
-
-        <!-- USER PROFILE -->
-        <div class="profile-card text-center">
-
-          <i class="fa-solid fa-user-circle profile-avatar"></i>
-
-          <div class="profile-name">
-            <%= currentUser.name %>
-          </div>
-          <div class="profile-email">
-            <%= currentUser.email %>
-          </div>
-
-          <div class="profile-bookings">
-
-            <a href="/profile/listings" class="btn btn-airbnb">my Properties</a>
-
-            <a href="/profile/bookings" class="btn btn-airbnb">my Bookings</a>
-          </div>
-
-          <hr class="profile-divider">
-
-          <div class="profile-actions d-grid gap-3">
-
-            <a href="/profile/edit-profile" class="btn btn-airbnb">
-              Edit Profile
-            </a>
-
-            <form action="/logout" method="POST">
-              <button type="submit" class="btn btn-logout w-100">
-                Logout
-              </button>
-            </form>
-
-          </div>
-
-        </div>
-
-        <% } %>
-
-
-
-  </div>
+      <div class="ds-list-grid">
+        <a class="ds-card" style="padding:24px;text-decoration:none;color:inherit" href="/profile/bookings">
+          <i class="bi bi-calendar-week" style="font-size:28px;color:var(--ds-primary)"></i>
+          <h3 style="margin:12px 0 6px;font-size:18px;font-weight:700">My bookings</h3>
+          <p style="color:var(--ds-text-3);margin:0">View upcoming and past trips</p>
+        </a>
+        <a class="ds-card" style="padding:24px;text-decoration:none;color:inherit" href="/profile/wishlist">
+          <i class="bi bi-heart" style="font-size:28px;color:var(--ds-primary)"></i>
+          <h3 style="margin:12px 0 6px;font-size:18px;font-weight:700">My wishlist</h3>
+          <p style="color:var(--ds-text-3);margin:0">Stays you've saved</p>
+        </a>
+        <a class="ds-card" style="padding:24px;text-decoration:none;color:inherit" href="/profile/listings">
+          <i class="bi bi-house-door" style="font-size:28px;color:var(--ds-primary)"></i>
+          <h3 style="margin:12px 0 6px;font-size:18px;font-weight:700">My properties</h3>
+          <p style="color:var(--ds-text-3);margin:0">Manage your published stays</p>
+        </a>
+        <a class="ds-card" style="padding:24px;text-decoration:none;color:inherit" href="/listings/new">
+          <i class="bi bi-plus-square" style="font-size:28px;color:var(--ds-primary)"></i>
+          <h3 style="margin:12px 0 6px;font-size:18px;font-weight:700">Host a stay</h3>
+          <p style="color:var(--ds-text-3);margin:0">Start earning by hosting</p>
+        </a>
+      </div>
+    <% } %>
+  </section>

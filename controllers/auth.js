@@ -3,7 +3,20 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 
 
+// Landing page — public marketing surface at /
+// If the visitor is already signed in, send them straight to the app.
+module.exports.landing = (req, res) => {
+  if (req.session && req.session.user) {
+    return res.redirect("/listings");
+  }
+  res.render("landing");
+};
+
+// Auth page (login/register). Reachable at /login and (for legacy links) /signin.
 module.exports.index = (req, res) => {
+  if (req.session && req.session.user) {
+    return res.redirect("/listings");
+  }
   res.render("auth", { error: null });
 };
 

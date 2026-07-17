@@ -1,0 +1,124 @@
+<%- layout("./admin/layouts/adminboilerplate.ejs") %>
+
+  <div class="page-header">
+    <div class="heading">
+      <h2>Reviews</h2>
+      <p>Moderate guest feedback across every listing.</p>
+    </div>
+    <div class="actions">
+      <span class="metric-pill"><i class="bi bi-star"></i> <strong><%= reviews.length %></strong> reviews</span>
+    </div>
+  </div>
+
+  <div class="data-table-wrap">
+    <div class="data-toolbar">
+      <div class="search">
+        <i class="bi bi-search"></i>
+        <input type="text" id="reviewSearch" placeholder="Search reviewer, listing, comment…">
+      </div>
+      <select id="reviewRating">
+        <option value="">All ratings</option>
+        <option value="5">5 stars</option>
+        <option value="4">4 stars</option>
+        <option value="3">3 stars</option>
+        <option value="2">2 stars</option>
+        <option value="1">1 star</option>
+      </select>
+      <div class="spacer"></div>
+      <span class="count" id="reviewCount"><%= reviews.length %> reviews</span>
+    </div>
+
+    <% if (reviews.length === 0) { %>
+      <div class="empty">
+        <i class="bi bi-chat-square-dots"></i>
+        <h3>No reviews yet</h3>
+        <p>Reviews left by guests will appear here.</p>
+      </div>
+    <% } else { %>
+      <div class="data-table-scroll">
+        <table class="data-table" id="reviewTable">
+          <thead>
+            <tr>
+              <th>Reviewer</th>
+              <th>Listing</th>
+              <th>Rating</th>
+              <th>Comment</th>
+              <th>Posted</th>
+              <th style="text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% reviews.forEach(review => { %>
+              <tr data-rating="<%= review.rating %>">
+                <td>
+                  <div class="user-chip">
+                    <div class="avatar-sm"><%= (review.name || "?").charAt(0).toUpperCase() %></div>
+                    <div>
+                      <div class="u-name"><%= review.name %></div>
+                      <small class="u-email"><%= review.authorEmail || "—" %></small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <% if (review.listing) { %>
+                    <div class="cell-strong"><%= review.listing.title || "Listing" %></div>
+                    <div class="cell-muted"><i class="bi bi-geo-alt"></i> <%= review.listing.location || "—" %></div>
+                  <% } else { %>
+                    <span class="cell-muted">Listing removed</span>
+                  <% } %>
+                </td>
+                <td>
+                  <span class="rating-badge">
+                    <i class="bi bi-star-fill"></i> <%= review.rating %>
+                  </span>
+                </td>
+                <td style="max-width:420px;">
+                  <div style="white-space:normal;line-height:1.5;color:var(--ds-text-2);"><%= review.comment %></div>
+                </td>
+                <td class="cell-muted" style="white-space:nowrap;">
+                  <%= review.createdAt ? new Date(review.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—" %>
+                </td>
+                <td style="text-align:right;">
+                  <div class="row-actions" style="justify-content:flex-end;">
+                    <a href="/admin/reviews/<%= review._id %>/delete"
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('Delete this review? This cannot be undone.');">
+                      <i class="bi bi-trash"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+
+  <script>
+    (function () {
+      var search = document.getElementById("reviewSearch");
+      var ratingSel = document.getElementById("reviewRating");
+      var count = document.getElementById("reviewCount");
+      var table = document.getElementById("reviewTable");
+      if (!table) return;
+      var rows = Array.prototype.slice.call(table.querySelectorAll("tbody tr"));
+
+      function apply() {
+        var q = (search.value || "").toLowerCase().trim();
+        var r = ratingSel.value;
+        var shown = 0;
+        rows.forEach(function (row) {
+          var text = row.textContent.toLowerCase();
+          var matchText = !q || text.indexOf(q) !== -1;
+          var matchRating = !r || row.getAttribute("data-rating") === r;
+          var ok = matchText && matchRating;
+          row.style.display = ok ? "" : "none";
+          if (ok) shown++;
+        });
+        count.textContent = shown + " review" + (shown === 1 ? "" : "s");
+      }
+      search.addEventListener("input", apply);
+      ratingSel.addEventListener("change", apply);
+    })();
+  </script>

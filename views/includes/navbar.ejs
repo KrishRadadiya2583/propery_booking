@@ -11,14 +11,18 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navMenu">
-      <ul class="navbar-nav ms-auto nav-links">
+      <ul class="navbar-nav ms-auto nav-links align-items-md-center" style="gap:6px">
 
         <li class="nav-item">
-          <a class="nav-link nav-home" href="/listings">Home</a>
+          <a class="nav-link nav-home" href="/listings">Explore</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link nav-add" href="/listings/new">Add Listing</a>
+          <a class="nav-link nav-add" href="/listings/new">Host</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link nav-wishlist" href="/profile/wishlist"><i class="bi bi-heart"></i> Wishlist</a>
         </li>
 
         <li class="nav-item">
@@ -29,17 +33,34 @@
           <a class="nav-link nav-contact" href="/contact">Contact</a>
         </li>
 
+        <% if (currentUser) { %>
+        <li class="nav-item ds-bell-wrap" id="notifBellWrap">
+          <button type="button" class="ds-bell" id="notifBell" aria-label="Notifications">
+            <i class="bi bi-bell"></i>
+            <span class="badge-dot" id="notifBadge">0</span>
+          </button>
+          <div class="ds-notif-panel" id="notifPanel" role="dialog" aria-label="Your notifications">
+            <div class="head">
+              <span>Notifications</span>
+              <a href="#" id="markAllRead">Mark all read</a>
+            </div>
+            <div id="notifList"><div class="empty">Loading…</div></div>
+          </div>
+        </li>
+        <% } %>
 
-
+        <li class="nav-item">
+          <button type="button" id="themeToggle" class="ds-theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+            <span class="ic ic-sun"><i class="bi bi-sun-fill"></i></span>
+            <span class="ic ic-moon"><i class="bi bi-moon-stars-fill"></i></span>
+          </button>
+        </li>
 
         <li class="nav-item">
           <a class="nav-link d-flex align-items-center" href="/profile">
             <i class="fa-solid fa-user-circle fs-4"></i>
           </a>
         </li>
-
-
-
 
       </ul>
     </div>

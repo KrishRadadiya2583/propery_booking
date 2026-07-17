@@ -1,59 +1,118 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-  <title>Admin Panel</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin · WonderLust</title>
+  <meta name="theme-color" content="#2f7d4c" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d1712" media="(prefers-color-scheme: dark)">
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("wl-theme");
+        if (!t) t = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+  <link rel="stylesheet" href="/css/design-system.css">
   <link rel="stylesheet" href="/css/admindashboard.css">
 </head>
 
-<body>
+<body id="admin-body">
 
-  <div class="admin-container">
+  <div class="admin-container" id="adminContainer">
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <h2 class="logo">
-        <svg class="logo-icon" width="32" height="32" viewBox="0 0 24 24" fill="none"
-          xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2L2 7v7c0 5 5 9 10 9s10-4 10-9V7l-10-5z" fill="#3b82f6" />
-          <path d="M12 12l-3 3h6l-3-3z" fill="#fff" />
-        </svg>
-        <span class="logo-text">AdminPro</span>
-      </h2>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
-      <nav>
-        <a href="/admin/dashboard">Dashboard</a>
-        <a href="/admin/listings">Listings</a>
-        <a href="/admin/bookings">Bookings</a>
-        <a href="/admin/users">Users</a>
-        <a href="/admin/logout">Logout</a>
-      </nav>
-    </aside>
-
-    <!-- Main Area -->
-    <main class="main-content">
-
-      <!-- Topbar -->
-      <header class="topbar">
-        <h1>Admin Panel</h1>
-
-        <div class="admin-profile"><span class="icon">👤</span>Admin</div>
-      </header>
-      <div class="flash-container">
-        <% if (success.length> 0) { %>
-          <div class="flash success">
-            <%= success[0] %>
-          </div>
-          <% } %>
-
-            <% if (error.length> 0) { %>
-              <div class="flash error">
-                <%= error[0] %>
-              </div>
-              <% } %>
+    <aside class="sidebar" id="adminSidebar">
+      <div class="logo">
+        <div class="logo-icon"><i class="bi bi-tree-fill"></i></div>
+        <span class="logo-text">WonderLust</span>
       </div>
 
-      <!-- Page Content -->
+      <div class="nav-section">
+        <div class="nav-heading">Main</div>
+        <nav>
+          <a href="/admin/dashboard" data-nav="dashboard">
+            <i class="bi bi-speedometer2"></i><span>Dashboard</span>
+          </a>
+          <a href="/admin/listings" data-nav="listings">
+            <i class="bi bi-house-door"></i><span>Listings</span>
+          </a>
+          <a href="/admin/bookings" data-nav="bookings">
+            <i class="bi bi-calendar-check"></i><span>Bookings</span>
+          </a>
+          <a href="/admin/users" data-nav="users">
+            <i class="bi bi-people"></i><span>Users</span>
+          </a>
+          <a href="/admin/reviews" data-nav="reviews">
+            <i class="bi bi-star"></i><span>Reviews</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-heading">System</div>
+        <nav>
+          <a href="/" target="_blank" rel="noopener">
+            <i class="bi bi-box-arrow-up-right"></i><span>View Site</span>
+          </a>
+          <a href="/admin/logout">
+            <i class="bi bi-box-arrow-right"></i><span>Logout</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="sidebar-footer">
+        &copy; <%= new Date().getFullYear() %> WonderLust
+      </div>
+    </aside>
+
+    <main class="main-content">
+
+      <header class="topbar">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+          <i class="bi bi-list"></i>
+        </button>
+        <h1><%= typeof pageTitle !== "undefined" ? pageTitle : "Admin Panel" %></h1>
+
+        <div class="topbar-actions">
+          <button class="topbar-btn" id="adminThemeToggle" aria-label="Toggle theme" title="Toggle theme">
+            <i class="bi bi-sun-fill" id="adminThemeIcon"></i>
+          </button>
+          <a class="topbar-btn" href="/" target="_blank" rel="noopener" aria-label="View site" title="View site">
+            <i class="bi bi-box-arrow-up-right"></i>
+          </a>
+          <div class="admin-profile">
+            <div class="avatar">A</div>
+            <div class="name-wrap">
+              <div class="name">Admin</div>
+              <span class="role">Super admin</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="flash-container">
+        <% if (success.length > 0) { %>
+          <div class="flash success"><%= success[0] %></div>
+        <% } %>
+        <% if (error.length > 0) { %>
+          <div class="flash error"><%= error[0] %></div>
+        <% } %>
+      </div>
+
       <section class="page-content">
         <%- body %>
       </section>
@@ -61,6 +120,92 @@
     </main>
 
   </div>
+
+  <script>
+    // Active nav link — only /admin/* links; longest-match wins
+    (function () {
+      var path = window.location.pathname;
+      var best = null, bestLen = 0;
+      document.querySelectorAll(".sidebar nav a").forEach(function (a) {
+        var href = a.getAttribute("href") || "";
+        if (href.indexOf("/admin/") !== 0) return;
+        if (path === href || path.indexOf(href + "/") === 0) {
+          if (href.length > bestLen) { best = a; bestLen = href.length; }
+        }
+      });
+      if (best) best.classList.add("active");
+    })();
+
+    // Sidebar toggle (desktop = collapse, mobile = drawer)
+    (function () {
+      var container = document.getElementById("adminContainer");
+      var toggle = document.getElementById("sidebarToggle");
+      var backdrop = document.getElementById("sidebarBackdrop");
+      if (!toggle) return;
+
+      function syncBodyLock() {
+        var open = container.classList.contains("sidebar-open");
+        document.body.style.overflow = (open && window.innerWidth <= 820) ? "hidden" : "";
+      }
+
+      toggle.addEventListener("click", function () {
+        if (window.innerWidth <= 820) {
+          container.classList.toggle("sidebar-open");
+          syncBodyLock();
+        } else {
+          container.classList.toggle("sidebar-collapsed");
+          localStorage.setItem("wl-admin-sidebar", container.classList.contains("sidebar-collapsed") ? "collapsed" : "open");
+        }
+      });
+
+      backdrop.addEventListener("click", function () {
+        container.classList.remove("sidebar-open");
+        syncBodyLock();
+      });
+
+      // Close mobile drawer after navigating (delegated click on nav links)
+      document.querySelectorAll(".sidebar nav a").forEach(function (a) {
+        a.addEventListener("click", function () {
+          if (window.innerWidth <= 820) {
+            container.classList.remove("sidebar-open");
+            syncBodyLock();
+          }
+        });
+      });
+
+      window.addEventListener("resize", syncBodyLock);
+
+      if (window.innerWidth > 820 && localStorage.getItem("wl-admin-sidebar") === "collapsed") {
+        container.classList.add("sidebar-collapsed");
+      }
+    })();
+
+    // Theme toggle
+    (function () {
+      var btn = document.getElementById("adminThemeToggle");
+      var icon = document.getElementById("adminThemeIcon");
+      function refreshIcon() {
+        var t = document.documentElement.getAttribute("data-theme");
+        icon.className = t === "light" ? "bi bi-moon-stars-fill" : "bi bi-sun-fill";
+      }
+      refreshIcon();
+      btn.addEventListener("click", function () {
+        var cur = document.documentElement.getAttribute("data-theme");
+        var next = cur === "light" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", next);
+        try { localStorage.setItem("wl-theme", next); } catch (e) {}
+        refreshIcon();
+      });
+    })();
+
+    // Flash auto-hide
+    setTimeout(function () {
+      document.querySelectorAll(".flash").forEach(function (f) {
+        f.classList.add("hide");
+        setTimeout(function () { f.remove(); }, 400);
+      });
+    }, 4000);
+  </script>
 
 </body>
 

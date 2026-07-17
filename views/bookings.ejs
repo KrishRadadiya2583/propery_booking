@@ -1,105 +1,71 @@
 <% layout("/layouts/boilerplate") %>
 
-  <link rel="stylesheet" href="/css/bookings.css">
-
-  <section class="bookings-page">
-    <div class="bookings-container">
-
-      <h1 class="bookings-title">Your Trips</h1>
-
-      <% if (!bookings || bookings.length===0) { %>
-        <div class="no-bookings-card">
-          <h2>No bookings yet</h2>
-          <p>When you book a place, your trips will appear here.</p>
-        </div>
-        <% } else { %>
-
-          <% bookings.forEach(booking=> { %>
-            <% if (currentUser && currentUser.email===booking.email) { %>
-
-              <div class="booking-card">
-
-                <!-- HEADER -->
-                <div class="booking-header">
-
-                  <div class="booking-header-left">
-                    <span class="trip-label">Upcoming trip</span>
-
-                    <h2 class="listing-title">
-                      <%= booking.listingtitle %>
-                    </h2>
-
-                    <p class="booking-email">
-                      <%= booking.email %>
-                    </p>
-                  </div>
-
-                  <p>
-                    <a href="/listings/<%= booking._id %>/cancelbooking" class="btn-cancel">
-                      Cancel Booking
-                    </a>
-                  </p>
-
-
-                  <div class="booking-price">
-                    ₹<%= booking.totalPrice %>
-                  </div>
-
-                </div>
-
-                <!-- DETAILS -->
-                <div class="booking-details">
-
-                  <div class="detail-item">
-                    <span class="detail-label">Check-in</span>
-                    <span class="detail-value">
-                      <%= booking.checkIn %>
-                    </span>
-                  </div>
-
-                  <div class="detail-item">
-                    <span class="detail-label">Check-out</span>
-                    <span class="detail-value">
-                      <%= booking.checkOut %>
-                    </span>
-                  </div>
-
-                  <div class="detail-item">
-                    <span class="detail-label">Guests</span>
-                    <span class="detail-value">
-                      <%= booking.guests %>
-                    </span>
-                  </div>
-
-                  <div class="detail-item">
-                    <span class="detail-label">Phone</span>
-                    <span class="detail-value">
-                      <%= booking.phone %>
-                    </span>
-                  </div>
-
-                  <div class="detail-item">
-                    <span class="detail-label"> Booked At</span>
-                    <span class="detail-value">
-                      <%= booking.createdAt.toLocaleString() %>
-                    </span>
-                  </div>
-
-                </div>
-
-                <!-- FOOTER -->
-
-                <div class="booking-footer">
-                  <span class="booking-status confirmed">Confirmed</span>
-                </div>
-
-              </div>
-
-              <% } %>
-
-                <% }) %>
-
-                  <% } %>
-
+  <section class="ds-profile-container">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+      <div>
+        <h1 style="font-size:28px;font-weight:700;margin:0">Your trips</h1>
+        <p style="color:var(--ds-text-3);margin:4px 0 0">Manage upcoming stays and view past bookings.</p>
+      </div>
+      <a class="ds-btn ds-btn-ghost" href="/profile"><i class="bi bi-arrow-left"></i> Back to profile</a>
     </div>
+
+    <nav class="ds-tabs">
+      <a href="/profile"><i class="bi bi-grid"></i> Overview</a>
+      <a href="/profile/bookings" class="active"><i class="bi bi-calendar-check"></i> Bookings</a>
+      <a href="/profile/wishlist"><i class="bi bi-heart"></i> Wishlist</a>
+      <a href="/profile/listings"><i class="bi bi-house-door"></i> Properties</a>
+    </nav>
+
+    <%
+      const visible = (bookings || []).filter(b => currentUser && b.email === currentUser.email);
+    %>
+
+    <% if (visible.length === 0) { %>
+      <div class="ds-empty">
+        <i class="bi bi-calendar-x"></i>
+        <h3 style="margin:0 0 6px">No bookings yet</h3>
+        <p style="margin:0 0 18px">When you book a place, your trips will appear here.</p>
+        <a class="ds-btn ds-btn-primary" href="/listings"><i class="bi bi-search"></i> Explore stays</a>
+      </div>
+    <% } else { %>
+      <div class="ds-list-grid">
+        <% visible.forEach(function (booking) {
+             const status = booking.status || "confirmed";
+             const canCancel = status === "confirmed" || status === "pending";
+        %>
+          <div class="ds-trip-card">
+            <div style="display:flex;gap:14px;align-items:flex-start;min-width:0">
+              <% if (booking.listingImage) { %>
+                <img src="<%= booking.listingImage %>" alt="<%= booking.listingtitle %>" style="width:78px;height:78px;border-radius:12px;object-fit:cover;flex-shrink:0">
+              <% } %>
+              <div style="min-width:0">
+                <span class="ds-status <%= status %>"><%= status %></span>
+                <h3 style="margin:8px 0 0"><%= booking.listingtitle %></h3>
+                <% if (booking.listingLocation) { %>
+                  <p style="color:var(--ds-text-3);margin:2px 0 0;font-size:13px"><i class="bi bi-geo-alt"></i> <%= booking.listingLocation %></p>
+                <% } %>
+                <div class="ds-trip-meta">
+                  <span><i class="bi bi-calendar2-check"></i> <strong><%= booking.checkIn %></strong></span>
+                  <span><i class="bi bi-arrow-right"></i></span>
+                  <span><i class="bi bi-calendar2-x"></i> <strong><%= booking.checkOut %></strong></span>
+                  <span><i class="bi bi-people"></i> <strong><%= booking.guests %></strong> guest(s)</span>
+                </div>
+              </div>
+            </div>
+            <div class="ds-trip-price">₹<%= Number(booking.totalPrice).toLocaleString("en-IN") %></div>
+            <div class="ds-trip-actions">
+              <% if (canCancel) { %>
+                <form method="POST" action="/listings/<%= booking._id %>/cancelbooking" onsubmit="return confirm('Cancel this booking?')" style="display:inline">
+                  <button type="submit" class="ds-btn ds-btn-danger ds-btn-sm"><i class="bi bi-x-lg"></i> Cancel</button>
+                </form>
+              <% } %>
+              <% if (booking.listing) { %>
+                <a href="/listings/<%= booking.listing %>" class="ds-btn ds-btn-soft ds-btn-sm"><i class="bi bi-eye"></i> View</a>
+              <% } %>
+              <span class="ds-metric" style="margin-left:auto"><i class="bi bi-clock-history"></i> Booked <%= new Date(booking.createdAt).toLocaleString() %></span>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
   </section>

@@ -4,7 +4,7 @@ const { isLoggedIn } = require('../middlewares/loginmiddleware');
 const { isuser } = require('../middlewares/authenticate');
 const { validateBooking } = require('../middlewares/bookingValidation');
 const { validateImages } = require('../middlewares/validateimage');
-const { index, new: newListing, show, create, edit, update, delete: deleteListing, bookingform, createBooking, savebooking, cancelbooking, showavailability } = require("../controllers/listing")
+const { index, new: newListing, show, create, edit, update, delete: deleteListing, bookingform, createBooking, savebooking, cancelbooking, showavailability, bookingConfirmation } = require("../controllers/listing")
 
 const upload = require('../middlewares/multer');
 
@@ -46,15 +46,22 @@ router.post("/:id/booking", isLoggedIn, validateBooking, createBooking);
 
 /* ===============================
    SAVE BOOKING AFTER PAYMENT
+   No validateBooking here — the payment handler already
+   validated inputs before opening the Razorpay modal. This
+   endpoint verifies the payment signature instead.
 ================================ */
-router.post("/confirm", isLoggedIn, validateBooking, savebooking);
+router.post("/confirm", isLoggedIn, savebooking);
 
 
 
 
-// cancel Booking
+// cancel Booking (GET keeps backwards-compat for existing links; POST is the safe form)
 router.get("/:id/cancelbooking", isLoggedIn, cancelbooking)
+router.post("/:id/cancelbooking", isLoggedIn, cancelbooking)
 
+
+// booking confirmation
+router.get("/:id/confirmation", isLoggedIn, bookingConfirmation);
 
 
 // availability route

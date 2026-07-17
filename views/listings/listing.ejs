@@ -1,51 +1,134 @@
 <% layout("/layouts/boilerplate") %>
-    <section id="listing-page">
 
+  <section class="ds-hero">
+    <span class="ds-live-pill"><span class="dot"></span> Real-time bookings</span>
+    <h1>Find your next <span class="accent">nature-loving</span> stay</h1>
+    <p>Real-time availability. Verified hosts. Handpicked cabins, cottages and eco-stays — book with confidence.</p>
+    <div style="display:flex; gap:12px; flex-wrap:wrap">
+      <a href="#browse" class="ds-btn ds-btn-primary ds-btn-lg"><i class="bi bi-search"></i> Start exploring</a>
+      <a href="/listings/new" class="ds-btn ds-btn-ghost ds-btn-lg"><i class="bi bi-plus-lg"></i> Host your place</a>
+    </div>
+  </section>
 
-        <div class="listing-grid">
+  <form class="ds-filters" method="GET" action="#browse" id="filterForm" role="search" aria-label="Search listings">
+    <div class="ds-filter">
+      <label for="q">Where</label>
+      <input type="text" id="q" name="q" placeholder="Search destinations" value="<%= (typeof query !== 'undefined' && query.q) ? query.q : '' %>">
+    </div>
+    <div class="ds-filter">
+      <label for="minPrice">Min price</label>
+      <input type="number" id="minPrice" name="minPrice" placeholder="₹0" min="0" value="<%= (typeof query !== 'undefined' && query.minPrice) ? query.minPrice : '' %>">
+    </div>
+    <div class="ds-filter">
+      <label for="maxPrice">Max price</label>
+      <input type="number" id="maxPrice" name="maxPrice" placeholder="Any" min="0" value="<%= (typeof query !== 'undefined' && query.maxPrice) ? query.maxPrice : '' %>">
+    </div>
+    <div class="ds-filter">
+      <label for="sort">Sort</label>
+      <select id="sort" name="sort">
+        <option value="newest">Newest</option>
+        <option value="price_asc">Price: Low to high</option>
+        <option value="price_desc">Price: High to low</option>
+      </select>
+    </div>
+    <input type="hidden" name="category" id="categoryInput" value="<%= (typeof query !== 'undefined' && query.category) ? query.category : 'all' %>">
+    <button type="submit" class="ds-filter-btn"><i class="bi bi-search"></i><span class="d-none d-md-inline">Search</span></button>
+  </form>
 
-            <% for(let listing of listings){ %>
-                <div class="listing-card">
+  <%
+    const categories = [
+      { key: 'all',         label: 'All',         icon: 'bi-grid' },
+      { key: 'cabins',      label: 'Cabins',      icon: 'bi-tree' },
+      { key: 'beach',       label: 'Beach',       icon: 'bi-sun' },
+      { key: 'mountain',    label: 'Mountain',    icon: 'bi-triangle' },
+      { key: 'countryside', label: 'Countryside', icon: 'bi-flower1' },
+      { key: 'lakefront',   label: 'Lakefront',   icon: 'bi-water' },
+      { key: 'farmstay',    label: 'Farmstay',    icon: 'bi-egg-fried' },
+      { key: 'treehouse',   label: 'Treehouse',   icon: 'bi-tree-fill' },
+      { key: 'camping',     label: 'Camping',     icon: 'bi-compass' },
+      { key: 'villa',       label: 'Villa',       icon: 'bi-house-heart' },
+      { key: 'cottage',     label: 'Cottage',     icon: 'bi-house' },
+      { key: 'eco_stay',    label: 'Eco stay',    icon: 'bi-recycle' },
+    ];
+    const activeCategory = (typeof query !== 'undefined' && query.category) ? query.category : 'all';
+  %>
+  <nav class="ds-categories" aria-label="Filter by category">
+    <% categories.forEach(function (c) { %>
+      <a href="javascript:void(0)" class="ds-cat <%= activeCategory === c.key ? 'active' : '' %>" data-cat="<%= c.key %>">
+        <i class="bi <%= c.icon %>"></i> <%= c.label %>
+      </a>
+    <% }) %>
+  </nav>
 
-                    <div class="image-wrapper">
-                        <span class="like-btn" onclick="toggleLike(this)">♡</span>
+  <section id="listing-page">
+    <div id="browse" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px">
+      <h2 style="font-size:22px;font-weight:700;margin:0"><span id="resultCount"><%= listings.length %></span> stays available</h2>
+      <span class="ds-metric"><i class="bi bi-broadcast"></i> Live updates on</span>
+    </div>
 
-                        <a href="/listings/<%= listing._id %>">
-                            <% if (listing.image && listing.image.length> 0) { %>
-                                <img class="listing-image" src="<%= listing.image[0].url %>" alt="<%= listing.title %>"
-                                    loading="lazy">
-                                <% } else { %>
-                                    <img class="listing-image"
-                                        src="https://images.unsplash.com/photo-1625505826533-5c80aca7d157?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGdvYXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60"
-                                        alt="Default Image" loading="lazy">
-                                    <% } %>
-                        </a>
-                    </div>
+    <div class="listing-grid" id="listingGrid">
+      <% for (let listing of listings) {
+           const avgRating = (listing.reviews && listing.reviews.length)
+             ? (listing.reviews.reduce(function(s, r){ return s + (r.rating || 0); }, 0) / listing.reviews.length).toFixed(1)
+             : null;
+      %>
+        <a class="listing-card" href="/listings/<%= listing._id %>" data-id="<%= listing._id %>">
+          <div class="image-wrapper">
+            <% if (avgRating) { %>
+              <span class="card-badge"><i class="bi bi-star-fill" style="color:#f4b942;font-size:11px"></i> <%= avgRating %></span>
+            <% } else { %>
+              <span class="card-badge"><i class="bi bi-sparkle" style="color:#a8dcaa;font-size:11px"></i> New</span>
+            <% } %>
+            <button type="button" class="ds-heart" data-wl-listing="<%= listing._id %>" aria-label="Save to wishlist">
+              <i class="bi bi-heart"></i>
+            </button>
+            <% if (listing.image && listing.image.length > 0) { %>
+              <img class="listing-image" src="<%= listing.image[0].url %>" alt="<%= listing.title %>" loading="lazy">
+            <% } else { %>
+              <img class="listing-image" src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=60" alt="Default" loading="lazy">
+            <% } %>
+          </div>
+          <div class="listing-info">
+            <h3 class="listing-title"><%= listing.title %></h3>
+            <p class="listing-location"><i class="bi bi-geo-alt"></i> <%= listing.location %>, <%= listing.country %></p>
+            <p class="listing-price"><b>₹<%= listing.price ? Number(listing.price).toLocaleString("en-IN") : "N/A" %></b> <span style="color:var(--ds-text-3)">/ night</span></p>
+          </div>
+        </a>
+      <% } %>
 
-                    <div class="listing-info">
-                        <a href="/listings/<%= listing._id %>" class="listing-link">
-                            <h3 class="listing-title">
-                                <%= listing.title %>
-                            </h3>
-                        </a>
-                        <p class="listing-location">
-                            <%= listing.location %>, <%= listing.country %>
-                        </p>
-                        <p class="listing-price">
-                            <b>₹<%= listing.price ? Number(listing.price).toLocaleString("en-IN") : "N/A" %></b>
-                            <span>/night</span>
-                        </p>
-                    </div>
-
-                </div>
-                <% } %>
-
+      <% if (listings.length === 0) { %>
+        <div style="grid-column:1 / -1" class="ds-empty">
+          <i class="bi bi-search"></i>
+          <h3 style="margin:0 0 6px">No stays found</h3>
+          <p style="margin:0">Try adjusting your filters or searching a different destination.</p>
         </div>
-    </section>
+      <% } %>
+    </div>
+  </section>
 
-    <script>
-        function toggleLike(btn) {
-            btn.classList.toggle("liked");
-            btn.innerText = btn.classList.contains("liked") ? "♥" : "♡";
-        }
-    </script>
+  <script>
+    (function () {
+      const form = document.getElementById("filterForm");
+      const catInput = document.getElementById("categoryInput");
+
+      if (form) {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("sort")) form.sort.value = params.get("sort");
+      }
+
+      document.querySelectorAll(".ds-cat").forEach(function (chip) {
+        chip.addEventListener("click", function () {
+          const cat = chip.getAttribute("data-cat");
+          if (catInput) catInput.value = cat;
+          if (form) form.submit();
+        });
+      });
+
+      if (window.WL_SOCKET) {
+        window.WL_SOCKET.on("listing:created", function () {
+          const el = document.getElementById("resultCount");
+          if (el) el.textContent = Number(el.textContent || 0) + 1;
+        });
+      }
+    })();
+  </script>

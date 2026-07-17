@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WonderLust — Nature stays, booked in seconds</title>
+  <meta name="description" content="Discover cabins, cottages and eco-stays across the country. Real-time availability. Verified hosts. Book with confidence.">
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("wl-theme");
+        if (!t) t = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) { document.documentElement.setAttribute("data-theme", "dark"); }
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/design-system.css">
+  <style>
+    body { padding-top: 0; }
+
+    /* Landing navbar */
+    .lp-nav {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--ds-surface);
+      backdrop-filter: saturate(140%) blur(14px);
+      -webkit-backdrop-filter: saturate(140%) blur(14px);
+      border-bottom: 1px solid var(--ds-border);
+    }
+    .lp-nav-inner {
+      width: var(--ds-container); margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 72px;
+    }
+    .lp-brand {
+      display: inline-flex; align-items: center; gap: 10px;
+      text-decoration: none; color: var(--ds-text);
+      font-weight: 700; font-size: 17px; letter-spacing: 0.2px;
+    }
+    .lp-brand .mark {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--ds-primary), var(--ds-primary-hover));
+      color: #fff; font-size: 18px;
+      box-shadow: 0 6px 16px var(--ds-primary-soft);
+    }
+    .lp-nav-links {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .lp-nav-links a {
+      padding: 8px 14px; color: var(--ds-text-2); text-decoration: none;
+      font-weight: 500; font-size: 14.5px; border-radius: 8px;
+      transition: color var(--ds-transition), background var(--ds-transition);
+    }
+    .lp-nav-links a:hover { color: var(--ds-text); background: var(--ds-glass-hi); }
+    @media (max-width: 720px) {
+      .lp-nav-links a:not(.lp-nav-cta):not(.lp-theme-btn) { display: none; }
+    }
+
+    /* HERO */
+    .lp-hero {
+      position: relative;
+      min-height: min(88vh, 820px);
+      display: flex; align-items: center;
+      overflow: hidden;
+      padding: clamp(60px, 8vw, 100px) 0;
+    }
+    .lp-hero-bg {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(160deg, rgba(15, 38, 24, 0.60) 0%, rgba(30, 78, 50, 0.40) 55%, rgba(58, 127, 168, 0.35) 100%),
+        url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1800&auto=format&fit=crop') center/cover fixed;
+    }
+    .lp-hero-bg::after {
+      content: "";
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(600px 400px at 90% 20%, rgba(244, 185, 66, 0.18), transparent 60%),
+        linear-gradient(180deg, transparent 55%, var(--ds-bg-0) 100%);
+    }
+    .lp-hero-inner {
+      position: relative; z-index: 1;
+      width: var(--ds-container); margin: 0 auto;
+      color: #fff;
+    }
+    .lp-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 14px; border-radius: 999px;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.28);
+      font-size: 12.5px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.6px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .lp-pill .dot {
+      width: 8px; height: 8px; border-radius: 50%; background: #b3f0c8;
+      box-shadow: 0 0 0 0 rgba(179, 240, 200, 0.7);
+      animation: ds-pulse 1.6s ease-out infinite;
+    }
+    .lp-hero h1 {
+      font-size: clamp(38px, 6vw, 76px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin: 22px 0 20px;
+      max-width: 860px;
+      text-shadow: 0 4px 24px rgba(0,0,0,0.25);
+    }
+    .lp-hero h1 span {
+      background: linear-gradient(135deg, #cbe9c3, #a8dcaa 50%, #f0d296);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-style: italic;
+      font-weight: 700;
+    }
+    .lp-hero p.lede {
+      font-size: clamp(16px, 1.6vw, 20px);
+      line-height: 1.55;
+      max-width: 640px;
+      opacity: 0.94;
+      margin-bottom: 32px;
+    }
+    .lp-cta-row {
+      display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+    }
+    .lp-cta {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 18px 34px;
+      font-size: 16px; font-weight: 700;
+      border-radius: 14px;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: transform var(--ds-transition), box-shadow var(--ds-transition), background var(--ds-transition);
+      letter-spacing: 0.2px;
+    }
+    .lp-cta-primary {
+      background: linear-gradient(135deg, var(--ds-primary), var(--ds-primary-hover));
+      color: #fff;
+      box-shadow: 0 12px 32px rgba(63, 143, 90, 0.45);
+    }
+    .lp-cta-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 40px rgba(63, 143, 90, 0.55);
+      color: #fff;
+    }
+    .lp-cta-ghost {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.28);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .lp-cta-ghost:hover {
+      background: rgba(255,255,255,0.22);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    /* Trust bar */
+    .lp-trust {
+      margin-top: 44px;
+      display: flex; gap: 32px; flex-wrap: wrap;
+      font-size: 13.5px; opacity: 0.85;
+    }
+    .lp-trust span { display: inline-flex; align-items: center; gap: 8px; }
+    .lp-trust i { color: #b3f0c8; }
+
+    /* Floating stats card */
+    .lp-stats-card {
+      position: absolute;
+      right: max(20px, calc((100vw - var(--ds-container)) / 2));
+      bottom: 40px;
+      background: rgba(255,255,255,0.10);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 18px;
+      padding: 20px 24px;
+      color: #fff;
+      display: flex; gap: 28px;
+      z-index: 2;
+    }
+    .lp-stats-card .stat-value { font-size: 24px; font-weight: 800; }
+    .lp-stats-card .stat-label { font-size: 12px; opacity: 0.85; margin-top: 2px; letter-spacing: 0.3px; }
+    @media (max-width: 960px) { .lp-stats-card { display: none; } }
+
+    /* Section base */
+    .lp-section {
+      padding: clamp(60px, 8vw, 100px) 0;
+      position: relative;
+    }
+    .lp-container {
+      width: var(--ds-container);
+      margin: 0 auto;
+    }
+    .lp-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--ds-primary);
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 1.2px; text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .lp-h2 {
+      font-size: clamp(30px, 3.6vw, 46px);
+      font-weight: 800;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      margin: 0 0 14px;
+      color: var(--ds-text);
+    }
+    .lp-h2 em {
+      font-style: italic;
+      background: linear-gradient(135deg, var(--ds-primary), var(--ds-sage));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .lp-sub {
+      color: var(--ds-text-2);
+      font-size: 16.5px;
+      line-height: 1.6;
+      max-width: 640px;
+      margin: 0 0 40px;
+    }
+
+    /* Feature grid */
+    .lp-features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    .lp-feature {
+      padding: 28px;
+      border-radius: 18px;
+      background: var(--ds-surface);
+      border: 1px solid var(--ds-border);
+      box-shadow: var(--ds-shadow-sm);
+      transition: transform var(--ds-transition), border-color var(--ds-transition), box-shadow var(--ds-transition);
+    }
+    .lp-feature:hover {
+      transform: translateY(-4px);
+      border-color: var(--ds-primary);
+      box-shadow: var(--ds-shadow);
+    }
+    .lp-feature .icn {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: grid; place-items: center;
+      background: var(--ds-primary-soft);
+      color: var(--ds-primary);
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+    .lp-feature h3 { font-size: 18px; font-weight: 700; margin: 0 0 6px; color: var(--ds-text); }
+    .lp-feature p { color: var(--ds-text-3); font-size: 14px; line-height: 1.55; margin: 0; }
+
+    /* Category strip */
+    .lp-cats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+    .lp-cat {
+      position: relative;
+      aspect-ratio: 3 / 4;
+      border-radius: 18px;
+      overflow: hidden;
+      cursor: pointer;
+      text-decoration: none;
+      color: #fff;
+      box-shadow: var(--ds-shadow-sm);
+      transition: transform var(--ds-transition);
+    }
+    .lp-cat:hover { transform: translateY(-4px); color: #fff; }
+    .lp-cat img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+    .lp-cat:hover img { transform: scale(1.08); }
+    .lp-cat::after {
+      content: "";
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.75));
+      pointer-events: none;
+    }
+    .lp-cat .cap {
+      position: absolute; left: 16px; right: 16px; bottom: 14px;
+      z-index: 1;
+      font-weight: 700;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .lp-cat .cap .icn { opacity: 0.9; }
+
+    /* Steps */
+    .lp-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+    @media (max-width: 800px) { .lp-steps { grid-template-columns: 1fr; } }
+    .lp-step {
+      text-align: center;
+      padding: 24px;
+    }
+    .lp-step .num {
+      width: 56px; height: 56px; border-radius: 50%;
+      display: grid; place-items: center;
+      margin: 0 auto 16px;
+      background: linear-gradient(135deg, var(--ds-primary), var(--ds-primary-hover));
+      color: #fff; font-weight: 800; font-size: 20px;
+      box-shadow: 0 10px 24px var(--ds-primary-soft);
+    }
+    .lp-step h3 { font-size: 18px; font-weight: 700; margin: 0 0 6px; color: var(--ds-text); }
+    .lp-step p { color: var(--ds-text-3); font-size: 14px; line-height: 1.55; margin: 0; }
+
+    /* Final CTA */
+    .lp-final {
+      background:
+        radial-gradient(700px 400px at 90% 20%, var(--ds-primary-soft), transparent 60%),
+        linear-gradient(160deg, var(--ds-surface-2), var(--ds-surface));
+      border: 1px solid var(--ds-border);
+      border-radius: var(--ds-radius-xl);
+      padding: clamp(40px, 6vw, 72px);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .lp-final::before {
+      content: "";
+      position: absolute; left: 0; right: 0; bottom: -1px; height: 60%;
+      background:
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320' preserveAspectRatio='none'><path fill='%234fa572' fill-opacity='0.18' d='M0,160 C240,240 480,80 720,140 C960,200 1200,120 1440,180 L1440,320 L0,320 Z'/></svg>") no-repeat bottom / 100% 100%;
+      pointer-events: none;
+    }
+    .lp-final > * { position: relative; z-index: 1; }
+    .lp-final h2 { font-size: clamp(28px, 4vw, 44px); font-weight: 800; margin: 0 0 12px; letter-spacing: -0.02em; color: var(--ds-text); }
+    .lp-final p { color: var(--ds-text-2); font-size: 17px; max-width: 560px; margin: 0 auto 28px; line-height: 1.55; }
+
+    /* Footer */
+    .lp-footer {
+      padding: 40px 0 32px;
+      border-top: 1px solid var(--ds-border);
+      color: var(--ds-text-3);
+      font-size: 13px;
+      margin-top: 40px;
+    }
+    .lp-footer-inner {
+      width: var(--ds-container); margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+    }
+    .lp-footer-inner > div:last-child {
+      display: flex; flex-wrap: wrap; gap: 8px 18px;
+    }
+    .lp-footer a { color: var(--ds-text-2); text-decoration: none; }
+    .lp-footer a:hover { color: var(--ds-primary); }
+    @media (max-width: 560px) {
+      .lp-footer { text-align: center; }
+      .lp-footer-inner { justify-content: center; }
+      .lp-footer-inner > div:last-child { justify-content: center; }
+    }
+
+    /* Scroll reveal */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+  <!-- ================= NAVBAR ================= -->
+  <nav class="lp-nav">
+    <div class="lp-nav-inner">
+      <a href="/" class="lp-brand">
+        <span class="mark"><i class="bi bi-tree-fill"></i></span>
+        WonderLust
+      </a>
+      <div class="lp-nav-links">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#categories">Categories</a>
+        <a href="/about">About</a>
+        <button type="button" id="themeToggle" class="ds-theme-toggle lp-theme-btn" aria-label="Toggle theme" style="width:38px;height:38px">
+          <span class="ic ic-sun"><i class="bi bi-sun-fill"></i></span>
+          <span class="ic ic-moon"><i class="bi bi-moon-stars-fill"></i></span>
+        </button>
+        <a href="/login" class="lp-nav-cta ds-btn ds-btn-primary ds-btn-sm" style="color:#fff">Sign in</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ================= HERO ================= -->
+  <section class="lp-hero">
+    <div class="lp-hero-bg"></div>
+    <div class="lp-hero-inner">
+      <span class="lp-pill"><span class="dot"></span> Realtime · 12,000+ nature stays</span>
+      <h1>Escape to stays that feel <span>closer to nature.</span></h1>
+      <p class="lede">Handpicked cabins, cottages and eco-stays across the country. Book in seconds — with live availability, verified hosts and prices you can trust.</p>
+
+      <div class="lp-cta-row">
+        <a href="/login" class="lp-cta lp-cta-primary">
+          <i class="bi bi-rocket-takeoff"></i> Get started
+        </a>
+        <a href="#features" class="lp-cta lp-cta-ghost">
+          <i class="bi bi-play-circle"></i> How it works
+        </a>
+      </div>
+
+      <div class="lp-trust">
+        <span><i class="bi bi-shield-check"></i> Verified hosts</span>
+        <span><i class="bi bi-broadcast"></i> Live availability</span>
+        <span><i class="bi bi-lock-fill"></i> Secure payments</span>
+        <span><i class="bi bi-cup-hot-fill"></i> 24/7 support</span>
+      </div>
+    </div>
+
+    <div class="lp-stats-card">
+      <div>
+        <div class="stat-value">12k+</div>
+        <div class="stat-label">Stays worldwide</div>
+      </div>
+      <div style="width:1px;background:rgba(255,255,255,0.2)"></div>
+      <div>
+        <div class="stat-value">4.9<i class="bi bi-star-fill" style="color:#f4b942;font-size:16px;margin-left:4px"></i></div>
+        <div class="stat-label">Average rating</div>
+      </div>
+      <div style="width:1px;background:rgba(255,255,255,0.2)"></div>
+      <div>
+        <div class="stat-value">98%</div>
+        <div class="stat-label">Verified hosts</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FEATURES ================= -->
+  <section class="lp-section" id="features">
+    <div class="lp-container">
+      <div class="reveal">
+        <span class="lp-eyebrow"><i class="bi bi-stars"></i> Why WonderLust</span>
+        <h2 class="lp-h2">Everything you need to book <em>with confidence.</em></h2>
+        <p class="lp-sub">We built WonderLust for travelers who want beautiful, honest stays — and for hosts who care about their guests. No hidden fees, no surprises.</p>
+      </div>
+
+      <div class="lp-features">
+        <div class="lp-feature reveal">
+          <div class="icn"><i class="bi bi-broadcast"></i></div>
+          <h3>Realtime availability</h3>
+          <p>See open dates update instantly — no double-bookings, no back-and-forth with hosts.</p>
+        </div>
+        <div class="lp-feature reveal">
+          <div class="icn"><i class="bi bi-shield-check"></i></div>
+          <h3>Verified hosts</h3>
+          <p>Every host and photo verified before going live. What you see is what you get.</p>
+        </div>
+        <div class="lp-feature reveal">
+          <div class="icn"><i class="bi bi-heart-fill"></i></div>
+          <h3>Wishlist &amp; alerts</h3>
+          <p>Save your favorites and get notified the moment a price drops or dates free up.</p>
+        </div>
+        <div class="lp-feature reveal">
+          <div class="icn"><i class="bi bi-bell-fill"></i></div>
+          <h3>Instant notifications</h3>
+          <p>Booking confirmed, reviewed, or updated — stay in the loop the moment it happens.</p>
+        </div>
+        <div class="lp-feature reveal">
+          <div class="icn"><i class="bi bi-lock-fill"></i></div>
+          <h3>Secure payments</h3>
+          <p>End-to-end encryption and PCI-compliant checkout, powered by trusted rails.</p>
+        </div>
+        <div class="lp-feature reveal">
+          <div class="icn"><i class="bi bi-tree-fill"></i></div>
+          <h3>Nature-first stays</h3>
+          <p>Curated cabins, treehouses, farmstays and eco-retreats away from the noise.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CATEGORIES ================= -->
+  <section class="lp-section" id="categories" style="padding-top:0">
+    <div class="lp-container">
+      <div class="reveal">
+        <span class="lp-eyebrow"><i class="bi bi-compass"></i> Explore</span>
+        <h2 class="lp-h2">Find your kind of <em>getaway.</em></h2>
+        <p class="lp-sub">Whether you're chasing mountain sunrises or barefoot on a beach, we've got a stay for that.</p>
+      </div>
+
+      <div class="lp-cats">
+        <a class="lp-cat reveal" href="/login">
+          <img src="https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=600&auto=format&fit=crop" alt="Cabins">
+          <div class="cap"><span>Cabins</span><i class="bi bi-tree icn"></i></div>
+        </a>
+        <a class="lp-cat reveal" href="/login">
+          <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop" alt="Beach">
+          <div class="cap"><span>Beach</span><i class="bi bi-sun icn"></i></div>
+        </a>
+        <a class="lp-cat reveal" href="/login">
+          <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&auto=format&fit=crop" alt="Mountain">
+          <div class="cap"><span>Mountain</span><i class="bi bi-triangle icn"></i></div>
+        </a>
+        <a class="lp-cat reveal" href="/login">
+          <img src="https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?w=600&auto=format&fit=crop" alt="Countryside">
+          <div class="cap"><span>Countryside</span><i class="bi bi-flower1 icn"></i></div>
+        </a>
+        <a class="lp-cat reveal" href="/login">
+          <img src="https://images.unsplash.com/photo-1500043357865-c6b8827edf10?w=600&auto=format&fit=crop" alt="Lakefront">
+          <div class="cap"><span>Lakefront</span><i class="bi bi-water icn"></i></div>
+        </a>
+        <a class="lp-cat reveal" href="/login">
+          <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=600&auto=format&fit=crop" alt="Treehouse">
+          <div class="cap"><span>Treehouse</span><i class="bi bi-tree-fill icn"></i></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= HOW IT WORKS ================= -->
+  <section class="lp-section" id="how" style="background: var(--ds-surface); border-top: 1px solid var(--ds-border); border-bottom: 1px solid var(--ds-border);">
+    <div class="lp-container">
+      <div class="reveal" style="text-align:center">
+        <span class="lp-eyebrow"><i class="bi bi-lightning-charge"></i> How it works</span>
+        <h2 class="lp-h2">Book your escape in <em>three simple steps.</em></h2>
+        <p class="lp-sub" style="margin: 0 auto 48px">Sign up, pick your stay, and pack your bag. That's it.</p>
+      </div>
+
+      <div class="lp-steps">
+        <div class="lp-step reveal">
+          <div class="num">1</div>
+          <h3>Create your account</h3>
+          <p>Sign up in seconds and start exploring 12,000+ curated nature stays.</p>
+        </div>
+        <div class="lp-step reveal">
+          <div class="num">2</div>
+          <h3>Pick your stay</h3>
+          <p>Filter by dates, guests and category. See live availability instantly.</p>
+        </div>
+        <div class="lp-step reveal">
+          <div class="num">3</div>
+          <h3>Book &amp; go</h3>
+          <p>Secure checkout, instant confirmation, and 24/7 support if you need it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FINAL CTA ================= -->
+  <section class="lp-section">
+    <div class="lp-container">
+      <div class="lp-final reveal">
+        <span class="lp-eyebrow"><i class="bi bi-tree-fill"></i> Ready to unwind</span>
+        <h2>Your next nature escape is <em style="font-style:italic;color:var(--ds-primary)">one click away.</em></h2>
+        <p>Join thousands of travelers finding calm, quiet stays every day.</p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <a href="/login" class="lp-cta lp-cta-primary">
+            <i class="bi bi-rocket-takeoff"></i> Get started free
+          </a>
+          <a href="/login" class="ds-btn ds-btn-ghost ds-btn-lg" style="padding:18px 28px;font-size:16px;border-radius:14px">
+            <i class="bi bi-box-arrow-in-right"></i> Sign in
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="lp-footer">
+    <div class="lp-footer-inner">
+      <div>© <%= new Date().getFullYear() %> WonderLust · Made for nature-lovers</div>
+      <div>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="/footer/terms">Terms</a>
+        <a href="/footer/privacy">Privacy</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/theme.js" defer></script>
+  <script>
+    // Scroll-reveal on view
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  </script>
+</body>
+</html>

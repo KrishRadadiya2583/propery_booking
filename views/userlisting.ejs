@@ -1,88 +1,55 @@
 <% layout("/layouts/boilerplate") %>
 
-  <link rel="stylesheet" href="/css/user-listing.css">
-
-  <section class="listings-page">
-    <div class="listings-container">
-
-      <h1 class="page-title">Your Listings</h1>
-
-      <% if (!listings || listings.length===0) { %>
-
-        <div class="empty-state">
-          <h2>No listings yet</h2>
-          <p>When you add a property, it will appear here.</p>
-          <a href="/listings/new" class="btn-primary">
-            Add New Listing
-          </a>
-        </div>
-
-        <% } else { %>
-
-          <div class="listings-grid">
-
-            <% listings.forEach(listing=> { %>
-              <% if (currentUser && currentUser.email===listing.useremail) { %>
-                <div class="listing-card">
-
-                  <!-- IMAGE -->
-                  <a href="/listings/<%= listing._id %>" class="image-wrapper">
-                    <% if (listing.image && listing.image.length> 0) { %>
-                      <img src="<%= listing.image[0].url %>" alt="<%= listing.title %>">
-                      <% } else { %>
-                        <div class="image-placeholder">No Image</div>
-                        <% } %>
-                  </a>
-
-                  <!-- CONTENT -->
-                  <div class="card-body">
-
-                    <div class="card-header">
-                      <span class="property-badge">Your property</span>
-                      <span class="price">
-                        ₹<%= listing.price %> <span>/ night</span>
-                      </span>
-                    </div>
-
-                    <h2 class="listing-title">
-                      <%= listing.title %>
-                    </h2>
-
-                    <p class="location">
-                      <%= listing.location %>, <%= listing.country %>
-                    </p>
-
-                    <p class="description">
-                      <%= listing.description %>
-                    </p>
-
-                  </div>
-
-                  <!-- FOOTER -->
-                  <div class="card-footer">
-                    <span class="status active">Active</span>
-
-                    <div class="actions">
-                      <a href="/listings/<%= listing._id %>" class="btn-outline">
-                        View
-                      </a>
-                      <a href="/listings/<%= listing._id %>/edit" class="btn-outline">
-                        Edit
-                      </a>
-                      <a href="/listings/<%= listing._id %>/delete" class="btn-outline">
-                        Delete
-                      </a>
-                    </div>
-                  </div>
-
-                </div>
-                <% } %>
-
-                  <% }) %>
-
-          </div>
-
-          <% } %>
-
+  <section class="ds-profile-container">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+      <div>
+        <h1 style="font-size:28px;font-weight:700;margin:0">Your properties</h1>
+        <p style="color:var(--ds-text-3);margin:4px 0 0">Manage everything you host on WonderLust.</p>
+      </div>
+      <a class="ds-btn ds-btn-primary" href="/listings/new"><i class="bi bi-plus-lg"></i> Add listing</a>
     </div>
+
+    <nav class="ds-tabs">
+      <a href="/profile"><i class="bi bi-grid"></i> Overview</a>
+      <a href="/profile/bookings"><i class="bi bi-calendar-check"></i> My bookings</a>
+      <a href="/profile/listings" class="active"><i class="bi bi-house-door"></i> My properties</a>
+    </nav>
+
+    <% const own = (listings || []).filter(l => currentUser && currentUser.email === l.useremail); %>
+
+    <% if (!own || own.length === 0) { %>
+      <div class="ds-empty">
+        <i class="bi bi-house-add"></i>
+        <h3 style="margin:0 0 6px">No properties yet</h3>
+        <p style="margin:0 0 18px">Start hosting to earn — it takes a few minutes to set up.</p>
+        <a class="ds-btn ds-btn-primary" href="/listings/new"><i class="bi bi-plus-lg"></i> Add your first listing</a>
+      </div>
+    <% } else { %>
+      <div class="ds-list-grid">
+        <% own.forEach(listing => { %>
+          <div class="ds-card" style="overflow:hidden;padding:0">
+            <a href="/listings/<%= listing._id %>" style="display:block;aspect-ratio:16/10;background:var(--ds-bg-2);overflow:hidden">
+              <% if (listing.image && listing.image.length > 0) { %>
+                <img src="<%= listing.image[0].url %>" alt="<%= listing.title %>" style="width:100%;height:100%;object-fit:cover">
+              <% } else { %>
+                <div style="width:100%;height:100%;display:grid;place-items:center;color:var(--ds-text-3)"><i class="bi bi-image" style="font-size:32px"></i></div>
+              <% } %>
+            </a>
+            <div style="padding:18px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <span class="ds-metric" style="background:rgba(52,211,153,0.15);color:#6ee7b7;border:1px solid rgba(52,211,153,0.3)">Active</span>
+                <strong>₹<%= Number(listing.price).toLocaleString("en-IN") %> <span style="color:var(--ds-text-3);font-weight:400">/ night</span></strong>
+              </div>
+              <h3 style="margin:6px 0 4px;font-size:18px;font-weight:700"><%= listing.title %></h3>
+              <div style="color:var(--ds-text-3);font-size:13px;margin-bottom:12px"><i class="bi bi-geo-alt"></i> <%= listing.location %>, <%= listing.country %></div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <a href="/listings/<%= listing._id %>" class="ds-btn ds-btn-ghost ds-btn-sm">View</a>
+                <a href="/listings/<%= listing._id %>/edit" class="ds-btn ds-btn-soft ds-btn-sm">Edit</a>
+                <a href="/listings/<%= listing._id %>/delete" class="ds-btn ds-btn-danger ds-btn-sm" onclick="return confirm('Delete this listing?')">Delete</a>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
   </section>

@@ -1,164 +1,280 @@
 <% layout("/layouts/boilerplate") %>
 
-  <section class="booking-page">
-    <div class="booking-container">
+  <section class="ds-booking-page" data-listing-id="<%= listing._id %>">
+    <div>
+      <h1 style="font-size:28px;font-weight:700;margin:0 0 4px">Confirm and pay</h1>
+      <p style="color:var(--ds-text-3);margin:0 0 20px">Complete your booking in a few quick steps.</p>
 
-      <h1 class="booking-title">
-        Book <%= listing.title %>
-      </h1>
-
-      <div class="booking-price">
-        <span class="price-amount">₹<%= listing.price %></span>
-        <span class="price-unit"> / guest / night</span>
+      <div class="ds-avail-indicator available" id="availIndicator">
+        <span class="dot"></span>
+        <span id="availText">Live availability — pick your dates</span>
       </div>
 
-      <form class="booking-form" id="bookingForm" action="/confirm" method="POST">
-
+      <form class="ds-card" style="padding:22px" id="bookingForm" novalidate>
         <input type="hidden" name="listingId" value="<%= listing._id %>">
 
-        <div>
-          <label for="name">Name</label>
-          <input type="text" id="name" name="name" value="<%= currentUser ? currentUser.name : '' %>" required>
+        <h3 style="font-size:16px;font-weight:700;margin:0 0 12px">Guest details</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div class="ds-field">
+            <label class="ds-label" for="name">Full name</label>
+            <input class="ds-input" type="text" id="name" name="name" value="<%= currentUser ? currentUser.name : '' %>" required>
+          </div>
+          <div class="ds-field">
+            <label class="ds-label" for="email">Email</label>
+            <input class="ds-input" type="email" id="email" name="email" value="<%= currentUser ? currentUser.email : '' %>" required>
+          </div>
+          <div class="ds-field" style="grid-column:1 / -1">
+            <label class="ds-label" for="phone">Phone</label>
+            <input class="ds-input" type="tel" id="phone" name="phone" required placeholder="10-digit mobile" pattern="[0-9]{10}" title="Enter a 10-digit mobile number">
+          </div>
         </div>
 
-        <div>
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" value="<%= currentUser ? currentUser.email : '' %>" required>
+        <h3 style="font-size:16px;font-weight:700;margin:22px 0 12px">Your trip</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div class="ds-field">
+            <label class="ds-label" for="checkIn">Check-in</label>
+            <input class="ds-input" type="date" id="checkIn" name="checkIn" required>
+          </div>
+          <div class="ds-field">
+            <label class="ds-label" for="checkOut">Check-out</label>
+            <input class="ds-input" type="date" id="checkOut" name="checkOut" required>
+          </div>
+          <div class="ds-field" style="grid-column:1 / -1">
+            <label class="ds-label" for="guests">Guests</label>
+            <input class="ds-input" type="number" id="guests" name="guests" min="1" max="20" value="1" required>
+          </div>
         </div>
 
-        <div>
-          <label for="phone">Phone</label>
-          <input type="tel" id="phone" name="phone" required>
-        </div>
+        <div id="payError" style="display:none;margin-top:14px;padding:12px 14px;border-radius:10px;background:rgba(198,90,78,0.14);border:1px solid rgba(198,90,78,0.35);color:#c65a4e;font-size:13.5px"></div>
 
-        <div>
-          <label for="checkIn">Check-in</label>
-          <input type="date" id="checkIn" name="checkIn" required>
-        </div>
-
-        <div>
-          <label for="checkOut">Check-out</label>
-          <input type="date" id="checkOut" name="checkOut" required>
-        </div>
-
-        <div>
-          <label for="guests">Guests</label>
-          <input type="number" id="guests" name="guests" min="1" max="20" value="1" required>
-        </div>
-
-        <!-- Hidden total price -->
-        <input type="hidden" name="totalPrice" id="totalPriceInput" value="<%= listing.price %>">
-
-        <!-- TOTAL PRICE DISPLAY -->
-        <div class="booking-total">
-          <span class="total-label">Total Price</span>
-          <strong class="total-amount">
-            ₹<span id="totalPrice">
-              <%= listing.price %>
-            </span>
-          </strong>
-        </div>
-
-        <button type="submit" class="btn-confirm">
-          Confirm Booking
+        <button type="submit" class="ds-btn ds-btn-primary ds-btn-lg ds-btn-block" id="payBtn" style="margin-top:22px" disabled>
+          <span class="btn-text"><i class="bi bi-lock-fill"></i> <span id="payLabel">Pick dates to continue</span></span>
         </button>
-
+        <p style="text-align:center;color:var(--ds-text-3);font-size:12px;margin:12px 0 0">Secured by Razorpay · You won't be charged until you confirm on the next screen.</p>
       </form>
-
     </div>
+
+    <aside class="ds-booking-summary">
+      <div class="listing-thumb">
+        <img src="<%= (listing.image && listing.image.length) ? listing.image[0].url : 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&auto=format&fit=crop' %>" alt="<%= listing.title %>">
+      </div>
+      <h4><%= listing.title %></h4>
+      <div class="loc"><i class="bi bi-geo-alt"></i> <%= listing.location %>, <%= listing.country %></div>
+
+      <hr style="border-color:var(--ds-border);opacity:1;margin:14px 0">
+
+      <div class="ds-summary-row"><span>₹<%= Number(listing.price).toLocaleString("en-IN") %> × <span id="nightsCount">0</span> nights × <span id="guestsCount">1</span> guest</span><span id="subtotal">₹0</span></div>
+      <div class="ds-summary-row"><span>Service fee</span><span id="fee">₹0</span></div>
+      <div class="ds-summary-total"><span>Total (INR)</span><span>₹<span id="totalPrice"><%= listing.price %></span></span></div>
+    </aside>
   </section>
 
-  <!-- Razorpay -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
   <script>
-    const pricePerGuestPerNight = Number("<%= listing.price %>");
+    (function () {
+      const LISTING_ID = "<%= listing._id %>";
+      const PRICE = Number("<%= listing.price %>") || 0;
+      const checkIn = document.getElementById("checkIn");
+      const checkOut = document.getElementById("checkOut");
+      const guests = document.getElementById("guests");
+      const nightsCount = document.getElementById("nightsCount");
+      const guestsCount = document.getElementById("guestsCount");
+      const subtotalEl = document.getElementById("subtotal");
+      const feeEl = document.getElementById("fee");
+      const totalEl = document.getElementById("totalPrice");
+      const availIndicator = document.getElementById("availIndicator");
+      const availText = document.getElementById("availText");
+      const payBtn = document.getElementById("payBtn");
+      const payLabel = document.getElementById("payLabel");
+      const payError = document.getElementById("payError");
+      const form = document.getElementById("bookingForm");
+      const nameInput = document.getElementById("name");
+      const emailInput = document.getElementById("email");
+      const phoneInput = document.getElementById("phone");
 
-    const checkInInput = document.getElementById("checkIn");
-    const checkOutInput = document.getElementById("checkOut");
-    const guestsInput = document.getElementById("guests");
+      let currentTotal = 0;
+      let datesAvailable = false;
 
-    const totalPriceText = document.getElementById("totalPrice");
-    const totalPriceInput = document.getElementById("totalPriceInput");
+      const today = new Date().toISOString().slice(0, 10);
+      checkIn.min = today;
+      checkOut.min = today;
 
-    function calculateTotalPrice() {
-      if (!checkInInput.value || !checkOutInput.value) return;
-
-      const checkInDate = new Date(checkInInput.value);
-      const checkOutDate = new Date(checkOutInput.value);
-      const guests = Number(guestsInput.value) || 1;
-
-      const nights = Math.ceil(
-        (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)
-      );
-
-      if (nights <= 0) {
-        totalPriceText.textContent = 0;
-        totalPriceInput.value = 0;
-        return;
+      function showError(msg) {
+        if (!msg) { payError.style.display = "none"; return; }
+        payError.textContent = msg;
+        payError.style.display = "block";
       }
 
-      const total = nights * guests * pricePerGuestPerNight;
-      totalPriceText.textContent = total;
-      totalPriceInput.value = total;
-    }
+      function refreshPayButton() {
+        const nights = Math.max(0, Math.ceil((new Date(checkOut.value) - new Date(checkIn.value)) / (1000 * 60 * 60 * 24)));
+        const hasDates = checkIn.value && checkOut.value && nights > 0;
+        const canPay = hasDates && datesAvailable && currentTotal > 0;
 
-    checkInInput.addEventListener("change", calculateTotalPrice);
-    checkOutInput.addEventListener("change", calculateTotalPrice);
-    guestsInput.addEventListener("input", calculateTotalPrice);
+        payBtn.disabled = !canPay;
+        payBtn.style.opacity = canPay ? "1" : "0.6";
 
-    /* ===============================
-       RAZORPAY PAYMENT FLOW
-    ================================ */
-    document.getElementById("bookingForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const formData = Object.fromEntries(new FormData(e.target));
-
-      // Create order
-      const res = await fetch(
-        "/listings/<%= listing._id %>/booking",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+        if (!hasDates) {
+          payLabel.textContent = "Pick dates to continue";
+        } else if (!datesAvailable) {
+          payLabel.textContent = "Pick different dates";
+        } else {
+          payLabel.textContent = "Pay ₹" + currentTotal.toLocaleString("en-IN");
         }
-      );
-
-      const data = await res.json();
-
-      if (!data.success) {
-        window.location.reload();
-        return;
       }
 
-      const options = {
-        key: data.key,
-        amount: data.order.amount,
-        currency: "INR",
-        name: "Stay Booking",
-        description: "Demo Payment",
-        order_id: data.order.id,
+      function calc() {
+        const nights = Math.max(0, Math.ceil((new Date(checkOut.value) - new Date(checkIn.value)) / (1000 * 60 * 60 * 24)));
+        const g = Math.max(1, Number(guests.value) || 1);
+        const sub = nights * PRICE * g;
+        const fee = Math.round(sub * 0.06);
+        const total = sub + fee;
+        currentTotal = total;
+        nightsCount.textContent = nights;
+        guestsCount.textContent = g;
+        subtotalEl.textContent = "₹" + sub.toLocaleString("en-IN");
+        feeEl.textContent = "₹" + fee.toLocaleString("en-IN");
+        totalEl.textContent = total.toLocaleString("en-IN");
+        refreshPayButton();
+      }
 
-        handler: async function (response) {
-          const confirmRes = await fetch("/listings/confirm", {
+      async function checkAvail() {
+        if (!checkIn.value || !checkOut.value) {
+          datesAvailable = false;
+          refreshPayButton();
+          return;
+        }
+        try {
+          const r = await fetch(`/api/v1/listings/${LISTING_ID}/availability?from=${checkIn.value}&to=${checkOut.value}`);
+          const j = await r.json();
+          const ok = j && j.data && j.data.available;
+          datesAvailable = !!ok;
+          availIndicator.classList.toggle("busy", !ok);
+          availIndicator.classList.toggle("available", ok);
+          availText.textContent = ok ? "Great — these dates are available" : "These dates are already booked. Please pick different dates.";
+        } catch (e) {
+          datesAvailable = false;
+          availText.textContent = "Couldn't check availability. Please retry.";
+        }
+        refreshPayButton();
+      }
+
+      [checkIn, checkOut, guests].forEach(el => el.addEventListener("change", () => { calc(); checkAvail(); }));
+      [checkIn, checkOut, guests].forEach(el => el.addEventListener("input", calc));
+
+      if (window.WL_SOCKET) {
+        window.WL_JOIN_LISTING && window.WL_JOIN_LISTING(LISTING_ID);
+        window.WL_SOCKET.on("listing:booked", function (payload) {
+          if (!payload || payload.listingId !== LISTING_ID) return;
+          if (window.WL_TOAST) window.WL_TOAST({ badge: "HEADS UP", title: "Someone booked overlapping dates", message: "Your selection may be affected — checking..." });
+          checkAvail();
+        });
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        showError("");
+
+        // Client-side sanity so we don't fire a hopeless order request.
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+        if (currentTotal <= 0) { showError("Please pick your check-in and check-out dates first."); return; }
+        if (!datesAvailable)   { showError("Those dates aren't available anymore. Please pick different ones."); return; }
+        if (typeof Razorpay !== "function") {
+          showError("Payment gateway didn't load. Check your connection and try again.");
+          return;
+        }
+
+        payBtn.classList.add("is-loading");
+        payBtn.disabled = true;
+
+        try {
+          const formData = Object.fromEntries(new FormData(form));
+          const res = await fetch(`/listings/${LISTING_ID}/booking`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              ...formData,
-              paymentId: response.razorpay_payment_id,
-            }),
+            body: JSON.stringify(formData),
           });
-
-          const confirmData = await confirmRes.json();
-          if (confirmData.success) {
-            window.location.href = "/profile/bookings";
-          } else {
-            window.location.reload();
+          const data = await res.json();
+          if (!res.ok || !data.success) {
+            showError(data && data.error ? data.error : (data && data.message) || "Something went wrong. Please try again.");
+            return;
           }
-        },
-      };
 
-      new Razorpay(options).open();
-    });
+          const options = {
+            key: data.key,
+            amount: data.order.amount,
+            currency: data.order.currency || "INR",
+            name: "WonderLust",
+            description: "Stay booking · " + (formData.checkIn || "") + " → " + (formData.checkOut || ""),
+            order_id: data.order.id,
+            prefill: {
+              name: formData.name || "",
+              email: formData.email || "",
+              contact: formData.phone || "",
+            },
+            notes: { listingId: LISTING_ID },
+            theme: { color: "#3f8f5a" },
+            modal: {
+              ondismiss: function () {
+                payBtn.classList.remove("is-loading");
+                refreshPayButton();
+                showError("Payment cancelled. You can try again whenever you're ready.");
+              },
+            },
+            handler: async function (response) {
+              try {
+                const confirmRes = await fetch("/listings/confirm", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    listingId: LISTING_ID,
+                    name: formData.name,
+                    email: formData.email,
+                    phone: formData.phone,
+                    checkIn: formData.checkIn,
+                    checkOut: formData.checkOut,
+                    guests: formData.guests,
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_signature: response.razorpay_signature,
+                  }),
+                });
+                const cd = await confirmRes.json();
+                if (confirmRes.ok && cd.success && cd.bookingId) {
+                  window.location.href = "/listings/" + cd.bookingId + "/confirmation";
+                } else if (cd.success) {
+                  window.location.href = "/profile/bookings";
+                } else {
+                  showError(cd.error || "Payment succeeded but we couldn't save the booking. Please contact support with payment ID: " + response.razorpay_payment_id);
+                  payBtn.classList.remove("is-loading");
+                  refreshPayButton();
+                }
+              } catch (err) {
+                showError("Booking couldn't be saved. Payment ID: " + response.razorpay_payment_id + ". Please contact support.");
+                payBtn.classList.remove("is-loading");
+                refreshPayButton();
+              }
+            },
+          };
+
+          const rz = new Razorpay(options);
+          rz.on("payment.failed", function (r) {
+            const desc = r && r.error && r.error.description ? r.error.description : "Payment failed. Please try again.";
+            showError(desc);
+            payBtn.classList.remove("is-loading");
+            refreshPayButton();
+          });
+          rz.open();
+        } catch (err) {
+          console.error(err);
+          showError("Network error. Please check your connection and try again.");
+          payBtn.classList.remove("is-loading");
+          refreshPayButton();
+        }
+      });
+
+      refreshPayButton();
+    })();
   </script>

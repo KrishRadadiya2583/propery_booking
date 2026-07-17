@@ -1,5 +1,6 @@
 const Booking = require("../models/booking");
 const Listing = require("../models/listing");
+const Wishlist = require("../models/wishlist");
 
 module.exports.index = (req, res) => {
   try {
@@ -52,13 +53,14 @@ module.exports.updateprofile = (req, res) => {
 module.exports.bookings = async (req, res) => {
   try {
     if (!req.session.user) {
-      return res.redirect("/", { currentUser: null });
+      return res.redirect("/");
     }
 
-    const bookings = await Booking.find({ user: req.session.user._id }).sort({ createdAt: -1 });
+    const bookings = await Booking.find({ email: req.session.user.email }).sort({ createdAt: -1 });
     res.render("bookings", { bookings, currentUser: req.session.user });
   }
   catch (err) {
+    console.log(err);
     res.send("something went wrong")
   }
 }
@@ -66,13 +68,33 @@ module.exports.bookings = async (req, res) => {
 module.exports.listings = async (req, res) => {
   try {
     if (!req.session.user) {
-      return res.redirect("/", { currentUser: null });
+      return res.redirect("/");
     }
 
-    const listings = await Listing.find({ user: req.session.user._id });
+    const listings = await Listing.find({ useremail: req.session.user.email }).sort({ createdAt: -1 }).lean();
     res.render("userlisting", { listings, currentUser: req.session.user });
   }
   catch (err) {
+    console.log(err);
     res.send("something went wrong")
+  }
+}
+
+module.exports.wishlist = async (req, res) => {
+  try {
+    if (!req.session.user) {
+      return res.redirect("/");
+    }
+    const email = req.session.user.email.toLowerCase();
+    const items = await Wishlist.find({ userEmail: email })
+      .sort({ createdAt: -1 })
+      .populate("listing")
+      .lean();
+    const listings = items.map(i => i.listing).filter(Boolean);
+    res.render("wishlist", { listings, currentUser: req.session.user });
+  }
+  catch (err) {
+    console.log(err);
+    res.send("something went wrong");
   }
 }

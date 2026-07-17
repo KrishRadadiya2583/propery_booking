@@ -184,31 +184,50 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
-        const bookedDates = <% - JSON.stringify(dates) %>;
+        const LISTING_ID = "<%= listing._id %>";
+        let bookedDates = <%- JSON.stringify(dates) %>;
 
-        const disabledRanges = bookedDates.map(b => {
-            return {
-                from: new Date(b.checkIn),
-                to: new Date(b.checkOut)
-            };
-        });
+        function toRanges(list) {
+            return list.map(b => ({ from: new Date(b.checkIn), to: new Date(b.checkOut) }));
+        }
+        let disabledRanges = toRanges(bookedDates);
 
-        flatpickr("#calendar", {
+        const picker = flatpickr("#calendar", {
             inline: true,
             minDate: "today",
             disable: disabledRanges,
             onDayCreate: function (dObj, dStr, fp, dayElem) {
                 const date = dayElem.dateObj;
-
-                let isBooked = disabledRanges.some(range => {
-                    return date >= range.from && date <= range.to;
-                });
-
-                if (isBooked) {
-                    dayElem.classList.add("booked");
-                } else {
-                    dayElem.classList.add("available");
-                }
+                let isBooked = disabledRanges.some(range => date >= range.from && date <= range.to);
+                if (isBooked) dayElem.classList.add("booked");
+                else dayElem.classList.add("available");
             }
         });
+
+        async function refreshFromServer() {
+            try {
+                const r = await fetch(`/api/v1/listings/${LISTING_ID}/availability`);
+                const j = await r.json();
+                if (j && j.data && Array.isArray(j.data.bookedRanges)) {
+                    bookedDates = j.data.bookedRanges;
+                    disabledRanges = toRanges(bookedDates);
+                    picker.set("disable", disabledRanges);
+                    picker.redraw();
+                }
+            } catch (e) {}
+        }
+
+        if (window.WL_SOCKET) {
+            window.WL_JOIN_LISTING && window.WL_JOIN_LISTING(LISTING_ID);
+            window.WL_SOCKET.on("listing:booked", function (payload) {
+                if (!payload || payload.listingId !== LISTING_ID) return;
+                if (window.WL_TOAST) window.WL_TOAST({ badge: "BOOKED", title: "New booking just came in", message: (payload.checkIn || "") + " → " + (payload.checkOut || "") });
+                refreshFromServer();
+            });
+            window.WL_SOCKET.on("listing:cancelled", function (payload) {
+                if (!payload || payload.listingId !== LISTING_ID) return;
+                if (window.WL_TOAST) window.WL_TOAST({ badge: "OPENED", title: "Booking cancelled — dates open", message: (payload.checkIn || "") + " → " + (payload.checkOut || "") });
+                refreshFromServer();
+            });
+        }
     </script>

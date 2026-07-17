@@ -1,0 +1,49 @@
+<% layout("/layouts/boilerplate") %>
+
+  <section class="ds-profile-container">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+      <div>
+        <h1 style="font-size:28px;font-weight:700;margin:0">Your wishlist</h1>
+        <p style="color:var(--ds-text-3);margin:4px 0 0">Stays you've saved to come back to later.</p>
+      </div>
+      <a class="ds-btn ds-btn-ghost" href="/profile"><i class="bi bi-arrow-left"></i> Back to profile</a>
+    </div>
+
+    <nav class="ds-tabs">
+      <a href="/profile"><i class="bi bi-grid"></i> Overview</a>
+      <a href="/profile/bookings"><i class="bi bi-calendar-check"></i> Bookings</a>
+      <a href="/profile/wishlist" class="active"><i class="bi bi-heart"></i> Wishlist</a>
+      <a href="/profile/listings"><i class="bi bi-house-door"></i> Properties</a>
+    </nav>
+
+    <% if (!listings || listings.length === 0) { %>
+      <div class="ds-empty">
+        <i class="bi bi-heart"></i>
+        <h3 style="margin:0 0 6px">Nothing saved yet</h3>
+        <p style="margin:0 0 18px">Tap the heart on any stay to save it here.</p>
+        <a class="ds-btn ds-btn-primary" href="/listings"><i class="bi bi-search"></i> Browse stays</a>
+      </div>
+    <% } else { %>
+      <div class="listing-grid" id="wishlistGrid">
+        <% listings.forEach(function (listing) { %>
+          <a class="listing-card" href="/listings/<%= listing._id %>" data-id="<%= listing._id %>">
+            <div class="image-wrapper">
+              <button type="button" class="ds-heart liked" data-wl-listing="<%= listing._id %>" aria-label="Remove from wishlist">
+                <i class="bi bi-heart-fill"></i>
+              </button>
+              <% if (listing.image && listing.image.length > 0) { %>
+                <img class="listing-image" src="<%= listing.image[0].url %>" alt="<%= listing.title %>" loading="lazy">
+              <% } else { %>
+                <img class="listing-image" src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=60" alt="Default" loading="lazy">
+              <% } %>
+            </div>
+            <div class="listing-info">
+              <h3 class="listing-title"><%= listing.title %></h3>
+              <p class="listing-location"><i class="bi bi-geo-alt"></i> <%= listing.location %>, <%= listing.country %></p>
+              <p class="listing-price"><b>₹<%= listing.price ? Number(listing.price).toLocaleString("en-IN") : "N/A" %></b> <span style="color:var(--ds-text-3)">/ night</span></p>
+            </div>
+          </a>
+        <% }) %>
+      </div>
+    <% } %>
+  </section>

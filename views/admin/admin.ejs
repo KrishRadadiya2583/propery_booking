@@ -2,91 +2,87 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login</title>
-    <style>
-        /* Reset default */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login · WonderLust</title>
+  <meta name="theme-color" content="#2f7d4c" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d1712" media="(prefers-color-scheme: dark)">
 
-        body {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #f4f6f8;
-        }
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("wl-theme");
+        if (!t) t = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    })();
+  </script>
 
-        .login-container {
-            background: #fff;
-            padding: 40px 30px;
-            border-radius: 8px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            width: 350px;
-            text-align: center;
-        }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
-        .login-container h2 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        .login-container input {
-            width: 100%;
-            padding: 12px 15px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 14px;
-            transition: border 0.3s;
-        }
-
-        .login-container input:focus {
-            border-color: #007bff;
-            outline: none;
-        }
-
-        .login-container button {
-            width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            color: #fff;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .login-container button:hover {
-            background-color: #0056b3;
-        }
-
-        /* Optional small text */
-        .login-container .note {
-            margin-top: 15px;
-            font-size: 12px;
-            color: #888;
-        }
-    </style>
+  <link rel="stylesheet" href="/css/design-system.css">
+  <link rel="stylesheet" href="/css/admindashboard.css">
 </head>
 
-<body>
+<body class="admin-login-body">
 
-    <div class="login-container">
-        <h2>Admin Login</h2>
-        <form action="/admin/login" method="post">
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit">Login</button>
-        </form>
-        <p class="note">Only admins can access this panel</p>
+  <div class="flash-container" style="position:fixed;top:20px;right:20px;">
+    <% if (typeof success !== "undefined" && success && success.length > 0) { %>
+      <div class="flash success"><%= success[0] %></div>
+    <% } %>
+    <% if (typeof error !== "undefined" && error && error.length > 0) { %>
+      <div class="flash error"><%= error[0] %></div>
+    <% } %>
+  </div>
+
+  <div class="admin-login-card">
+    <div class="brand">
+      <div class="mark"><i class="bi bi-tree-fill"></i></div>
+      <h1>WonderLust</h1>
     </div>
+
+    <h2>Admin Sign In</h2>
+    <p class="sub">Secure access to the WonderLust control panel.</p>
+
+    <form action="/admin/login" method="post" autocomplete="off">
+      <div class="field">
+        <label for="admin-email">Email</label>
+        <div class="input-wrap">
+          <i class="bi bi-envelope"></i>
+          <input type="email" id="admin-email" name="email" placeholder="you@example.com" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="admin-password">Password</label>
+        <div class="input-wrap">
+          <i class="bi bi-lock"></i>
+          <input type="password" id="admin-password" name="password" placeholder="Enter your password" required>
+        </div>
+      </div>
+
+      <button type="submit">
+        <i class="bi bi-box-arrow-in-right"></i>&nbsp; Sign in
+      </button>
+    </form>
+
+    <p class="note">Restricted area. Access is logged.</p>
+    <a href="/" class="back-home"><i class="bi bi-arrow-left"></i> Back to site</a>
+  </div>
+
+  <script>
+    setTimeout(function () {
+      document.querySelectorAll(".flash").forEach(function (f) {
+        f.classList.add("hide");
+        setTimeout(function () { f.remove(); }, 400);
+      });
+    }, 4000);
+  </script>
 
 </body>
 

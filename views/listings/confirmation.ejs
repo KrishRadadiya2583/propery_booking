@@ -1,0 +1,24 @@
+<% layout("/layouts/boilerplate") %>
+
+  <section class="ds-confirm">
+    <div class="check"><i class="bi bi-check-lg"></i></div>
+    <h2>Your stay is booked 🌿</h2>
+    <p>We've sent a confirmation to <b><%= booking.email %></b>. See you soon!</p>
+
+    <div class="details">
+      <div class="row-x"><span>Stay</span><b><%= booking.listingtitle %></b></div>
+      <% if (booking.listingLocation) { %>
+        <div class="row-x"><span>Location</span><b><%= booking.listingLocation %></b></div>
+      <% } %>
+      <div class="row-x"><span>Check-in</span><b><%= booking.checkIn %></b></div>
+      <div class="row-x"><span>Check-out</span><b><%= booking.checkOut %></b></div>
+      <div class="row-x"><span>Guests</span><b><%= booking.guests %></b></div>
+      <div class="row-x"><span>Total paid</span><b>₹<%= Number(booking.totalPrice).toLocaleString("en-IN") %></b></div>
+      <div class="row-x"><span>Booking ID</span><b style="font-family:monospace"><%= booking._id %></b></div>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+      <a class="ds-btn ds-btn-primary" href="/profile/bookings"><i class="bi bi-calendar-check"></i> View my trips</a>
+      <a class="ds-btn ds-btn-ghost" href="/listings"><i class="bi bi-search"></i> Explore more</a>
+    </div>
+  </section>

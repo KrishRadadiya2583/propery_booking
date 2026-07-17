@@ -1,134 +1,247 @@
 <%- layout("./admin/layouts/adminboilerplate.ejs") %>
 
-  <h1 class="dashboard-title">Admin Dashboard</h1>
+  <div class="page-header">
+    <div class="heading">
+      <h2>Overview</h2>
+      <p>Real-time snapshot of your platform's activity.</p>
+    </div>
+    <div class="actions">
+      <a href="/admin/listings" class="btn btn-soft"><i class="bi bi-house-door"></i> Listings</a>
+      <a href="/admin/bookings" class="btn btn-primary"><i class="bi bi-calendar-check"></i> Bookings</a>
+    </div>
+  </div>
 
   <div class="stats-grid">
     <div class="stat-card">
-      <div class="card-icon">🏠</div>
+      <div class="card-icon"><i class="bi bi-house-door"></i></div>
       <div class="card-info">
         <h3>Total Listings</h3>
-        <p>
-          <%= totalListings %>
-        </p>
+        <p><%= totalListings %></p>
       </div>
     </div>
-
-    <div class="stat-card">
-      <div class="card-icon">👤</div>
+    <div class="stat-card tone-blue">
+      <div class="card-icon"><i class="bi bi-people"></i></div>
       <div class="card-info">
         <h3>Total Users</h3>
-        <p>
-          <%= totalUsers %>
-        </p>
+        <p><%= totalUsers %></p>
       </div>
     </div>
-
-    <div class="stat-card">
-      <div class="card-icon">📅</div>
+    <div class="stat-card tone-amber">
+      <div class="card-icon"><i class="bi bi-calendar-check"></i></div>
       <div class="card-info">
         <h3>Total Bookings</h3>
-        <p>
-          <%= totalBookings %>
-        </p>
+        <p><%= totalBookings %></p>
       </div>
     </div>
-
     <div class="stat-card">
-      <div class="card-icon">💰</div>
+      <div class="card-icon"><i class="bi bi-currency-rupee"></i></div>
       <div class="card-info">
-        <h3>Revenue</h3>
-        <p>₹<%= totalRevenue %>
-        </p>
+        <h3>Total Revenue</h3>
+        <p>₹<%= totalRevenue.toLocaleString("en-IN") %></p>
       </div>
     </div>
   </div>
 
-  <section class="graph-section">
-    <h2>Analytics</h2>
-    <div class="charts-grid">
-      <canvas id="listingsChart"></canvas>
-      <canvas id="usersChart"></canvas>
-      <canvas id="bookingsChart"></canvas>
-      <canvas id="revenueChart"></canvas>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h4><i class="bi bi-graph-up"></i> Revenue per Month</h4>
+      <div class="chart-wrap"><canvas id="revenueChart"></canvas></div>
     </div>
-  </section>
+    <div class="chart-card">
+      <h4><i class="bi bi-bar-chart"></i> Bookings per Month</h4>
+      <div class="chart-wrap"><canvas id="bookingsChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h4><i class="bi bi-person-plus"></i> New Users per Month</h4>
+      <div class="chart-wrap"><canvas id="usersChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h4><i class="bi bi-pie-chart"></i> Booking Status</h4>
+      <div class="chart-wrap"><canvas id="statusChart"></canvas></div>
+    </div>
+  </div>
 
-  <section class="recent-section">
-  <h2 class="section-title">Recent Bookings</h2>
+  <div class="panel">
+    <div class="panel-head">
+      <h3><i class="bi bi-clock-history"></i> Recent Bookings</h3>
+      <a href="/admin/bookings" class="btn btn-soft btn-sm">View all <i class="bi bi-arrow-right"></i></a>
+    </div>
 
-  <ul class="recent-list">
-    <% recentBookings.forEach(booking => { %>
-      <li class="recent-item">
-        <div class="recent-left">
-          <span class="recent-icon">📩</span>
-          <div>
-            <p class="recent-title"><%= booking.listingtitle %></p>
-            <p class="recent-email"><%= booking.email %></p>
-          </div>
-        </div>
+    <% if (recentBookings.length === 0) { %>
+      <div class="empty">
+        <i class="bi bi-inbox"></i>
+        <h3>No bookings yet</h3>
+        <p>New bookings will appear here as they come in.</p>
+      </div>
+    <% } else { %>
+      <ul class="recent-list">
+        <% recentBookings.forEach(booking => { %>
+          <li class="recent-item">
+            <div class="recent-left">
+              <div class="recent-icon"><i class="bi bi-house-heart"></i></div>
+              <div>
+                <p class="recent-title"><%= booking.listingtitle || "Listing" %></p>
+                <p class="recent-email"><%= booking.email || "—" %> · <%= booking.checkIn || "" %> → <%= booking.checkOut || "" %></p>
+              </div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:center;">
+              <span class="status-pill <%= booking.status || 'confirmed' %>"><%= booking.status || "confirmed" %></span>
+              <div class="recent-price">₹<%= (booking.totalPrice || 0).toLocaleString("en-IN") %></div>
+            </div>
+          </li>
+        <% }) %>
+      </ul>
+    <% } %>
+  </div>
 
-        <div class="recent-price">
-          $<%= booking.totalPrice %>
-        </div>
-      </li>
-    <% }) %>
-  </ul>
-</section>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script>
-    const chartsData = <%- JSON.stringify(charts) %>;
+    (function () {
+      var chartsData = <%- JSON.stringify(charts) %>;
+      var statusCounts = <%- JSON.stringify(statusCounts) %>;
 
-    const colorPalette = [
-      '#FF6384',
-      '#36A2EB',
-      '#FFCE56',
-      '#4BC0C0',
-      '#9966FF',
-      '#FF9F40',
-      '#8DD17E',
-      '#E7E9ED'
-    ];
+      function themeColor(name) {
+        return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+      }
 
+      function palette() {
+        return {
+          primary: themeColor("--ds-primary") || "#4fa572",
+          primarySoft: themeColor("--ds-primary-soft") || "rgba(79,165,114,0.16)",
+          water: themeColor("--ds-water") || "#5ea8d9",
+          sun: themeColor("--ds-sun") || "#f4b942",
+          sage: themeColor("--ds-sage") || "#a8dcaa",
+          text: themeColor("--ds-text") || "#f2f7f0",
+          text2: themeColor("--ds-text-2") || "#c6d5c9",
+          text3: themeColor("--ds-text-3") || "#8ba095",
+          border: themeColor("--ds-border") || "rgba(163,210,178,0.14)",
+        };
+      }
 
-    function createChart(id, label, data, type = 'line', color = 'rgba(54, 162, 235, 0.7)') {
-      const canvas = document.getElementById(id);
-      canvas.height = 300;  // medium height
-      const ctx = canvas.getContext('2d');
+      var charts = {};
 
-      return new Chart(ctx, {
-        type,
-        data: {
-          labels: Object.keys(data),
-          datasets: [{
-            label,
-            data: Object.values(data),
-            backgroundColor: colorPalette,
-            borderColor: color.replace('0.7', '1'),
-            borderWidth: 2,
-            tension: 0.3,
-
-          }]
-        },
-        options: {
+      function baseOpts(p) {
+        return {
           responsive: true,
-          maintainAspectRatio: false, // respect canvas height
+          maintainAspectRatio: false,
           plugins: {
-            legend: { display: true }, tooltip: {
-              bodyFont: { size: 50 },       // bigger text for tooltip
-              titleFont: { size: 50 },      // bigger title
-              padding: 10
-            }
+            legend: {
+              labels: { color: p.text2, font: { size: 12 } },
+            },
+            tooltip: {
+              backgroundColor: p.text.startsWith("#f") ? "#0d1712" : "#ffffff",
+              titleColor: p.text.startsWith("#f") ? "#f2f7f0" : "#16281c",
+              bodyColor: p.text.startsWith("#f") ? "#c6d5c9" : "#3d5a48",
+              padding: 10,
+              borderColor: p.border,
+              borderWidth: 1,
+            },
           },
+          scales: {
+            x: {
+              ticks: { color: p.text3, font: { size: 11 } },
+              grid: { color: p.border, drawBorder: false },
+            },
+            y: {
+              beginAtZero: true,
+              ticks: { color: p.text3, font: { size: 11 } },
+              grid: { color: p.border, drawBorder: false },
+            },
+          },
+        };
+      }
 
-          scales: { y: { beginAtZero: true } }
+      function buildAll() {
+        var p = palette();
+        Object.keys(charts).forEach(function (k) { charts[k] && charts[k].destroy(); });
+
+        // Revenue — line with gradient fill
+        var revCtx = document.getElementById("revenueChart").getContext("2d");
+        var grad = revCtx.createLinearGradient(0, 0, 0, 260);
+        grad.addColorStop(0, p.primarySoft);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        charts.revenue = new Chart(revCtx, {
+          type: "line",
+          data: {
+            labels: Object.keys(chartsData.revenue),
+            datasets: [{
+              label: "Revenue (₹)",
+              data: Object.values(chartsData.revenue),
+              borderColor: p.primary,
+              backgroundColor: grad,
+              tension: 0.35,
+              fill: true,
+              pointBackgroundColor: p.primary,
+              pointRadius: 3,
+              borderWidth: 2.5,
+            }],
+          },
+          options: baseOpts(p),
+        });
+
+        charts.bookings = new Chart(document.getElementById("bookingsChart").getContext("2d"), {
+          type: "bar",
+          data: {
+            labels: Object.keys(chartsData.bookings),
+            datasets: [{
+              label: "Bookings",
+              data: Object.values(chartsData.bookings),
+              backgroundColor: p.primary,
+              borderRadius: 6,
+              maxBarThickness: 26,
+            }],
+          },
+          options: baseOpts(p),
+        });
+
+        charts.users = new Chart(document.getElementById("usersChart").getContext("2d"), {
+          type: "line",
+          data: {
+            labels: Object.keys(chartsData.users),
+            datasets: [{
+              label: "New users",
+              data: Object.values(chartsData.users),
+              borderColor: p.water,
+              backgroundColor: "rgba(94,168,217,0.15)",
+              tension: 0.35,
+              fill: true,
+              pointBackgroundColor: p.water,
+              pointRadius: 3,
+              borderWidth: 2.5,
+            }],
+          },
+          options: baseOpts(p),
+        });
+
+        var pieOpts = baseOpts(p);
+        pieOpts.scales = {};
+        charts.status = new Chart(document.getElementById("statusChart").getContext("2d"), {
+          type: "doughnut",
+          data: {
+            labels: ["Confirmed", "Pending", "Completed", "Cancelled"],
+            datasets: [{
+              data: [statusCounts.confirmed, statusCounts.pending, statusCounts.completed, statusCounts.cancelled],
+              backgroundColor: [p.primary, p.sun, p.water, "#c65a4e"],
+              borderColor: "transparent",
+              borderWidth: 2,
+              hoverOffset: 6,
+            }],
+          },
+          options: pieOpts,
+        });
+      }
+
+      buildAll();
+
+      // Rebuild on theme change so grid/text colors follow
+      var lastTheme = document.documentElement.getAttribute("data-theme");
+      var mo = new MutationObserver(function () {
+        var t = document.documentElement.getAttribute("data-theme");
+        if (t !== lastTheme) {
+          lastTheme = t;
+          buildAll();
         }
       });
-    }
-
-
-    createChart('listingsChart', 'Listings per Month', chartsData.listings, 'doughnut', 'rgba(54, 162, 235, 0.3)');
-    createChart('usersChart', 'Users per Month', chartsData.users, 'bar', 'rgba(255, 99, 132, 0.7)');
-    createChart('bookingsChart', 'Bookings per Month', chartsData.bookings, 'pie', 'rgba(255, 206, 86, 0.7)');
-    createChart('revenueChart', 'Revenue per Month', chartsData.revenue, 'bar', 'rgba(75, 192, 192, 0.7)');
+      mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    })();
   </script>
